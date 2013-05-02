@@ -1,4 +1,4 @@
 jquery-steps
 ============
 
-A powerful jQuery wizard plugin that support accessibility and HTML5.
+A powerful jQuery wizard plugin that supports accessibility and HTML5.
