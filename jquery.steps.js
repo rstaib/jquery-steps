@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.8.0 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.8.1 - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -17,12 +17,13 @@
  * - Implement preloadContent for async and iframe content types.
  * - Implement slideLeft animation
  * - Implement functionality to skip a certain amount of steps 
+ * - Add insert and remove step method
  */
 
 
 (function ($)
 {
-    var uid = 0;
+    var uniqueId = 0;
 
     /// <summary>
     /// 
@@ -130,7 +131,7 @@
                 currentIndex: opts.startIndex,
                 currentStep: null,
                 stepCount: 0,
-                transitionLock: false
+                transitionShowElement: null
             });
             createUniqueId($this);
 
@@ -339,15 +340,9 @@
         var options = wizard.data("options");
         var state = wizard.data("state");
 
-        if (state.transitionLock)
-        {
-            return;
-        }
-
         if (index < 0 || index >= state.stepCount || state.stepCount == 0)
         {
-            //TODO: Change to a better error message
-            throw new "Index out of range exception!";
+            throw new "Index out of range.";
         }
 
         if (options.forceMoveForward && index < state.currentIndex)
@@ -374,21 +369,33 @@
             switch (options.transitionEffect)
             {
                 case $.fn.steps.transitionEffect.fade:
-                    state.transitionLock = true;
+                    state.transitionShowElement = stepContents.eq(index);
                     stepContents.eq(oldIndex).fadeOut(options.transitionEffectSpeed, function ()
                     {
-                        stepContents.eq(index).fadeIn(options.transitionEffectSpeed,
-                            function () { state.transitionLock = false; });
-                    });
+                        var wizard = $(this).parents(".wizard");
+                        var state = wizard.data("state");
+
+                        if (state.transitionShowElement)
+                        {
+                            state.transitionShowElement.fadeIn(options.transitionEffectSpeed);
+                            state.transitionShowElement = null;
+                        }
+                    }).promise();
                     break;
 
                 case $.fn.steps.transitionEffect.slide:
-                    state.transitionLock = true;
+                    state.transitionShowElement = stepContents.eq(index);
                     stepContents.eq(oldIndex).slideUp(options.transitionEffectSpeed, function ()
                     {
-                        stepContents.eq(index).slideDown(options.transitionEffectSpeed,
-                            function () { state.transitionLock = false; });
-                    });
+                        var wizard = $(this).parents(".wizard");
+                        var state = wizard.data("state");
+
+                        if (state.transitionShowElement)
+                        {
+                            state.transitionShowElement.slideDown(options.transitionEffectSpeed);
+                            state.transitionShowElement = null;
+                        }
+                    }).promise();
                     break;
 
                     //case $.fn.steps.transitionEffect.slideLeft:
@@ -435,10 +442,13 @@
         stepContents.not(":eq(" + options.startIndex + ")").hide();
         stepContents.eq(options.startIndex).show();
 
-        if (stepTitles.length !== stepContents.length)
+        if (stepTitles.length > stepContents.length)
         {
-            //TODO: Change to a better error message
-            throw new "Each title has to have a relating content part and vise versa!";
+            throw new "One or more corresponding step contents are missing.";
+        }
+        else if (stepTitles.length < stepContents.length)
+        {
+            throw new "One or more corresponding step titles are missing.";
         }
 
         var stepsWrapper = $(document.createElement(options.stepsContainerTag)).addClass("steps");
@@ -641,8 +651,7 @@
     {
         if (substitutes[key] === undefined)
         {
-            //TODO: Change to a better error message
-            throw new "Substitute key \"" + key + "\" does not exist!";
+            throw new "The key \"" + key + "\" does not exist in the substitute collection!";
         }
 
         return substitutes[key];
@@ -673,18 +682,18 @@
     }
 
     /// <summary>
-    /// 
+    /// Creates an unique id and adds this to the corresponding wizard instance.
     /// </summary>
     function createUniqueId(wizard)
     {
         if (wizard.attr("data-uid") === undefined)
         {
-            wizard.attr("data-uid", "steps-uid-" + ++uid);
+            wizard.attr("data-uid", "steps-uid-" + ++uniqueId);
         }
     }
 
     /// <summary>
-    /// 
+    /// Retrieves the unique id from the given wizard instance.
     /// </summary>
     /// <returns></returns>
     function getUniqueId(wizard)
