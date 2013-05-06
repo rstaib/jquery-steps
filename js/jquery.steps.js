@@ -324,12 +324,23 @@
     {
         var options = wizard.data("options");
         var state = wizard.data("state");
+        var oldIndex = state.currentIndex;
 
         if (index >= 0 && index < state.stepCount && !(options.forceMoveForward && index < state.currentIndex))
         {
             var anchor = $(".steps a[href$='-" + index + "']", wizard);
+            var isDisabled = anchor.parent().hasClass("disabled");
+            // Remove the class to make the anchor clickable!
             anchor.parent().removeClass("disabled");
             anchor.click();
+
+            // An error occured
+            if (oldIndex == state.currentIndex && isDisabled)
+            {
+                // Add the class again to disable the anchor; avoid click action.
+                anchor.parent().addClass("disabled");
+                return false;
+            }
 
             return true;
         }
@@ -573,12 +584,12 @@
 
         if (options.enablePagination)
         {
-            var finish = $(".actions a[href='#finish']", wizard);
-            var next = $(".actions a[href='#next']", wizard);
+            var finish = $(".actions a[href='#finish']", wizard).parent();
+            var next = $(".actions a[href='#next']", wizard).parent();
 
             if (!options.forceMoveForward)
             {
-                var previous = $(".actions a[href='#previous']", wizard);
+                var previous = $(".actions a[href='#previous']", wizard).parent();
                 if (state.currentIndex > 0)
                 {
                     previous.removeClass("disabled");
@@ -611,13 +622,13 @@
             {
                 if (state.stepCount == 0)
                 {
-                    finish.parent().hide();
-                    next.addClass("disabled").parent().show();
+                    finish.hide();
+                    next.show().addClass("disabled");
                 }
                 else if (state.stepCount > 1 && state.stepCount > (state.currentIndex + 1))
                 {
-                    finish.parent().hide();
-                    next.removeClass("disabled").parent().show();
+                    finish.hide();
+                    next.show().removeClass("disabled");
                 }
                 else if (!options.enableFinishButton)
                 {
@@ -625,8 +636,8 @@
                 }
                 else
                 {
-                    finish.parent().show();
-                    next.removeClass("disabled").parent().hide();
+                    finish.show();
+                    next.hide().removeClass("disabled");
                 }
             }
         }
