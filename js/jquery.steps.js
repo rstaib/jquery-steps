@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.8.1 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.8.2 - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -19,10 +19,11 @@
  * - Implement functionality to skip a certain amount of steps 
  * - Add insert and remove step method
  */
- 
-/* Features:
+
+
+/* Planed Features:
  * - Progress bar
-*/
+ */
 
 
 (function ($)
@@ -610,13 +611,13 @@
             {
                 if (state.stepCount == 0)
                 {
-                    finish.hide();
-                    next.show().addClass("disabled");
+                    finish.parent().hide();
+                    next.addClass("disabled").parent().show();
                 }
                 else if (state.stepCount > 1 && state.stepCount > (state.currentIndex + 1))
                 {
-                    finish.hide();
-                    next.show().removeClass("disabled");
+                    finish.parent().hide();
+                    next.removeClass("disabled").parent().show();
                 }
                 else if (!options.enableFinishButton)
                 {
@@ -624,8 +625,8 @@
                 }
                 else
                 {
-                    finish.show();
-                    next.hide().removeClass("disabled");
+                    finish.parent().show();
+                    next.removeClass("disabled").parent().hide();
                 }
             }
         }
@@ -670,9 +671,9 @@
         var options = wizard.data("options");
         var $header = $(".content > .title:eq(" + index + ")", wizard);
         var $content = $header.next(".body");
-        var mode = (isNaN($content.attr("data-mode")) || Number($content.attr("data-mode")) > 2) ? 
+        var mode = (isNaN($content.attr("data-mode")) || Number($content.attr("data-mode")) > 2) ?
             $.fn.steps.contentMode.html : Number($content.attr("data-mode"));
-        var contentUrl = (mode === $.fn.steps.contentMode.html || $content.attr("data-url") === undefined) ? 
+        var contentUrl = (mode === $.fn.steps.contentMode.html || $content.attr("data-url") === undefined) ?
             "" : $content.attr("data-url");
         var contentLoaded = (mode !== $.fn.steps.contentMode.html && $content.attr("data-loaded") === "1");
 
