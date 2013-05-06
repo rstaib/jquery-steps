@@ -19,6 +19,10 @@
  * - Implement functionality to skip a certain amount of steps 
  * - Add insert and remove step method
  */
+ 
+/* Features:
+ * - Progress bar
+*/
 
 
 (function ($)
