@@ -335,7 +335,7 @@
             anchor.click();
 
             // An error occured
-            if (oldIndex == state.currentIndex && isDisabled)
+            if (oldIndex === state.currentIndex && isDisabled)
             {
                 // Add the class again to disable the anchor; avoid click action.
                 anchor.parent().addClass("disabled");
