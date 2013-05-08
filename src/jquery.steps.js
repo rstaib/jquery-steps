@@ -23,6 +23,7 @@
 
 /* Planed Features:
  * - Progress bar
+ * - Advanced Accessibility support (WAI-ARIA)
  */
 
 
