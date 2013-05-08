@@ -558,7 +558,7 @@
                 case $.fn.steps.contentMode.iframe:
                     var currentStepContent = $(".content > .body", wizard).eq(state.currentIndex);
                     currentStepContent.html($("<iframe src=\"" + state.currentStep.contentUrl + "\" />"));
-                    currentStepContent.attr("data-loaded", "1");
+                    currentStepContent.data("loaded", "1");
                     break;
 
                 case $.fn.steps.contentMode.async:
@@ -567,7 +567,7 @@
                     $.ajax({ url: state.currentStep.contentUrl, cache: false }).done(function (data)
                     {
                         currentStepContent.html(data);
-                        currentStepContent.attr("data-loaded", "1");
+                        currentStepContent.data("loaded", "1");
                     });
                     break;
             }
@@ -682,11 +682,11 @@
         var options = wizard.data("options");
         var $header = $(".content > .title:eq(" + index + ")", wizard);
         var $content = $header.next(".body");
-        var mode = (isNaN($content.attr("data-mode")) || Number($content.attr("data-mode")) > 2) ?
-            $.fn.steps.contentMode.html : Number($content.attr("data-mode"));
-        var contentUrl = (mode === $.fn.steps.contentMode.html || $content.attr("data-url") === undefined) ?
-            "" : $content.attr("data-url");
-        var contentLoaded = (mode !== $.fn.steps.contentMode.html && $content.attr("data-loaded") === "1");
+        var mode = (isNaN($content.data("mode")) || Number($content.data("mode")) > 2) ?
+            $.fn.steps.contentMode.html : Number($content.data("mode"));
+        var contentUrl = (mode === $.fn.steps.contentMode.html || $content.data("url") === undefined) ?
+            "" : $content.data("url");
+        var contentLoaded = (mode !== $.fn.steps.contentMode.html && $content.data("loaded") === "1");
 
         return {
             title: $header.html(),
@@ -702,9 +702,9 @@
     /// </summary>
     function createUniqueId(wizard)
     {
-        if (wizard.attr("data-uid") === undefined)
+        if (wizard.data("uid") === undefined)
         {
-            wizard.attr("data-uid", "steps-uid-" + ++uniqueId);
+            wizard.data("uid", "steps-uid-" + ++uniqueId);
         }
     }
 
@@ -714,6 +714,6 @@
     /// <returns></returns>
     function getUniqueId(wizard)
     {
-        return wizard.attr("data-uid");
+        return wizard.data("uid");
     }
 })(jQuery);
