@@ -9,7 +9,7 @@
     "email": "rstaib@derklang.com"
   },
   "scripts": {
-    "test": "grunt jshint qunit"
+    "test": "grunt"
   },
   "repository": {
     "type": "git",
