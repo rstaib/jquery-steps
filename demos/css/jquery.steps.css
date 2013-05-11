@@ -1,4 +1,11 @@
-﻿/* Common */
+﻿.wizard
+{
+    width: 600px;
+}
+
+
+
+/* Common */
 .wizard a
 {
     outline: 0;
@@ -22,7 +29,8 @@
 
 .wizard > .steps
 {
-    display: block;
+    display: inline-block;
+    width: 600px;
 }
 
 .wizard > .steps .number
@@ -64,6 +72,12 @@
     background: #f00;
 }
 
+.wizard > .content
+{
+    display: inline-block;
+    width: 600px;
+}
+
 .wizard > .content > .title
 {
     position: absolute;
@@ -73,7 +87,7 @@
 .wizard > .content > .body
 {
     border: 1px solid #CCC;
-    width: 50%;
+    width: 100%;
     height: 200px;
 }
 
@@ -82,6 +96,12 @@
     border: 0 none;
     width: 100%;
     height: 200px;
+}
+
+.wizard > .actions
+{
+    display: inline-block;
+    width: 600px;
 }
 
 .wizard > .actions a.disabled

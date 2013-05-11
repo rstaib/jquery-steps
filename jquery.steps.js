@@ -131,7 +131,7 @@
 
         return this.each(function (i)
         {
-            $this = $(this);
+            var $this = $(this);
             $this.data("options", opts);
             $this.data("state", {
                 currentIndex: opts.startIndex,
@@ -183,7 +183,7 @@
                 }
 
                 // If nothing has changed
-                if (oldIndex == state.currentIndex)
+                if (oldIndex === state.currentIndex)
                 {
                     $(".steps a[href$=-" + oldIndex + "]", wizard).focus();
                     return false;
@@ -242,7 +242,7 @@
         var $this = $(this);
         var state = $this.data("state");
 
-        return (index == state.currentStep) ? state.currentStep : getStepProperties($this, index);
+        return (index === state.currentStep) ? state.currentStep : getStepProperties($this, index);
     };
 
     /// <summary>
@@ -301,7 +301,7 @@
     $.fn.steps.remove = function (index)
     {
         // State must be modified
-        throw new "Not yet implemented!";
+        throw new Error("Not yet implemented!");
     };
 
     /// <summary>
@@ -310,7 +310,7 @@
     $.fn.steps.insert = function (index, step)
     {
         // State must be modified
-        throw new "Not yet implemented!";
+        throw new Error("Not yet implemented!");
     };
 
     /*
@@ -357,9 +357,9 @@
         var options = wizard.data("options");
         var state = wizard.data("state");
 
-        if (index < 0 || index >= state.stepCount || state.stepCount == 0)
+        if (index < 0 || index >= state.stepCount || state.stepCount === 0)
         {
-            throw new "Index out of range.";
+            throw new Error("Index out of range.");
         }
 
         if (options.forceMoveForward && index < state.currentIndex)
@@ -428,11 +428,11 @@
         }
         else
         {
-            $(".steps li:eq(" + oldIndex + ")", wizard).addClass("error")
+            $(".steps li:eq(" + oldIndex + ")", wizard).addClass("error");
         }
 
         return true;
-    };
+    }
 
     /// <summary>
     /// Transforms the initial html structure/code.
@@ -461,11 +461,11 @@
 
         if (stepTitles.length > stepContents.length)
         {
-            throw new "One or more corresponding step contents are missing.";
+            throw new Error("One or more corresponding step contents are missing.");
         }
         else if (stepTitles.length < stepContents.length)
         {
-            throw new "One or more corresponding step titles are missing.";
+            throw new Error("One or more corresponding step titles are missing.");
         }
 
         var stepsWrapper = $(document.createElement(options.stepsContainerTag)).addClass("steps");
@@ -476,7 +476,7 @@
 
         stepTitles.each(function (index)
         {
-            $header = $(this).attr("id", getUniqueId(wizard) + "-" + index).attr("tabindex", "-1");
+            var $header = $(this).attr("id", getUniqueId(wizard) + "-" + index).attr("tabindex", "-1");
 
             var title = null;
             var stepItem = $("<li></li>");
@@ -518,7 +518,7 @@
 
         // Set state values
         state.stepCount = stepContents.length;
-        state.currentStep = getStepProperties($this, state.currentIndex);
+        state.currentStep = getStepProperties(wizard, state.currentIndex);
 
         if (options.enablePagination)
         {
@@ -549,21 +549,22 @@
     /// </summary>
     function loadAsyncContent(wizard)
     {
-        var options = wizard.data("options");
-        var state = wizard.data("state");
+        var options = wizard.data("options"),
+            state = wizard.data("state");
 
         if (!options.enableContentCache || !state.currentStep.contentLoaded)
         {
+            var currentStepContent;
             switch (state.currentStep.contentMode)
             {
                 case $.fn.steps.contentMode.iframe:
-                    var currentStepContent = $(".content > .body", wizard).eq(state.currentIndex);
+                    currentStepContent = $(".content > .body", wizard).eq(state.currentIndex);
                     currentStepContent.html($("<iframe src=\"" + state.currentStep.contentUrl + "\" />"));
                     currentStepContent.data("loaded", "1");
                     break;
 
                 case $.fn.steps.contentMode.async:
-                    var currentStepContent = $(".content > .body", wizard).eq(state.currentIndex);
+                    currentStepContent = $(".content > .body", wizard).eq(state.currentIndex);
                     currentStepContent.empty();
                     $.ajax({ url: state.currentStep.contentUrl, cache: false }).done(function (data)
                     {
@@ -603,7 +604,7 @@
 
             if (options.enableFinishButton && options.showFinishButtonAlways)
             {
-                if (state.stepCount == 0)
+                if (state.stepCount === 0)
                 {
                     finish.addClass("disabled");
                     next.addClass("disabled");
@@ -621,7 +622,7 @@
             }
             else
             {
-                if (state.stepCount == 0)
+                if (state.stepCount === 0)
                 {
                     finish.hide();
                     next.show().addClass("disabled");
@@ -668,7 +669,7 @@
     {
         if (substitutes[key] === undefined)
         {
-            throw new "The key \"" + key + "\" does not exist in the substitute collection!";
+            throw new Error("The key \"" + key + "\" does not exist in the substitute collection!");
         }
 
         return substitutes[key];
@@ -691,7 +692,7 @@
 
         return {
             title: $header.html(),
-            content: (mode == $.fn.steps.contentMode.html) ? $content.html() : "",
+            content: (mode === $.fn.steps.contentMode.html) ? $content.html() : "",
             contentUrl: contentUrl,
             contentMode: mode,
             contentLoaded: contentLoaded
@@ -705,7 +706,7 @@
     {
         if (wizard.data("uid") === undefined)
         {
-            wizard.data("uid", "steps-uid-" + ++uniqueId);
+            wizard.data("uid", "steps-uid-".concat(++uniqueId));
         }
     }
 
