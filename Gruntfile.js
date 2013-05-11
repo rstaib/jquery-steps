@@ -117,7 +117,8 @@ module.exports = function (grunt)
                     outdir: 'docs/'
                 }
             }
-        }
+        },
+        clean: ["dist", "docs"]
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -126,7 +127,8 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['jshint'/*, 'qunit'*/, 'yuidoc']);
+    grunt.registerTask('default', ['clean', 'jshint'/*, 'qunit'*/, 'yuidoc']);
     grunt.registerTask('release', ['default', 'concat', 'uglify', 'compress']);
 };

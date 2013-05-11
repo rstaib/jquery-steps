@@ -151,7 +151,7 @@
 
     /**
     * An object that represents the default settings.
-    * There are two possibiities to override the sub-properties.
+    * There are two possibities to override the sub-properties.
     * Either by doing it generally (global) or on initialization.
     *
     * @static
