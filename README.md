@@ -49,16 +49,14 @@ There are two ways to add steps and their corresponding content.
 2. Or use the API to add steps dynamically.
 
 ```javascript
-    <script>
-        // Initialize wizard
-        var wizard = $("#wizard").steps();
+// Initialize wizard
+var wizard = $("#wizard").steps();
 
-        // Add step
-        wizard.steps("add", {
-            title: "HTML code", 
-            content: "<strong>HTML code</strong>"
-        });
-    </script>
+// Add step
+wizard.steps("add", {
+    title: "HTML code", 
+    content: "<strong>HTML code</strong>"
+});
 ```
 
 ## License
