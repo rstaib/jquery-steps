@@ -37,9 +37,10 @@ module.exports = function (grunt)
                         src: [
                             'README.md',
                             /*'changelog.txt',*/
-                            'demo/** /*.*',
+                            'docs/**/*.*',
+                            'demo/**/*.*',
                             'lib/*.*',
-                            'test/** /*.*'
+                            'test/**/*.*'
                         ]
                     },
                     {
@@ -104,6 +105,18 @@ module.exports = function (grunt)
                     ]
                 }
             }
+        },
+        yuidoc: {
+            compile: {
+                name: '<%= pkg.name %>',
+                description: '<%= pkg.description %>',
+                version: '<%= pkg.version %>',
+                url: '<%= pkg.homepage %>',
+                options: {
+                    paths: '.',
+                    outdir: 'docs/'
+                }
+            }
         }
     });
 
@@ -114,6 +127,6 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-contrib-compress');
 
-    grunt.registerTask('default', ['jshint'/*, 'qunit'*/]);
-    grunt.registerTask('release', ['default', 'concat'/*, 'yuidoc'*/, 'uglify', 'compress']);
+    grunt.registerTask('default', ['jshint'/*, 'qunit'*/, 'yuidoc']);
+    grunt.registerTask('release', ['default', 'concat', 'uglify', 'compress']);
 };
