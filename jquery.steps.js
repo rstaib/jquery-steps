@@ -466,7 +466,7 @@
 
                 var anchor = $(this);
                 var wizard = anchor.parents(".wizard");
-                switch (anchor.attr("href"))
+                switch (anchor.attr("href").substring(anchor.attr("href").lastIndexOf("#")))
                 {
                     case "#finish":
                         wizard.steps("finish");
@@ -775,12 +775,12 @@
 
         if (options.enablePagination)
         {
-            var finish = $(".actions a[href='#finish']", wizard).parent();
-            var next = $(".actions a[href='#next']", wizard).parent();
+            var finish = $(".actions a[href$='#finish']", wizard).parent();
+            var next = $(".actions a[href$='#next']", wizard).parent();
 
             if (!options.forceMoveForward)
             {
-                var previous = $(".actions a[href='#previous']", wizard).parent();
+                var previous = $(".actions a[href$='#previous']", wizard).parent();
                 if (state.currentIndex > 0)
                 {
                     previous.removeClass("disabled");
