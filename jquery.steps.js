@@ -166,7 +166,7 @@
     **/
     $.fn.steps.defaults = {
         /**
-        * The header tag that is used to find the step button text within the declared wizard area.
+        * The header tag is used to find the step button text within the declared wizard area.
         *
         * @property headerTag
         * @type {String}
@@ -175,7 +175,7 @@
         headerTag: "h1",
 
         /**
-        * The body tag that is used to find the step content within the declared wizard area.
+        * The body tag is used to find the step content within the declared wizard area.
         *
         * @property bodyTag
         * @type {String}

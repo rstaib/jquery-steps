@@ -19,7 +19,7 @@
     "jQuery",
     "Wizard",
     "Steps",
-    "PlugIn"
+    "Plugin"
   ],
   "licenses": [
     {

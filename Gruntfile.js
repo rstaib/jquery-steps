@@ -94,7 +94,7 @@ module.exports = function (grunt)
                 },
                 files: {
                     src: [
-                        'test/test.js'
+                        'test/tests.js'
                     ]
                 }
             },
@@ -129,6 +129,6 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['clean', 'jshint'/*, 'qunit'*/, 'yuidoc']);
-    grunt.registerTask('release', ['default', 'concat', 'uglify', 'compress']);
+    grunt.registerTask('default', ['clean', 'jshint', 'qunit']);
+    grunt.registerTask('release', ['default', 'yuidoc', 'concat', 'uglify', 'compress']);
 };
