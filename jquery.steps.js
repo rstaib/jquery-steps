@@ -219,6 +219,7 @@
         enableAllSteps: false, /* If true, all steps are ebable from the begining (all steps are clickable) */
         enableKeyNavigation: true,
         enablePagination: true,
+        blockPaginationForFields: true,
         enableContentCache: true,
         enableFinishButton: true,
         preloadContent: false, /* Not yet implemented */
@@ -423,8 +424,13 @@
                 $this.keyup(function (event)
                 {
                     var wizard = $(this);
-                    var keyCodes = { left: 37, right: 39 };
+                    if (wizard.data("options").blockPaginationForFields && $(":focus", wizard).is(":input"))
+                    {
+                        event.preventDefault();
+                        return false;
+                    }
 
+                    var keyCodes = { left: 37, right: 39 };
                     if (event.keyCode === keyCodes.left)
                     {
                         event.preventDefault();
