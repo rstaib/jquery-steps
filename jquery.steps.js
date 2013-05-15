@@ -16,9 +16,7 @@
  * - Loading Animation (Spinner)
  * - Implement slideLeft animation
  * - Fix bugs in insert and remove methods (add works fine)
- *   a. Refresh ids higher than new index
- *   b. The step button is not inserted right (still added at the end)
- *   c. Add tests for add, insert and remove
+ *   a. Add tests for add, insert and remove
  *
  * Planed Features:
  * - Progress bar
@@ -26,6 +24,7 @@
  * - Implement preloadContent for async and iframe content types.
  * - Implement functionality to skip a certain amount of steps 
  * - Dynamic settings change
+ * - Dynamic step update
  *
  */
 
@@ -362,18 +361,20 @@
             options = wizard.data("options"),
             state = wizard.data("state");
 
-        if (index < 0 || index > state.Count || state.currentIndex === index)
+        // Index out of range and try deleting current item will return false.
+        if (index < 0 || index > state.stepCount || state.currentIndex === index)
         {
             return false;
         }
 
         var contentContainer = wizard.children(".content");
-        contentContainer.children(".title:eq(" + index + ")").remove();
-        contentContainer.children(".body:eq(" + index + ")").remove();
+        $(".title:eq(" + index + ")", contentContainer).remove();
+        $(".body:eq(" + index + ")", contentContainer).remove();
+        $(".steps > ol > li:eq(" + index + ")", wizard).remove();
 
         if (index === 0)
         {
-            contentContainer.children(".title:first").addClass("first");
+            $(".title:first", contentContainer).addClass("first");
         }
 
         // Reset state values
@@ -381,9 +382,10 @@
         {
             state.currentIndex = state.currentIndex + 1;
         }
-        state.stepCount = contentContainer.children(".body").length;
+        state.stepCount = $(".body", contentContainer).length;
         state.currentStep = getStepProperties(wizard, state.currentIndex);
 
+        updateIdentifiers(wizard, index);
         refreshActionState(wizard);
 
         return true;
@@ -467,6 +469,7 @@
         state.stepCount = contentContainer.children(".body").length;
         state.currentStep = getStepProperties(wizard, state.currentIndex);
 
+        updateIdentifiers(wizard, index);
         refreshActionState(wizard);
 
         return wizard;
@@ -762,8 +765,16 @@
         {
             stepItem.addClass("disabled");
         }
-
-        $(".steps > ol", wizard).append(stepItem);
+        
+        var stepCollection = $(".steps > ol", wizard);
+        if (index === 0)
+        {
+            stepCollection.prepend(stepItem);
+        }
+        else
+        {
+            $("li:eq(" + (index - 1) + ")", stepCollection).after(stepItem);
+        }
     }
 
     /**
@@ -803,10 +814,28 @@
     }
 
     /**
+     * Updates identifiers for step buttons and their related titles.
+     *
+     * @private
+     * @method updateIdentifiers
+     * @param wizard A jQuery wizard object
+     * @param index The start point for updating ids
+     */
+    function updateIdentifiers(wizard, index)
+    {
+        for (var i = index; i < wizard.data("state").stepCount; i++)
+        {
+            $(".steps > ol > li:eq(" + i + ") > a", wizard).attr("href", "#" + getUniqueId(wizard) + "-" + i);
+            $(".content > .title:eq(" + i + ")", wizard).attr("id", getUniqueId(wizard) + "-" + i);
+        }
+    }
+
+    /**
      * Refreshs the action navigation.
      *
      * @private
      * @method refreshActionState
+     * @param wizard A jQuery wizard object
      */
     function refreshActionState(wizard)
     {
