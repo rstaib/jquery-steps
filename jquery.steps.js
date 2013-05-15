@@ -11,42 +11,45 @@
  * Please report issues at: https://github.com/rstaib/jquery-steps/issues
  */
 
-
-/* TODOs:
+/* 
+ * TODOs:
  * - Loading Animation (Spinner)
  * - Implement slideLeft animation
- * - Add insert and remove step method
- */
-
-
-/* Planed Features:
+ * - Fix bugs in insert and remove methods (add works fine)
+ *   a. Refresh ids higher than new index
+ *   b. The step button is not inserted right (still added at the end)
+ *   c. Add tests for add, insert and remove
+ *
+ * Planed Features:
  * - Progress bar
  * - Advanced Accessibility support (WAI-ARIA)
  * - Implement preloadContent for async and iframe content types.
  * - Implement functionality to skip a certain amount of steps 
+ * - Dynamic settings change
+ *
  */
 
 (function ($)
 {
     /**
-    * A global unique id count.
-    *
-    * @static
-    * @private
-    * @property _uniqueId
-    * @type {Integer}
-    **/
+     * A global unique id count.
+     *
+     * @static
+     * @private
+     * @property _uniqueId
+     * @type {Integer}
+     **/
     var _uniqueId = 0;
 
     /**
-    * Represents a jQuery wizard plugin.
-    *
-    * @class steps
-    * @constructor
-    * @param {Object} method
-    * @param {Array} arguments
-    * @chainable
-    **/
+     * Represents a jQuery wizard plugin.
+     *
+     * @class steps
+     * @constructor
+     * @param {Object} method
+     * @param {Array} arguments
+     * @chainable
+     **/
     $.fn.steps = function (method)
     {
         if ($.fn.steps[method])
@@ -64,155 +67,154 @@
     };
 
     /**
-    * An enum represents the different content types of a step and their loading mechanisms.
-    *
-    * @class contentMode
-    * @for steps
-    **/
+     * An enum represents the different content types of a step and their loading mechanisms.
+     *
+     * @class contentMode
+     * @for steps
+     **/
     $.fn.steps.contentMode = {
         /**
-        * HTML embedded content
-        *
-        * @readOnly
-        * @property html
-        * @type {Integer}
-        * @for contentMode
-        **/
+         * HTML embedded content
+         *
+         * @readOnly
+         * @property html
+         * @type {Integer}
+         * @for contentMode
+         **/
         html: 0,
 
         /**
-        * IFrame included content
-        *
-        * @readOnly
-        * @property iframe
-        * @type {Integer}
-        * @for contentMode
-        **/
+         * IFrame included content
+         *
+         * @readOnly
+         * @property iframe
+         * @type {Integer}
+         * @for contentMode
+         **/
         iframe: 1,
 
         /**
-        * Async embedded content
-        *
-        * @readOnly
-        * @property async
-        * @type {Integer}
-        * @for contentMode
-        **/
+         * Async embedded content
+         *
+         * @readOnly
+         * @property async
+         * @type {Integer}
+         * @for contentMode
+         **/
         async: 2
     };
 
     /**
-    * An enum that represents the various transition animations.
-    *
-    * @class transitionEffect
-    * @for steps
-    **/
+     * An enum that represents the various transition animations.
+     *
+     * @class transitionEffect
+     * @for steps
+     **/
     $.fn.steps.transitionEffect = {
         /**
-        * No transition animation
-        *
-        * @readOnly
-        * @property none
-        * @type {Integer}
-        * @for transitionEffect
-        **/
+         * No transition animation
+         *
+         * @readOnly
+         * @property none
+         * @type {Integer}
+         * @for transitionEffect
+         **/
         none: 0,
 
         /**
-        * Fade in transition
-        *
-        * @readOnly
-        * @property fade
-        * @type {Integer}
-        * @for transitionEffect
-        **/
+         * Fade in transition
+         *
+         * @readOnly
+         * @property fade
+         * @type {Integer}
+         * @for transitionEffect
+         **/
         fade: 1,
 
         /**
-        * Slide up transition
-        *
-        * @readOnly
-        * @property slide
-        * @type {Integer}
-        * @for transitionEffect
-        **/
+         * Slide up transition
+         *
+         * @readOnly
+         * @property slide
+         * @type {Integer}
+         * @for transitionEffect
+         **/
         slide: 2,
 
         /**
-        * Slide left transition
-        *
-        * @readOnly
-        * @property slideLeft
-        * @type {Integer}
-        * @for transitionEffect
-        **/
+         * Slide left transition
+         *
+         * @readOnly
+         * @property slideLeft
+         * @type {Integer}
+         * @for transitionEffect
+         **/
         slideLeft: 3
     };
 
     /**
-    * An object that represents the default settings.
-    * There are two possibities to override the sub-properties.
-    * Either by doing it generally (global) or on initialization.
-    *
-    * @static
-    * @class defaults
-    * @for steps
-    * @example
-    *   // Global approach
-    *   $.steps.defaults.headerTag = "h3";
-    * @example
-    *   // Initialization approach
-    *   $("#wizard").steps({ headerTag: "h3" });
-    **/
+     * An object that represents the default settings.
+     * There are two possibities to override the sub-properties.
+     * Either by doing it generally (global) or on initialization.
+     *
+     * @static
+     * @class defaults
+     * @for steps
+     * @example
+     *   // Global approach
+     *   $.steps.defaults.headerTag = "h3";
+     * @example
+     *   // Initialization approach
+     *   $("#wizard").steps({ headerTag: "h3" });
+     **/
     $.fn.steps.defaults = {
         /**
-        * The header tag is used to find the step button text within the declared wizard area.
-        *
-        * @property headerTag
-        * @type {String}
-        * @for defaults
-        **/
+         * The header tag is used to find the step button text within the declared wizard area.
+         *
+         * @property headerTag
+         * @type {String}
+         * @for defaults
+         **/
         headerTag: "h1",
 
         /**
-        * The body tag is used to find the step content within the declared wizard area.
-        *
-        * @property bodyTag
-        * @type {String}
-        * @for defaults
-        **/
+         * The body tag is used to find the step content within the declared wizard area.
+         *
+         * @property bodyTag
+         * @type {String}
+         * @for defaults
+         **/
         bodyTag: "div",
 
         /**
-        * The content container tag that will be used to wrap all step contents.
-        *
-        * @property contentContainerTag
-        * @type {String}
-        * @for defaults
-        **/
+         * The content container tag that will be used to wrap all step contents.
+         *
+         * @property contentContainerTag
+         * @type {String}
+         * @for defaults
+         **/
         contentContainerTag: "div",
 
         /**
-        * The action container tag that will be used to wrap the pagination navigation.
-        *
-        * @property actionContainerTag
-        * @type {String}
-        * @for defaults
-        **/
+         * The action container tag that will be used to wrap the pagination navigation.
+         *
+         * @property actionContainerTag
+         * @type {String}
+         * @for defaults
+         **/
         actionContainerTag: "div",
 
         /**
-        * The steps container tag that will be used to wrap the steps navigation.
-        *
-        * @property stepsContainerTag
-        * @type {String}
-        * @for defaults
-        **/
+         * The steps container tag that will be used to wrap the steps navigation.
+         *
+         * @property stepsContainerTag
+         * @type {String}
+         * @for defaults
+         **/
         stepsContainerTag: "div",
 
         /* Templates */
         titleTemplate: "<span class=\"number\">#index#.</span> #title#",
-        currentTitleTemplate: "<span class=\"current-info\">#current#</span> <span class=\"number\">#index#.</span> #title#", /* For Accessability reasons */
         loadingTemplate: "<span class=\"spinner\"></span> #text#",
 
         /* Behaviours */
@@ -248,38 +250,38 @@
 
     /*
         Public methods
-    */
+     */
 
     /**
-    * Gets the current step index.
-    *
-    * @method getCurrentIndex
-    * @return {Integer} The actual step index (zero-based)
-    * @for steps
-    **/
+     * Gets the current step index.
+     *
+     * @method getCurrentIndex
+     * @return {Integer} The actual step index (zero-based)
+     * @for steps
+     **/
     $.fn.steps.getCurrentIndex = function ()
     {
         return $(this).data("state").currentIndex;
     };
 
     /**
-    * Gets the current step object.
-    *
-    * @method getCurrentStep
-    * @return {Integer} The actual step object
-    **/
+     * Gets the current step object.
+     *
+     * @method getCurrentStep
+     * @return {Integer} The actual step object
+     **/
     $.fn.steps.getCurrentStep = function ()
     {
         return $(this).data("state").currentStep;
     };
 
     /**
-    * Gets a specific step object by index.
-    *
-    * @method getStep
-    * @param {Integer} index An integer that belongs to the position of a step
-    * @return {Integer} A specific step object
-    **/
+     * Gets a specific step object by index.
+     *
+     * @method getStep
+     * @param {Integer} index An integer that belongs to the position of a step
+     * @return {Integer} A specific step object
+     **/
     $.fn.steps.getStep = function (index)
     {
         var $this = $(this);
@@ -289,11 +291,11 @@
     };
 
     /**
-    * Routes to the next step.
-    *
-    * @method next
-    * @return {Boolean} Indicates whether the action executed
-    **/
+     * Routes to the next step.
+     *
+     * @method next
+     * @return {Boolean} Indicates whether the action executed
+     **/
     $.fn.steps.next = function ()
     {
         var $this = $(this);
@@ -301,11 +303,11 @@
     };
 
     /**
-    * Routes to the previous step.
-    *
-    * @method previous
-    * @return {Boolean} Indicates whether the action executed
-    **/
+     * Routes to the previous step.
+     *
+     * @method previous
+     * @return {Boolean} Indicates whether the action executed
+     **/
     $.fn.steps.previous = function ()
     {
         var $this = $(this);
@@ -313,22 +315,22 @@
     };
 
     /**
-    * Skips an certain amount of steps.
-    *
-    * @method skip
-    * @param {Integer} count The amount of steps that should be skipped
-    * @return {Boolean} Indicates whether the action executed
-    **/
+     * Skips an certain amount of steps.
+     *
+     * @method skip
+     * @param {Integer} count The amount of steps that should be skipped
+     * @return {Boolean} Indicates whether the action executed
+     **/
     $.fn.steps.skip = function (count)
     {
         throw new Error("Not yet implemented!");
     };
 
     /**
-    * Completes editing.
-    *
-    * @method finish
-    **/
+     * Completes editing.
+     *
+     * @method finish
+     **/
     $.fn.steps.finish = function ()
     {
         var $this = $(this);
@@ -349,61 +351,138 @@
     };
 
     /**
-    * Removes a specific step by an given index.
-    *
-    * @method remove
-    * @param {Integer} index The position (zero-based) of the step to remove
-    **/
+     * Removes a specific step by an given index.
+     *
+     * @method remove
+     * @param {Integer} index The position (zero-based) of the step to remove
+     **/
     $.fn.steps.remove = function (index)
     {
-        // State must be modified
-        throw new Error("Not yet implemented!");
+        var wizard = $(this),
+            options = wizard.data("options"),
+            state = wizard.data("state");
+
+        if (index < 0 || index > state.Count || state.currentIndex === index)
+        {
+            return false;
+        }
+
+        var contentContainer = wizard.children(".content");
+        contentContainer.children(".title:eq(" + index + ")").remove();
+        contentContainer.children(".body:eq(" + index + ")").remove();
+
+        if (index === 0)
+        {
+            contentContainer.children(".title:first").addClass("first");
+        }
+
+        // Reset state values
+        if (state.currentIndex >= index)
+        {
+            state.currentIndex = state.currentIndex + 1;
+        }
+        state.stepCount = contentContainer.children(".body").length;
+        state.currentStep = getStepProperties(wizard, state.currentIndex);
+
+        refreshActionState(wizard);
+
+        return true;
     };
 
     /**
-    * Adds a new step.
-    *
-    * @method add
-    * @param {Object} step The step object to add
-    **/
+     * Adds a new step.
+     *
+     * @method add
+     * @param {Object} step The step object to add
+     * @chainable
+     **/
     $.fn.steps.add = function (step)
     {
         var wizard = $(this);
         wizard.steps("insert", wizard.data("state").stepCount, step);
+        return wizard;
     };
 
     /**
-    * Inserts a new step to a specific position.
-    *
-    * @method insert
-    * @param {Integer} index The position (zero-based) to add
-    * @param {Object} step The step object to add
-    **/
+     * Inserts a new step to a specific position.
+     *
+     * @method insert
+     * @param {Integer} index The position (zero-based) to add
+     * @param {Object} step The step object to add
+     * @example
+     *     $("#wizard").steps().insert(0, {
+     *         title: "Title",
+     *         content: "", // optional
+     *         contentMode: "async",
+     *         contentUrl: "/Content/Step/1"
+     *     });
+     * @chainable
+     **/
     $.fn.steps.insert = function (index, step)
     {
-        /*var wizard = $(this);
-        var state = wizard.data("state");
+        var wizard = $(this),
+            options = wizard.data("options"),
+            state = wizard.data("state");
 
-        if (index < 0 || index > state.Count)
+        if (index < 0 || index > state.stepCount)
         {
             throw new Error("Index out of range.");
-        }*/
+        }
 
-        // State must be modified
-        throw new Error("Not yet implemented!");
+        var contentContainer = wizard.children(".content"),
+            header = $(document.createElement(options.headerTag)),
+            body = $(document.createElement(options.bodyTag));
+        if (index === 0)
+        {
+            contentContainer.prepend(body).prepend(header);
+        }
+        else
+        {
+            $(".body:eq(" + (index - 1) + ")", contentContainer).after(body).after(header);
+        }
+
+        header.html(step.title);
+        transformTitle(wizard, header, index);
+
+        // Add click event
+        $(".steps > ol > li:eq(" + index + ") > a", wizard).bind("click.steps", stepClickHandler);
+
+        // Reset the current class
+        if (index === 0)
+        {
+            $(".steps > ol > li", wizard).removeClass("first").eq(index).addClass("first");
+        }
+
+        body.addClass("body").hide();
+        if (step.contentMode == null || step.contentMode === $.fn.steps.contentMode.html)
+        {
+            body.html(step.content);
+        }
+
+        // Reset state values
+        if (state.currentIndex >= index)
+        {
+            state.currentIndex = state.currentIndex + 1;
+        }
+        state.stepCount = contentContainer.children(".body").length;
+        state.currentStep = getStepProperties(wizard, state.currentIndex);
+
+        refreshActionState(wizard);
+
+        return wizard;
     };
 
     /*
         Private methods
-    */
+     */
 
     /**
-    * Initializes the component.
-    *
-    * @private
-    * @method initialize
-    * @param {Object} options The component settings
-    **/
+     * Initializes the component.
+     *
+     * @private
+     * @method initialize
+     * @param {Object} options The component settings
+     **/
     function initialize(options)
     {
         var opts = $.extend({}, $.fn.steps.defaults, options);
@@ -429,84 +508,23 @@
 
             if (opts.enableKeyNavigation)
             {
-                $this.keyup(function (event)
-                {
-                    var wizard = $(this);
-                    if (wizard.data("options").suppressPaginationOnFocus && $(":focus", wizard).is(":input"))
-                    {
-                        event.preventDefault();
-                        return false;
-                    }
-
-                    var keyCodes = { left: 37, right: 39 };
-                    if (event.keyCode === keyCodes.left)
-                    {
-                        event.preventDefault();
-                        wizard.steps("previous");
-                    }
-                    else if (event.keyCode === keyCodes.right)
-                    {
-                        event.preventDefault();
-                        wizard.steps("next");
-                    }
-                });
+                $this.keyup(keyUpHandler);
             }
 
-            $(".steps a", $this).bind("click.steps", function (event)
-            {
-                event.preventDefault();
-
-                var anchor = $(this);
-                var wizard = anchor.parents(".wizard");
-                var state = wizard.data("state");
-                var oldIndex = state.currentIndex;
-
-                if (anchor.parent().is(":not(.disabled):not(.current)"))
-                {
-                    goToStep(wizard, Number(anchor.attr("href").substring(anchor.attr("href").lastIndexOf("-") + 1)));
-                }
-
-                // If nothing has changed
-                if (oldIndex === state.currentIndex)
-                {
-                    $(".steps a[href$=-" + oldIndex + "]", wizard).focus();
-                    return false;
-                }
-            });
-
-            $(".actions a", $this).bind("click.steps", function (event)
-            {
-                event.preventDefault();
-
-                var anchor = $(this);
-                var wizard = anchor.parents(".wizard");
-                switch (anchor.attr("href").substring(anchor.attr("href").lastIndexOf("#")))
-                {
-                    case "#finish":
-                        wizard.steps("finish");
-                        break;
-
-                    case "#next":
-                        wizard.steps("next");
-                        break;
-
-                    case "#previous":
-                        wizard.steps("previous");
-                        break;
-                }
-            });
+            $(".steps a", $this).bind("click.steps", stepClickHandler);
+            $(".actions a", $this).bind("click.steps", actionClickHandler);
         });
     }
 
     /**
-    * Fires the action next or previous click event.
-    *
-    * @private
-    * @method actionClick
-    * @param {Object} wizard The jQuery wizard object
-    * @param {Integer} index The position (zero-based) to route to
-    * @return {Boolean} Indicates whether the event fired successfully or not
-    **/
+     * Fires the action next or previous click event.
+     *
+     * @private
+     * @method actionClick
+     * @param {Object} wizard The jQuery wizard object
+     * @param {Integer} index The position (zero-based) to route to
+     * @return {Boolean} Indicates whether the event fired successfully or not
+     **/
     function actionClick(wizard, index)
     {
         var options = wizard.data("options");
@@ -536,14 +554,14 @@
     }
 
     /**
-    * Routes to a specific step by a given index.
-    *
-    * @private
-    * @method goToStep
-    * @param {Object} wizard The jQuery wizard object
-    * @param {Integer} index The position (zero-based) to route to
-    * @return {Boolean} Indicates whether the action succeeded or failed
-    **/
+     * Routes to a specific step by a given index.
+     *
+     * @private
+     * @method goToStep
+     * @param {Object} wizard The jQuery wizard object
+     * @param {Integer} index The position (zero-based) to route to
+     * @return {Boolean} Indicates whether the action succeeded or failed
+     **/
     function goToStep(wizard, index)
     {
         var options = wizard.data("options");
@@ -567,9 +585,11 @@
             state.currentStep = getStepProperties(wizard, index);
 
             // Change visualisation
-            var steps = $(".steps li", wizard);
+            var steps = $(".steps li", wizard),
+                currentInfo = $("a > .current-info", steps.eq(oldIndex));
             steps.eq(oldIndex).addClass("done").removeClass("current error");
-            steps.eq(index).addClass("current").removeClass("disabled done").children("a").focus();
+            steps.eq(index).addClass("current").removeClass("disabled done")
+                .children("a").prepend(currentInfo).focus();
 
             refreshActionState(wizard);
             loadAsyncContent(wizard);
@@ -627,12 +647,12 @@
     }
 
     /**
-    * Transforms the initial html structure/code.
-    *
-    * @private
-    * @method transform
-    * @param {Object} wizard The jQuery wizard object
-    **/
+     * Transforms the initial html structure/code.
+     *
+     * @private
+     * @method transform
+     * @param {Object} wizard The jQuery wizard object
+     **/
     function transform(wizard)
     {
         var options = wizard.data("options");
@@ -646,10 +666,8 @@
         wizard.append(contentWrapper);
 
         var stepTitles = contentWrapper.children(options.headerTag);
-        stepTitles.addClass("title");
 
-        var stepContents = contentWrapper.children(options.bodyTag);
-        stepContents.addClass("body");
+        var stepContents = contentWrapper.children(options.bodyTag).addClass("body");
 
         // hides all contents except the defined start content
         stepContents.not(":eq(" + options.startIndex + ")").hide();
@@ -667,49 +685,11 @@
         var stepsWrapper = $(document.createElement(options.stepsContainerTag)).addClass("steps");
         wizard.prepend(stepsWrapper);
 
-        var stepCollection = $(document.createElement("ol"));
-        stepsWrapper.append(stepCollection);
+        stepsWrapper.append($(document.createElement("ol")));
 
         stepTitles.each(function (index)
         {
-            var $header = $(this).attr("id", getUniqueId(wizard) + "-" + index).attr("tabindex", "-1");
-
-            var title = null;
-            var stepItem = $("<li></li>");
-            if (index === 0)
-            {
-                stepItem.addClass("first");
-            }
-
-            if (index === options.startIndex)
-            {
-                stepItem.addClass("current");
-                title = renderTemplate(options.currentTitleTemplate, {
-                    index: index + 1,
-                    title: $header.html(),
-                    current: options.labels.current
-                });
-            }
-            else
-            {
-                title = renderTemplate(options.titleTemplate, {
-                    index: index + 1,
-                    title: $header.html()
-                });
-            }
-
-            if (index < options.startIndex)
-            {
-                stepItem.addClass("done");
-            }
-
-            if (index > options.startIndex && !options.enableAllSteps)
-            {
-                stepItem.addClass("disabled");
-            }
-
-            stepItem.html("<a href=\"#" + $header.attr("id") + "\">" + title + "</a>");
-            stepCollection.append(stepItem);
+            transformTitle(wizard, $(this), index);
         });
 
         // Set state values
@@ -741,12 +721,58 @@
     }
 
     /**
-    * Loads and includes async content.
-    *
-    * @private
-    * @method loadAsyncContent
-    * @param {Object} wizard A jQuery wizard object
-    */
+     * Transforms the title to a step item button.
+     *
+     * @private
+     * @param {Object} wizard A jQuery wizard object
+     * @param {Object} header A jQuery header object
+     * @param {Integer} index The position of the header
+     */
+    function transformTitle(wizard, header, index)
+    {
+        // TODO: Some code for currentand so on!
+
+        var options = wizard.data("options");
+
+        header.attr("id", getUniqueId(wizard) + "-" + index).attr("tabindex", "-1").addClass("title");
+
+        var title = renderTemplate(options.titleTemplate, {
+                index: index + 1,
+                title: header.html()
+            }),
+            stepItem = $("<li></li>").html("<a href=\"#" + header.attr("id") + "\">" + title + "</a>");
+
+        if (index === 0)
+        {
+            stepItem.addClass("first");
+        }
+
+        if (index === options.startIndex)
+        {
+            stepItem.addClass("current").children("a").prepend("<span class=\"current-info\">" + 
+                options.labels.current + " </span>");
+        }
+
+        if (index < options.startIndex)
+        {
+            stepItem.addClass("done");
+        }
+
+        if (index > options.startIndex && !options.enableAllSteps)
+        {
+            stepItem.addClass("disabled");
+        }
+
+        $(".steps > ol", wizard).append(stepItem);
+    }
+
+    /**
+     * Loads and includes async content.
+     *
+     * @private
+     * @method loadAsyncContent
+     * @param {Object} wizard A jQuery wizard object
+     */
     function loadAsyncContent(wizard)
     {
         var options = wizard.data("options"),
@@ -777,11 +803,11 @@
     }
 
     /**
-    * Refreshs the action navigation.
-    *
-    * @private
-    * @method refreshActionState
-    */
+     * Refreshs the action navigation.
+     *
+     * @private
+     * @method refreshActionState
+     */
     function refreshActionState(wizard)
     {
         var options = wizard.data("options");
@@ -849,14 +875,14 @@
     }
 
     /**
-    * Renders a template and substitutes all placeholder.
-    *
-    * @private
-    * @method renderTemplate
-    * @param {String} template A template
-    * @param {Object} substitutes A list of substitute
-    * @return {String} The rendered template
-    */
+     * Renders a template and substitutes all placeholder.
+     *
+     * @private
+     * @method renderTemplate
+     * @param {String} template A template
+     * @param {Object} substitutes A list of substitute
+     * @return {String} The rendered template
+     */
     function renderTemplate(template, substitutes)
     {
         var matches = template.match(/#([a-z]*)#/gi);
@@ -870,14 +896,14 @@
     }
 
     /**
-    * Gets a substitute by key.
-    *
-    * @private
-    * @method getSubstitute
-    * @param {Object} substitutes A list of substitute
-    * @param {String} key The key to look for
-    * @return {String} A suitable substitute
-    */
+     * Gets a substitute by key.
+     *
+     * @private
+     * @method getSubstitute
+     * @param {Object} substitutes A list of substitute
+     * @param {String} key The key to look for
+     * @return {String} A suitable substitute
+     */
     function getSubstitute(substitutes, key)
     {
         if (substitutes[key] === undefined)
@@ -889,14 +915,14 @@
     }
 
     /**
-    * Gets a step by an given index.
-    *
-    * @private
-    * @method getStepProperties
-    * @param {Object} wizard A jQuery wizard object  
-    * @param {Integer} index The position (zero-based) of a step
-    * @return {Object} Returns a step object
-    */
+     * Gets a step by an given index.
+     *
+     * @private
+     * @method getStepProperties
+     * @param {Object} wizard A jQuery wizard object  
+     * @param {Integer} index The position (zero-based) of a step
+     * @return {Object} Returns a step object
+     */
     function getStepProperties(wizard, index)
     {
         var options = wizard.data("options");
@@ -1004,5 +1030,92 @@
     function getUniqueId(wizard)
     {
         return wizard.data("uid");
+    }
+
+    /**
+     * Handles the keyup DOM event.
+     *
+     * @private
+     * @event keyup
+     * @param {Object} event An event object
+     */
+    function keyUpHandler(event)
+    {
+        var wizard = $(this);
+        if (wizard.data("options").suppressPaginationOnFocus && $(":focus", wizard).is(":input"))
+        {
+            event.preventDefault();
+            return false;
+        }
+
+        var keyCodes = { left: 37, right: 39 };
+        if (event.keyCode === keyCodes.left)
+        {
+            event.preventDefault();
+            wizard.steps("previous");
+        }
+        else if (event.keyCode === keyCodes.right)
+        {
+            event.preventDefault();
+            wizard.steps("next");
+        }
+    }
+
+    /**
+     * Fires when a action click happens.
+     *
+     * @private
+     * @event click
+     * @param {Object} event An event object
+     */
+    function actionClickHandler(event)
+    {
+        event.preventDefault();
+
+        var anchor = $(this);
+        var wizard = anchor.parents(".wizard");
+        switch (anchor.attr("href").substring(anchor.attr("href").lastIndexOf("#")))
+        {
+            case "#finish":
+                wizard.steps("finish");
+                break;
+
+            case "#next":
+                wizard.steps("next");
+                break;
+
+            case "#previous":
+                wizard.steps("previous");
+                break;
+        }
+    }
+
+    /**
+     * Fires when a step click happens.
+     *
+     * @private
+     * @event click
+     * @param {Object} event An event object
+     */
+    function stepClickHandler(event)
+    {
+        event.preventDefault();
+
+        var anchor = $(this);
+        var wizard = anchor.parents(".wizard");
+        var state = wizard.data("state");
+        var oldIndex = state.currentIndex;
+
+        if (anchor.parent().is(":not(.disabled):not(.current)"))
+        {
+            goToStep(wizard, Number(anchor.attr("href").substring(anchor.attr("href").lastIndexOf("-") + 1)));
+        }
+
+        // If nothing has changed
+        if (oldIndex === state.currentIndex)
+        {
+            $(".steps a[href$=-" + oldIndex + "]", wizard).focus();
+            return false;
+        }
     }
 })(jQuery);
