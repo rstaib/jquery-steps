@@ -14,9 +14,7 @@
 
 /* TODOs:
  * - Loading Animation (Spinner)
- * - Implement preloadContent for async and iframe content types.
  * - Implement slideLeft animation
- * - Implement functionality to skip a certain amount of steps 
  * - Add insert and remove step method
  */
 
@@ -24,6 +22,8 @@
 /* Planed Features:
  * - Progress bar
  * - Advanced Accessibility support (WAI-ARIA)
+ * - Implement preloadContent for async and iframe content types.
+ * - Implement functionality to skip a certain amount of steps 
  */
 
 (function ($)
@@ -219,7 +219,7 @@
         enableAllSteps: false, /* If true, all steps are ebable from the begining (all steps are clickable) */
         enableKeyNavigation: true,
         enablePagination: true,
-        blockPaginationForFields: true,
+        suppressPaginationOnFocus: true, /* Suppress pagination if a form field is focused (within the current wizard)  */
         enableContentCache: true,
         enableFinishButton: true,
         preloadContent: false, /* Not yet implemented */
@@ -381,6 +381,14 @@
     **/
     $.fn.steps.insert = function (index, step)
     {
+        /*var wizard = $(this);
+        var state = wizard.data("state");
+
+        if (index < 0 || index > state.Count)
+        {
+            throw new Error("Index out of range.");
+        }*/
+
         // State must be modified
         throw new Error("Not yet implemented!");
     };
@@ -424,7 +432,7 @@
                 $this.keyup(function (event)
                 {
                     var wizard = $(this);
-                    if (wizard.data("options").blockPaginationForFields && $(":focus", wizard).is(":input"))
+                    if (wizard.data("options").suppressPaginationOnFocus && $(":focus", wizard).is(":input"))
                     {
                         event.preventDefault();
                         return false;
@@ -909,14 +917,73 @@
         };
     }
 
+    /**
+     * Gets a valid enum value by checking an specific enum key or value.
+     * 
+     * @private
+     * @methodName getValidEnumValue
+     * @param enumType Type of enum
+     * @param keyOrValue Key or value to check for
+     */
+    function getValidEnumValue(enumType, keyOrValue)
+    {
+        validateArgument("enumType", enumType);
+        validateArgument("keyOrValue", keyOrValue);
+
+        // Is key
+        if (typeof keyOrValue === "string")
+        {
+            var value = enumType[keyOrValue];
+            if (value === undefined)
+            {
+                throw new Error("The enum key \"" + keyOrValue + "\" does not exist.");
+            }
+
+            return value;
+        }
+        // Is value
+        else if (typeof keyOrValue === "number")
+        {
+            for (var key in enumType)
+            {
+                if (enumType[key] === keyOrValue)
+                {
+                    return keyOrValue;
+                }
+            }
+
+            throw new Error("Invalid enum value \"" + keyOrValue + "\".");
+        }
+        // Type is not supported
+        else
+        {
+            throw new Error("Invalid key or value type.");
+        }
+    }
 
     /**
-    * Creates an unique id and adds this to the corresponding wizard instance.
-    *
-    * @private
-    * @method createUniqueId
-    * @param {Object} wizard A jQuery wizard object
-    */
+     * Checks an argument for null or undefined and throws an error if one check applies.
+     *
+     * @private
+     * @method validateArgument
+     * @param {String} argumentName The name of the given argument
+     * @param {Object} argumentValue The argument itself
+     */
+    function validateArgument(argumentName, argumentValue)
+    {
+        if (argumentValue == null)
+        {
+            throw new Error("The argument \"" + argumentName + "\" is null or undefined.");
+        }
+    }
+
+    /**
+     * Creates an unique id and adds this to the corresponding wizard instance.
+     *
+     * @private
+     * @method createUniqueId
+     * @param {Object} wizard A jQuery wizard object
+     */
     function createUniqueId(wizard)
     {
         if (wizard.data("uid") === undefined)
@@ -926,13 +993,13 @@
     }
 
     /**
-    * Retrieves the unique id from the given wizard instance.
-    *
-    * @private
-    * @method getUniqueId
-    * @param {Object} wizard A jQuery wizard object
-    * @return {String} Returns the unique for the given wizard
-    */
+     * Retrieves the unique id from the given wizard instance.
+     *
+     * @private
+     * @method getUniqueId
+     * @param {Object} wizard A jQuery wizard object
+     * @return {String} Returns the unique for the given wizard
+     */
     function getUniqueId(wizard)
     {
         return wizard.data("uid");

@@ -129,6 +129,6 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['clean', 'jshint', 'qunit']);
+    grunt.registerTask('default', ['clean', 'jshint'/*, 'qunit'*/]);
     grunt.registerTask('release', ['default', 'yuidoc', 'concat', 'uglify', 'compress']);
 };
