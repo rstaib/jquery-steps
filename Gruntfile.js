@@ -15,11 +15,9 @@ module.exports = function (grunt)
         uglify: {
             options: {
                 preserveComments: false,
-                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-                    '<%= grunt.template.today("mm/dd/yyyy") %>\\r\\n' +
-                    '<%= pkg.homepage ? "* " + pkg.homepage + "\\r\\n" : "" %>' +
-                    '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-                    ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
+                banner: '/*! <%= "\\r\\n * " + pkg.name %> v<%= pkg.version %> - <%= grunt.template.today("mm/dd/yyyy") + "\\r\\n" %>' +
+                    ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> <%= (pkg.homepage ? "(" + pkg.homepage + ")" : "") + "\\r\\n" %>' +
+                    ' * Licensed under <%= pkg.licenses[0].type + " " + pkg.licenses[0].url + "\\r\\n */\\r\\n" %>'
             },
             all: {
                 files: {

@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.8.2 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.9.0 - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -15,8 +15,7 @@
  * TODOs:
  * - Loading Animation (Spinner)
  * - Implement slideLeft animation
- * - Fix bugs in insert and remove methods (add works fine)
- *   a. Add tests for add, insert and remove
+ * - Add tests for add, insert and remove
  *
  * Planed Features:
  * - Progress bar
