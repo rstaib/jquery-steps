@@ -575,7 +575,7 @@
             loadAsyncContent(wizard);
 
             var stepContents = $(".content > .body", wizard);
-            switch (options.transitionEffect)
+            switch (getValidEnumValue($.fn.steps.transitionEffect, options.transitionEffect))
             {
                 case $.fn.steps.transitionEffect.fade:
                     state.transitionShowElement = stepContents.eq(index);
@@ -755,7 +755,7 @@
         if (!options.enableContentCache || !state.currentStep.contentLoaded)
         {
             var currentStepContent;
-            switch (state.currentStep.contentMode)
+            switch (getValidEnumValue($.fn.steps.contentMode, state.currentStep.contentMode))
             {
                 case $.fn.steps.contentMode.iframe:
                     currentStepContent = $(".content > .body", wizard).eq(state.currentIndex);
@@ -902,8 +902,9 @@
         var options = wizard.data("options");
         var $header = $(".content > .title:eq(" + index + ")", wizard);
         var $content = $header.next(".body");
-        var mode = (isNaN($content.data("mode")) || Number($content.data("mode")) > 2) ?
-            $.fn.steps.contentMode.html : Number($content.data("mode"));
+        var mode = ($content.data("mode") == null) ? $.fn.steps.contentMode.html :
+            getValidEnumValue($.fn.steps.contentMode, (/^\s*$/.test($content.data("mode")) || isNaN($content.data("mode"))) ? 
+                $content.data("mode") : Number($content.data("mode")));
         var contentUrl = (mode === $.fn.steps.contentMode.html || $content.data("url") === undefined) ?
             "" : $content.data("url");
         var contentLoaded = (mode !== $.fn.steps.contentMode.html && $content.data("loaded") === "1");
