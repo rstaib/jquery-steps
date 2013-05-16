@@ -5,11 +5,11 @@ A powerful jQuery wizard plugin that supports accessibility and HTML5.
 
 ## Getting Started
 
-jQuery Steps is a lightweight wizard UI component written for jQuery.
+**jQuery Steps** is a lightweight wizard UI component written for **jQuery**.
 
 Everything you need to start is:
 
-1. Include *jQuery* and *jQuery Steps* in your HTML code.
+1. Include **jQuery** and **jQuery Steps** in your HTML code.
 2. Then select an element represents the wizard and call the `steps` method.
 
 ```html
@@ -61,7 +61,7 @@ wizard.steps("add", {
 });
 ```
 
-> For more samples [check the demos](https://github.com/rstaib/jquery-steps/wiki).
+> For more samples [check the demos](https://github.com/rstaib/jquery-steps/wiki#demo).
 
 ## Reporting an Issue
 
