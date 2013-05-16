@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.9.1 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.9.2 - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -13,7 +13,7 @@
 
 /* 
  * TODOs:
- * - Loading Animation (Spinner)
+ * - Add tests and styles for loading animation (Spinner)
  * - Add tests for add, insert and remove
  * - Shrink the comprehensive code
  *
@@ -246,7 +246,8 @@
             current: "current step:", /* For Accessability reasons */
             finish: "Finish",
             next: "Next",
-            previous: "Previous"
+            previous: "Previous",
+            loading: "Loading ..."
         }
     };
 
@@ -286,10 +287,10 @@
      **/
     $.fn.steps.getStep = function (index)
     {
-        var $this = $(this);
-        var state = $this.data("state");
+        var wizard = $(this),
+            state = wizard.data("state");
 
-        return (index === state.currentStep) ? state.currentStep : getStepProperties($this, index);
+        return (index === state.currentStep) ? state.currentStep : getStepProperties(wizard, index);
     };
 
     /**
@@ -300,8 +301,9 @@
      **/
     $.fn.steps.next = function ()
     {
-        var $this = $(this);
-        return actionClick($this, $this.data("state").currentIndex + 1);
+        var wizard = $(this);
+
+        return actionClick(wizard, wizard.data("state").currentIndex + 1);
     };
 
     /**
@@ -312,8 +314,9 @@
      **/
     $.fn.steps.previous = function ()
     {
-        var $this = $(this);
-        return actionClick($this, $this.data("state").currentIndex - 1);
+        var wizard = $(this);
+
+        return actionClick(wizard, wizard.data("state").currentIndex - 1);
     };
 
     /**
@@ -335,16 +338,15 @@
      **/
     $.fn.steps.finish = function ()
     {
-        var $this = $(this),
-            options = $this.data("options"),
-            state = $this.data("state"),
-            currentStep = $(".steps li:eq(" + state.currentIndex + ")", $this);
+        var wizard = $(this),
+            options = wizard.data("options"),
+            state = wizard.data("state"),
+            currentStep = $(".steps li:eq(" + state.currentIndex + ")", wizard);
 
-        if ($this.triggerHandler("finishing", [state.currentIndex]))
+        if (wizard.triggerHandler("finishing", [state.currentIndex]))
         {
             currentStep.addClass("done").removeClass("error");
-
-            $this.triggerHandler("finished", [state.currentIndex]);
+            wizard.triggerHandler("finished", [state.currentIndex]);
         }
         else
         {
@@ -587,6 +589,11 @@
         var oldIndex = state.currentIndex;
         if (wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
         {
+            if (state.asyncRequest != null)
+            {
+                state.asyncRequest.abort();
+            }
+
             // Save new state
             state.currentIndex = index;
             state.currentStep = getStepProperties(wizard, index);
@@ -672,19 +679,15 @@
      **/
     function transform(wizard)
     {
-        var options = wizard.data("options");
-        var state = wizard.data("state");
+        var options = wizard.data("options"),
+            state = wizard.data("state"),
+            contentWrapper = $(document.createElement(options.contentContainerTag)).addClass("content");
 
-        wizard.addClass("wizard");
-
-        var contentWrapper = $(document.createElement(options.contentContainerTag)).addClass("content");
         contentWrapper.html(wizard.html());
-        wizard.empty();
-        wizard.append(contentWrapper);
+        wizard.addClass("wizard").empty().append(contentWrapper);
 
-        var stepTitles = contentWrapper.children(options.headerTag);
-
-        var stepContents = contentWrapper.children(options.bodyTag).addClass("body");
+        var stepTitles = contentWrapper.children(options.headerTag),
+            stepContents = contentWrapper.children(options.bodyTag).addClass("body");
 
         // hides all contents except the defined start content
         stepContents.not(":eq(" + options.startIndex + ")").hide();
@@ -699,10 +702,9 @@
             throw new Error("One or more corresponding step titles are missing.");
         }
 
-        var stepsWrapper = $(document.createElement(options.stepsContainerTag)).addClass("steps");
+        var stepsWrapper = $(document.createElement(options.stepsContainerTag))
+            .addClass("steps").append($(document.createElement("ol")));
         wizard.prepend(stepsWrapper);
-
-        stepsWrapper.append($(document.createElement("ol")));
 
         stepTitles.each(function (index)
         {
@@ -715,11 +717,10 @@
 
         if (options.enablePagination)
         {
-            var actionWrapper = $(document.createElement(options.actionContainerTag)).addClass("actions");
+            var actionCollection = $(document.createElement("ul")),
+                actionWrapper = $(document.createElement(options.actionContainerTag))
+                    .addClass("actions").append(actionCollection);
             wizard.append(actionWrapper);
-
-            var actionCollection = $(document.createElement("ul"));
-            actionWrapper.append(actionCollection);
 
             if (!options.forceMoveForward)
             {
@@ -805,23 +806,22 @@
 
         if (!options.enableContentCache || !state.currentStep.contentLoaded)
         {
-            var currentStepContent;
             switch (getValidEnumValue($.fn.steps.contentMode, state.currentStep.contentMode))
             {
                 case $.fn.steps.contentMode.iframe:
-                    currentStepContent = $(".content > .body", wizard).eq(state.currentIndex);
-                    currentStepContent.html($("<iframe src=\"" + state.currentStep.contentUrl + "\" />"));
-                    currentStepContent.data("loaded", "1");
+                    $(".content > .body", wizard).eq(state.currentIndex)
+                        .html($("<iframe src=\"" + state.currentStep.contentUrl + "\" />"))
+                        .data("loaded", "1");
                     break;
 
                 case $.fn.steps.contentMode.async:
-                    currentStepContent = $(".content > .body", wizard).eq(state.currentIndex);
-                    currentStepContent.empty();
-                    $.ajax({ url: state.currentStep.contentUrl, cache: false }).done(function (data)
-                    {
-                        currentStepContent.html(data);
-                        currentStepContent.data("loaded", "1");
-                    });
+                    var currentStepContent = $(".content > .body", wizard).eq(state.currentIndex)
+                        .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
+                    $.ajax({ url: state.currentStep.contentUrl, cache: false })
+                        .done(function (data)
+                        {
+                            currentStepContent.empty().html(data).data("loaded", "1");
+                        });
                     break;
             }
         }
@@ -853,13 +853,13 @@
      */
     function refreshActionState(wizard)
     {
-        var options = wizard.data("options");
-        var state = wizard.data("state");
+        var options = wizard.data("options"),
+            state = wizard.data("state");
 
         if (options.enablePagination)
         {
-            var finish = $(".actions a[href$='#finish']", wizard).parent();
-            var next = $(".actions a[href$='#next']", wizard).parent();
+            var finish = $(".actions a[href$='#finish']", wizard).parent(),
+                next = $(".actions a[href$='#next']", wizard).parent();
 
             if (!options.forceMoveForward)
             {
@@ -929,9 +929,11 @@
     function renderTemplate(template, substitutes)
     {
         var matches = template.match(/#([a-z]*)#/gi);
+
         for (var i = 0; i < matches.length; i++)
         {
-            var match = matches[i], key = match.substring(1, match.length - 1);
+            var match = matches[i], 
+                key = match.substring(1, match.length - 1);
             template = template.replace(match, getSubstitute(substitutes, key));
         }
 
@@ -968,19 +970,19 @@
      */
     function getStepProperties(wizard, index)
     {
-        var options = wizard.data("options");
-        var $header = $(".content > .title:eq(" + index + ")", wizard);
-        var $content = $header.next(".body");
-        var mode = ($content.data("mode") == null) ? $.fn.steps.contentMode.html :
-            getValidEnumValue($.fn.steps.contentMode, (/^\s*$/.test($content.data("mode")) || isNaN($content.data("mode"))) ? 
-                $content.data("mode") : Number($content.data("mode")));
-        var contentUrl = (mode === $.fn.steps.contentMode.html || $content.data("url") === undefined) ?
-            "" : $content.data("url");
-        var contentLoaded = (mode !== $.fn.steps.contentMode.html && $content.data("loaded") === "1");
+        var options = wizard.data("options"),
+            header = $(".content > .title:eq(" + index + ")", wizard),
+            content = header.next(".body"),
+            mode = (content.data("mode") == null) ? $.fn.steps.contentMode.html :
+            getValidEnumValue($.fn.steps.contentMode, (/^\s*$/.test(content.data("mode")) || isNaN(content.data("mode"))) ? 
+                content.data("mode") : Number(content.data("mode"))),
+            contentUrl = (mode === $.fn.steps.contentMode.html || content.data("url") === undefined) ?
+                "" : content.data("url"),
+            contentLoaded = (mode !== $.fn.steps.contentMode.html && content.data("loaded") === "1");
 
         return {
-            title: $header.html(),
-            content: (mode === $.fn.steps.contentMode.html) ? $content.html() : "",
+            title: header.html(),
+            content: (mode === $.fn.steps.contentMode.html) ? content.html() : "",
             contentUrl: contentUrl,
             contentMode: mode,
             contentLoaded: contentLoaded
@@ -1115,8 +1117,8 @@
     {
         event.preventDefault();
 
-        var anchor = $(this);
-        var wizard = anchor.parents(".wizard");
+        var anchor = $(this),
+            wizard = anchor.parents(".wizard");
         switch (anchor.attr("href").substring(anchor.attr("href").lastIndexOf("#")))
         {
             case "#finish":
@@ -1144,10 +1146,10 @@
     {
         event.preventDefault();
 
-        var anchor = $(this);
-        var wizard = anchor.parents(".wizard");
-        var state = wizard.data("state");
-        var oldIndex = state.currentIndex;
+        var anchor = $(this),
+            wizard = anchor.parents(".wizard"),
+            state = wizard.data("state"),
+            oldIndex = state.currentIndex;
 
         if (anchor.parent().is(":not(.disabled):not(.current)"))
         {
