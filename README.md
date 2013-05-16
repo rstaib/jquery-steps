@@ -59,15 +59,11 @@ wizard.steps("add", {
 });
 ```
 
+> For more information [check the documentation](https://github.com/rstaib/jquery-steps/wiki).
+
 ## Demo
 
 An live demo area will be available soon!
-
-## Documentation
-
-Documentation will follow soon!
-
-However, it is possible to generate a API documentation by using the following *GruntJS* command `grunt api`.
 
 ## Reporting an Issue
 
