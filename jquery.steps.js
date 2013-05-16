@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.9.0 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.9.1 - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -14,8 +14,8 @@
 /* 
  * TODOs:
  * - Loading Animation (Spinner)
- * - Implement slideLeft animation
  * - Add tests for add, insert and remove
+ * - Shrink the comprehensive code
  *
  * Planed Features:
  * - Progress bar
@@ -27,6 +27,10 @@
  *
  */
 
+/**
+ * @module jQuery.steps
+ * @requires jQuery
+ */
 (function ($)
 {
     /**
@@ -35,7 +39,7 @@
      * @static
      * @private
      * @property _uniqueId
-     * @type {Integer}
+     * @type Integer
      **/
     var _uniqueId = 0;
 
@@ -44,8 +48,8 @@
      *
      * @class steps
      * @constructor
-     * @param {Object} method
-     * @param {Array} arguments
+     * @param [method={}] The name of the method as `String` or an JSON object for initialization
+     * @param [params=]* {Array} Additional arguments for a method call
      * @chainable
      **/
     $.fn.steps = function (method)
@@ -76,7 +80,7 @@
          *
          * @readOnly
          * @property html
-         * @type {Integer}
+         * @type Integer
          * @for contentMode
          **/
         html: 0,
@@ -86,7 +90,7 @@
          *
          * @readOnly
          * @property iframe
-         * @type {Integer}
+         * @type Integer
          * @for contentMode
          **/
         iframe: 1,
@@ -96,7 +100,7 @@
          *
          * @readOnly
          * @property async
-         * @type {Integer}
+         * @type Integer
          * @for contentMode
          **/
         async: 2
@@ -114,7 +118,7 @@
          *
          * @readOnly
          * @property none
-         * @type {Integer}
+         * @type Integer
          * @for transitionEffect
          **/
         none: 0,
@@ -124,7 +128,7 @@
          *
          * @readOnly
          * @property fade
-         * @type {Integer}
+         * @type Integer
          * @for transitionEffect
          **/
         fade: 1,
@@ -134,7 +138,7 @@
          *
          * @readOnly
          * @property slide
-         * @type {Integer}
+         * @type Integer
          * @for transitionEffect
          **/
         slide: 2,
@@ -144,7 +148,7 @@
          *
          * @readOnly
          * @property slideLeft
-         * @type {Integer}
+         * @type Integer
          * @for transitionEffect
          **/
         slideLeft: 3
@@ -170,7 +174,7 @@
          * The header tag is used to find the step button text within the declared wizard area.
          *
          * @property headerTag
-         * @type {String}
+         * @type String
          * @for defaults
          **/
         headerTag: "h1",
@@ -179,7 +183,7 @@
          * The body tag is used to find the step content within the declared wizard area.
          *
          * @property bodyTag
-         * @type {String}
+         * @type String
          * @for defaults
          **/
         bodyTag: "div",
@@ -188,7 +192,7 @@
          * The content container tag that will be used to wrap all step contents.
          *
          * @property contentContainerTag
-         * @type {String}
+         * @type String
          * @for defaults
          **/
         contentContainerTag: "div",
@@ -197,7 +201,7 @@
          * The action container tag that will be used to wrap the pagination navigation.
          *
          * @property actionContainerTag
-         * @type {String}
+         * @type String
          * @for defaults
          **/
         actionContainerTag: "div",
@@ -206,7 +210,7 @@
          * The steps container tag that will be used to wrap the steps navigation.
          *
          * @property stepsContainerTag
-         * @type {String}
+         * @type String
          * @for defaults
          **/
         stepsContainerTag: "div",
@@ -277,7 +281,7 @@
      * Gets a specific step object by index.
      *
      * @method getStep
-     * @param {Integer} index An integer that belongs to the position of a step
+     * @param index {Integer} An integer that belongs to the position of a step
      * @return {Integer} A specific step object
      **/
     $.fn.steps.getStep = function (index)
@@ -316,7 +320,7 @@
      * Skips an certain amount of steps.
      *
      * @method skip
-     * @param {Integer} count The amount of steps that should be skipped
+     * @param count {Integer} The amount of steps that should be skipped
      * @return {Boolean} Indicates whether the action executed
      **/
     $.fn.steps.skip = function (count)
@@ -331,11 +335,11 @@
      **/
     $.fn.steps.finish = function ()
     {
-        var $this = $(this);
-        var options = $this.data("options");
-        var state = $this.data("state");
+        var $this = $(this),
+            options = $this.data("options"),
+            state = $this.data("state"),
+            currentStep = $(".steps li:eq(" + state.currentIndex + ")", $this);
 
-        var currentStep = $(".steps li:eq(" + state.currentIndex + ")", $this);
         if ($this.triggerHandler("finishing", [state.currentIndex]))
         {
             currentStep.addClass("done").removeClass("error");
@@ -352,7 +356,8 @@
      * Removes a specific step by an given index.
      *
      * @method remove
-     * @param {Integer} index The position (zero-based) of the step to remove
+     * @param index {Integer} The position (zero-based) of the step to remove
+     * @return Indecates whether the item is removed.
      **/
     $.fn.steps.remove = function (index)
     {
@@ -394,7 +399,7 @@
      * Adds a new step.
      *
      * @method add
-     * @param {Object} step The step object to add
+     * @param step {Object} The step object to add
      * @chainable
      **/
     $.fn.steps.add = function (step)
@@ -408,8 +413,8 @@
      * Inserts a new step to a specific position.
      *
      * @method insert
-     * @param {Integer} index The position (zero-based) to add
-     * @param {Object} step The step object to add
+     * @param index {Integer} The position (zero-based) to add
+     * @param step {Object} The step object to add
      * @example
      *     $("#wizard").steps().insert(0, {
      *         title: "Title",
@@ -483,7 +488,7 @@
      *
      * @private
      * @method initialize
-     * @param {Object} options The component settings
+     * @param options {Object} The component settings
      **/
     function initialize(options)
     {
@@ -523,8 +528,8 @@
      *
      * @private
      * @method actionClick
-     * @param {Object} wizard The jQuery wizard object
-     * @param {Integer} index The position (zero-based) to route to
+     * @param wizard {Object} The jQuery wizard object
+     * @param index {Integer} The position (zero-based) to route to
      * @return {Boolean} Indicates whether the event fired successfully or not
      **/
     function actionClick(wizard, index)
@@ -560,8 +565,8 @@
      *
      * @private
      * @method goToStep
-     * @param {Object} wizard The jQuery wizard object
-     * @param {Integer} index The position (zero-based) to route to
+     * @param wizard {Object} The jQuery wizard object
+     * @param index {Integer} The position (zero-based) to route to
      * @return {Boolean} Indicates whether the action succeeded or failed
      **/
     function goToStep(wizard, index)
@@ -629,8 +634,18 @@
                     }).promise();
                     break;
 
-                    //case $.fn.steps.transitionEffect.slideLeft:
-                    //    break;
+                    case $.fn.steps.transitionEffect.slideLeft:
+                        var newStep = stepContents.eq(index),
+                            currentStep = stepContents.eq(oldIndex),
+                            outerWidth = currentStep.outerWidth(true),
+                            posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
+                            posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
+
+                        currentStep.animate({ left: posFadeOut }, options.transitionEffectSpeed, 
+                            function () { $(this).hide(); }).promise();
+                        newStep.css("left", posFadeIn + "px").show();
+                        newStep.animate({ left: 0 }, options.transitionEffectSpeed).promise();
+                        break;
 
                 default:
                     stepContents.eq(oldIndex).hide();
@@ -653,7 +668,7 @@
      *
      * @private
      * @method transform
-     * @param {Object} wizard The jQuery wizard object
+     * @param wizard {Object} The jQuery wizard object
      **/
     function transform(wizard)
     {
@@ -726,9 +741,9 @@
      * Transforms the title to a step item button.
      *
      * @private
-     * @param {Object} wizard A jQuery wizard object
-     * @param {Object} header A jQuery header object
-     * @param {Integer} index The position of the header
+     * @param wizard {Object} A jQuery wizard object
+     * @param header {Object} A jQuery header object
+     * @param index {Integer} The position of the header
      */
     function transformTitle(wizard, header, index)
     {
@@ -781,7 +796,7 @@
      *
      * @private
      * @method loadAsyncContent
-     * @param {Object} wizard A jQuery wizard object
+     * @param wizard {Object} A jQuery wizard object
      */
     function loadAsyncContent(wizard)
     {
@@ -817,8 +832,8 @@
      *
      * @private
      * @method updateIdentifiers
-     * @param wizard A jQuery wizard object
-     * @param index The start point for updating ids
+     * @param wizard {Object} A jQuery wizard object
+     * @param index {Integer} The start point for updating ids
      */
     function updateIdentifiers(wizard, index)
     {
@@ -834,7 +849,7 @@
      *
      * @private
      * @method refreshActionState
-     * @param wizard A jQuery wizard object
+     * @param wizard {Object} A jQuery wizard object
      */
     function refreshActionState(wizard)
     {
@@ -907,8 +922,8 @@
      *
      * @private
      * @method renderTemplate
-     * @param {String} template A template
-     * @param {Object} substitutes A list of substitute
+     * @param template {String} A template
+     * @param substitutes {Object} A list of substitute
      * @return {String} The rendered template
      */
     function renderTemplate(template, substitutes)
@@ -928,8 +943,8 @@
      *
      * @private
      * @method getSubstitute
-     * @param {Object} substitutes A list of substitute
-     * @param {String} key The key to look for
+     * @param substitutes {Object} A list of substitute
+     * @param key {String} The key to look for
      * @return {String} A suitable substitute
      */
     function getSubstitute(substitutes, key)
@@ -947,8 +962,8 @@
      *
      * @private
      * @method getStepProperties
-     * @param {Object} wizard A jQuery wizard object  
-     * @param {Integer} index The position (zero-based) of a step
+     * @param wizard {Object} A jQuery wizard object  
+     * @param index {Integer} The position (zero-based) of a step
      * @return {Object} Returns a step object
      */
     function getStepProperties(wizard, index)
@@ -973,12 +988,12 @@
     }
 
     /**
-     * Gets a valid enum value by checking an specific enum key or value.
+     * Gets a valid enum value by checking a specific enum key or value.
      * 
      * @private
-     * @methodName getValidEnumValue
-     * @param enumType Type of enum
-     * @param keyOrValue Key or value to check for
+     * @method getValidEnumValue
+     * @param enumType {Object} Type of enum
+     * @param keyOrValue {Object} Key as `String` or value as `Integer` to check for
      */
     function getValidEnumValue(enumType, keyOrValue)
     {
@@ -1021,8 +1036,8 @@
      *
      * @private
      * @method validateArgument
-     * @param {String} argumentName The name of the given argument
-     * @param {Object} argumentValue The argument itself
+     * @param argumentName {String} The name of the given argument
+     * @param argumentValue {Object} The argument itself
      */
     function validateArgument(argumentName, argumentValue)
     {
@@ -1037,7 +1052,7 @@
      *
      * @private
      * @method createUniqueId
-     * @param {Object} wizard A jQuery wizard object
+     * @param wizard {Object} A jQuery wizard object
      */
     function createUniqueId(wizard)
     {
@@ -1052,7 +1067,7 @@
      *
      * @private
      * @method getUniqueId
-     * @param {Object} wizard A jQuery wizard object
+     * @param wizard {Object} A jQuery wizard object
      * @return {String} Returns the unique for the given wizard
      */
     function getUniqueId(wizard)
@@ -1065,7 +1080,7 @@
      *
      * @private
      * @event keyup
-     * @param {Object} event An event object
+     * @param event {Object} An event object
      */
     function keyUpHandler(event)
     {
@@ -1094,7 +1109,7 @@
      *
      * @private
      * @event click
-     * @param {Object} event An event object
+     * @param event {Object} An event object
      */
     function actionClickHandler(event)
     {
@@ -1123,7 +1138,7 @@
      *
      * @private
      * @event click
-     * @param {Object} event An event object
+     * @param event {Object} An event object
      */
     function stepClickHandler(event)
     {

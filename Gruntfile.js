@@ -111,6 +111,7 @@ module.exports = function (grunt)
                 version: '<%= pkg.version %>',
                 url: '<%= pkg.homepage %>',
                 options: {
+                    exclude: 'qunit-1.11.0.js',
                     paths: '.',
                     outdir: 'docs/'
                 }
@@ -127,6 +128,7 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['clean', 'jshint', 'qunit']);
-    grunt.registerTask('release', ['default', 'yuidoc', 'concat', 'uglify', 'compress']);
+    grunt.registerTask('default', ['jshint', 'qunit']);
+    grunt.registerTask('api', ['clean', 'yuidoc']);
+    grunt.registerTask('release', ['default', 'api', 'concat', 'uglify', 'compress']);
 };

@@ -59,6 +59,24 @@ wizard.steps("add", {
 });
 ```
 
+## Demo
+
+An live demo area will be available soon!
+
+## Documentation
+
+Documentation will follow soon!
+
+However, it is possible to generate a API documentation by using the following *GruntJS* command `grunt api`.
+
+## Reporting an Issue
+
+Instructions will follow soon!
+
+## Contributing
+
+Instructions will follow soon!
+
 ## License
 
 Copyright (c) 2013 Rafael J. Staib Licensed under the [MIT license](https://github.com/rstaib/jquery-steps/blob/master/LICENSE.txt).
