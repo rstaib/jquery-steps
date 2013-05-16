@@ -30,6 +30,8 @@ Everything you need to start is:
 </html>
 ```
 
+> For more information [check the documentation](https://github.com/rstaib/jquery-steps/wiki).
+
 ### How to add initial steps?
 
 There are two ways to add steps and their corresponding content.
@@ -59,11 +61,7 @@ wizard.steps("add", {
 });
 ```
 
-> For more information [check the documentation](https://github.com/rstaib/jquery-steps/wiki).
-
-## Demo
-
-An live demo area will be available soon!
+> For more samples [check the demos](https://github.com/rstaib/jquery-steps/wiki).
 
 ## Reporting an Issue
 
