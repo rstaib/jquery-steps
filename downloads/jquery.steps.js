@@ -735,6 +735,7 @@
             }
 
             refreshActionState(wizard);
+            loadAsyncContent(wizard);
         }
     }
 
@@ -809,7 +810,7 @@
             switch (getValidEnumValue($.fn.steps.contentMode, state.currentStep.contentMode))
             {
                 case $.fn.steps.contentMode.iframe:
-                    $(".content > .body", wizard).eq(state.currentIndex)
+                    $(".content > .body", wizard).eq(state.currentIndex).empty()
                         .html($("<iframe src=\"" + state.currentStep.contentUrl + "\" />"))
                         .data("loaded", "1");
                     break;
