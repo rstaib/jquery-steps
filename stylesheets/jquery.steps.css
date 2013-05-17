@@ -1,6 +1,8 @@
 ﻿.wizard
 {
+    display: block;
     width: 600px;
+    overflow: hidden;
 }
 
 
@@ -14,7 +16,15 @@
 .wizard ol,
 .wizard ul
 {
-    list-style: none;
+    list-style: none !important;
+    padding: 0;
+}
+
+.wizard ol > li,
+.wizard ul > li
+{
+    display: block;
+    padding: 0;
 }
 
 
@@ -26,17 +36,17 @@
     left: -999em;
 }
 
-
 .wizard > .steps
 {
+    position: relative;
+    display: block;
     width: 600px;
-    height: 30px;
+    height: 40px;
 }
 
 .wizard > .steps .number
 {
     font-size: 22px;
-    font-weight: bold;
 }
 
 .wizard > .steps > ol > li,
@@ -47,24 +57,29 @@
 
 .wizard > .steps a
 {
-    background: #999;
+    display: block;
+    width: 130px;
+    height: 34px;
+    padding: 3px 10px;
 }
 
 .wizard > .steps .disabled a
 {
-    background: #ccc;
+    color: #fff;
+    background: #9ddcff;
     cursor: default;
 }
 
 .wizard > .steps .current a
 {
-    background: rgb(241, 101, 41);
+    background: #2879d0;
+    color: #fff;
     cursor: default;
 }
 
 .wizard > .steps .done a
 {
-    background: #4cff00;
+    background: #9ddcff;
 }
 
 .wizard > .steps .error a
@@ -74,8 +89,11 @@
 
 .wizard > .content
 {
+    position: relative;
+    display: block;
     width: 600px;
     height: 300px;
+    overflow: hidden;
 }
 
 .wizard > .content > .title
@@ -86,11 +104,11 @@
 
 .wizard > .content > .body
 {
-    border: 1px solid #CCC;
     float: left;
     position: absolute;
-    width: 600px;
-    height: 300px;
+    width: 580px;
+    height: 280px;
+    padding: 10px;
 }
 
 .wizard > .content > .body > iframe
@@ -102,12 +120,37 @@
 
 .wizard > .actions
 {
+    position: relative;
+    display: block;
     width: 600px;
+    height: 30px;
+    text-align: right;
+    margin-top: 10px;
 }
 
-.wizard > .actions a.disabled
+.wizard > .actions > ul
 {
-    background: #ccc;
+    display: inline-block;
+    text-align: right;
+}
+
+.wizard > .actions > ul > li
+{
+    margin: 0 5px;
+}
+
+.wizard > .actions a
+{
+    display: block;
+    color: #fff;
+    background: #2879d0;
+    height: 24px;
+    padding: 3px 10px;
+}
+
+.wizard > .actions .disabled a
+{
+    background: #9ddcff;
 }
 
 .wizard > .loading

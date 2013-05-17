@@ -36,23 +36,16 @@
                         {
                             $("#wizard").steps({
                                 headerTag: "h4",
-                                bodyTag: "section"
+                                bodyTag: "section",
+                                transitionEffect: "fade"
                             });
-                            $("#wizard").steps("insert", 1, { 
-                                title: "Second Step", 
-                                content: "New!" 
-                            });
-                            $("#wizard").steps("remove", 2);
                         });
                     </script>
 
                     <h3>Basic Example</h3>
                     <div id="wizard">
-                        <h4>First Step</h4>
-                        <section>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut nulla nunc. Maecenas arcu sem, hendrerit a tempor quis, 
-                                sagittis accumsan tellus. In hac habitasse platea dictumst. Donec a semper dui. Nunc eget quam libero. Nam at felis metus. 
-                                Nam tellus dolor, tristique ac tempus nec, iaculis quis nisi.</p>
+                        <h4>Iframe Step</h4>
+                        <section data-mode="iframe" data-url="http://www.google.com">
                         </section>
 
                         <h4>Second Step</h4>

@@ -1,86 +1,111 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>jQeury.steps Demos</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="stylesheets/normalize.css">
-        <link rel="stylesheet" href="stylesheets/main.css">
+        <title>jQuery Steps by rstaib</title>
+        <meta charset='utf-8'>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="description" content="A powerful jQuery wizard plugin that supports accessibility and HTML5.">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
         <link rel="stylesheet" href="stylesheets/jquery.steps.css">
-        <script src="javascripts/modernizr-2.6.2.min.js"></script>
+
         <script src="javascripts/jquery-1.9.1.min.js"></script>
         <script src="javascripts/jquery.steps.min.js"></script>
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
     </head>
     <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
-
         <header>
-            <h1>Wizard Demo</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Basic</a></li>
-                    <li><a href="multiple.html">Multiple Wizard</a></li>
-                    <li><a href="async-iframe.html">Async/Iframe Content</a></li>
-                    <li><a href="form.html">Step Validation</a></li>
-                    <li><a href="add-remove.html">Add/Remove Steps via API</a></li>
-                </ul>
-            </nav>
+            <div class="inner">
+                <h1>jquery-steps</h1>
+                <h2>A powerful jQuery wizard plugin that supports accessibility and HTML5.</h2>
+                <a href="https://github.com/rstaib/jquery-steps" class="button"><small>View project on</small>GitHub</a>
+            </div>
         </header>
 
-        <div class="content">
-            <h1>Basic Demo</h1>
+        <div id="content-wrapper">
+            <div class="inner clearfix">
+                <section id="main-content">
+                    <script>
+                        $(function ()
+                        {
+                            $("#wizard").steps({
+                                headerTag: "h4",
+                                bodyTag: "section",
+                                transitionEffect: "slideLeft"
+                            });
+                        });
+                    </script>
 
-            <script>
-                $(function ()
-                {
-                    $("#wizard").steps({
-                        headerTag: "h2",
-                        bodyTag: "section",
-			transitionEffect: 'slideLeft'
-                    });
-                });
-            </script>
+                    <h3>Basic Example</h3>
+                    <div id="wizard">
+                        <h4>First Step</h4>
+                        <section>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut nulla nunc. Maecenas arcu sem, hendrerit a tempor quis, 
+                                sagittis accumsan tellus. In hac habitasse platea dictumst. Donec a semper dui. Nunc eget quam libero. Nam at felis metus. 
+                                Nam tellus dolor, tristique ac tempus nec, iaculis quis nisi.</p>
+                        </section>
 
-            <div id="wizard">
-                <h2>First Step</h2>
-                <section>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut nulla nunc. Maecenas arcu sem, hendrerit a tempor quis, 
-                        sagittis accumsan tellus. In hac habitasse platea dictumst. Donec a semper dui. Nunc eget quam libero. Nam at felis metus. 
-                        Nam tellus dolor, tristique ac tempus nec, iaculis quis nisi.</p>
+                        <h4>Second Step</h4>
+                        <section>
+                            <p>Donec mi sapien, hendrerit nec egestas a, rutrum vitae dolor. Nullam venenatis diam ac ligula elementum pellentesque. 
+                                In lobortis sollicitudin felis non eleifend. Morbi tristique tellus est, sed tempor elit. Morbi varius, nulla quis condimentum 
+                                dictum, nisi elit condimentum magna, nec venenatis urna quam in nisi. Integer hendrerit sapien a diam adipiscing consectetur. 
+                                In euismod augue ullamcorper leo dignissim quis elementum arcu porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                Vestibulum leo velit, blandit ac tempor nec, ultrices id diam. Donec metus lacus, rhoncus sagittis iaculis nec, malesuada a diam. 
+                                Donec non pulvinar urna. Aliquam id velit lacus.</p>
+                        </section>
+
+                        <h4>Third Step</h4>
+                        <section>
+                            <p>Morbi ornare tellus at elit ultrices id dignissim lorem elementum. Sed eget nisl at justo condimentum dapibus. Fusce eros justo, 
+                                pellentesque non euismod ac, rutrum sed quam. Ut non mi tortor. Vestibulum eleifend varius ullamcorper. Aliquam erat volutpat. 
+                                Donec diam massa, porta vel dictum sit amet, iaculis ac massa. Sed elementum dui commodo lectus sollicitudin in auctor mauris 
+                                venenatis.</p>
+                        </section>
+
+                        <h4>Forth Step</h4>
+                        <section>
+                            <p>Quisque at sem turpis, id sagittis diam. Suspendisse malesuada eros posuere mauris vehicula vulputate. Aliquam sed sem tortor. 
+                                Quisque sed felis ut mauris feugiat iaculis nec ac lectus. Sed consequat vestibulum purus, imperdiet varius est pellentesque vitae. 
+                                Suspendisse consequat cursus eros, vitae tempus enim euismod non. Nullam ut commodo tortor.</p>
+                        </section>
+                    </div>
+
+                    <h3>License</h3>
+                    <p>Copyright (c) 2013 Rafael J. Staib Licensed under the <a href="https://github.com/rstaib/jquery-steps/blob/master/LICENSE.txt">MIT license</a>.</p>
                 </section>
 
-                <h2>Second Step</h2>
-                <section>
-                    <p>Donec mi sapien, hendrerit nec egestas a, rutrum vitae dolor. Nullam venenatis diam ac ligula elementum pellentesque. 
-                        In lobortis sollicitudin felis non eleifend. Morbi tristique tellus est, sed tempor elit. Morbi varius, nulla quis condimentum 
-                        dictum, nisi elit condimentum magna, nec venenatis urna quam in nisi. Integer hendrerit sapien a diam adipiscing consectetur. 
-                        In euismod augue ullamcorper leo dignissim quis elementum arcu porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Vestibulum leo velit, blandit ac tempor nec, ultrices id diam. Donec metus lacus, rhoncus sagittis iaculis nec, malesuada a diam. 
-                        Donec non pulvinar urna. Aliquam id velit lacus.</p>
-                </section>
+                <aside id="sidebar">
+                    <a href="https://github.com/rstaib/jquery-steps/zipball/master" class="button">
+                        <small>Download</small>
+                        .zip file
+                    </a>
+                    <a href="https://github.com/rstaib/jquery-steps/tarball/master" class="button">
+                        <small>Download</small>
+                        .tar.gz file
+                    </a>
 
-                <h2>Third Step</h2>
-                <section>
-                    <p>Morbi ornare tellus at elit ultrices id dignissim lorem elementum. Sed eget nisl at justo condimentum dapibus. Fusce eros justo, 
-                        pellentesque non euismod ac, rutrum sed quam. Ut non mi tortor. Vestibulum eleifend varius ullamcorper. Aliquam erat volutpat. 
-                        Donec diam massa, porta vel dictum sit amet, iaculis ac massa. Sed elementum dui commodo lectus sollicitudin in auctor mauris 
-                        venenatis.</p>
-                </section>
+                    <p class="repo-owner"><a href="https://github.com/rstaib/jquery-steps"></a>is maintained by <a href="https://github.com/rstaib">rstaib</a>.</p>
 
-                <h2>Forth Step</h2>
-                <section>
-                    <p>Quisque at sem turpis, id sagittis diam. Suspendisse malesuada eros posuere mauris vehicula vulputate. Aliquam sed sem tortor. 
-                        Quisque sed felis ut mauris feugiat iaculis nec ac lectus. Sed consequat vestibulum purus, imperdiet varius est pellentesque vitae. 
-                        Suspendisse consequat cursus eros, vitae tempus enim euismod non. Nullam ut commodo tortor.</p>
-                </section>
+                    <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+                </aside>
             </div>
         </div>
+
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-40997516-1', 'rstaib.github.io');
+            ga('send', 'pageview');
+        </script>
     </body>
 </html>
