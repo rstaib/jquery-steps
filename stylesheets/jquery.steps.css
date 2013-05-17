@@ -64,6 +64,8 @@
     width: 130px;
     height: 34px;
     padding: 3px 10px;
+    background: #9ddcff;
+    color: #2268b2;
 }
 
 .wizard > .steps .disabled a
