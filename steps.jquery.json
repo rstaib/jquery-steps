@@ -1,0 +1,31 @@
+{
+    "name": "steps",
+    "title": "jQuery Steps",
+    "description": "A powerful jQuery wizard plugin that supports accessibility and HTML5.",
+    "keywords": [
+        "wizard",
+        "navigation",
+        "forms",
+        "UI",
+        "component",
+        "HTML5",
+        "accessibility",
+        "validation"
+    ],
+    "version": "0.9.2",
+    "author": {
+        "name": "Rafael J. Staib",
+        "email": "rstaib@derklang.com",
+        "url": ""
+    },
+    "licenses": [
+        { "type": "MIT", "url": "http://www.opensource.org/licenses/MIT" }
+    ],
+    "bugs": "https://github.com/rstaib/jquery-steps/issues",
+    "homepage": "http://rstaib.github.io/jquery-steps",
+    "docs": "https://github.com/rstaib/jquery-steps/wiki",
+    "download": "http://rstaib.github.io/jquery-steps",
+    "dependencies": {
+        "jquery": ">=1.4.4"
+    }
+}
