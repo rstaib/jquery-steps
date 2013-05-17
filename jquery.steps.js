@@ -391,7 +391,7 @@
         state.stepCount = $(".body", contentContainer).length;
         state.currentStep = getStepProperties(wizard, state.currentIndex);
 
-        updateIdentifiers(wizard, index);
+        updateSteps(wizard, index);
         refreshActionState(wizard);
 
         return true;
@@ -475,7 +475,7 @@
         state.stepCount = contentContainer.children(".body").length;
         state.currentStep = getStepProperties(wizard, state.currentIndex);
 
-        updateIdentifiers(wizard, index);
+        updateSteps(wizard, index);
         refreshActionState(wizard);
 
         return wizard;
@@ -828,19 +828,22 @@
     }
 
     /**
-     * Updates identifiers for step buttons and their related titles.
+     * Updates step buttons and their related titles.
      *
      * @private
-     * @method updateIdentifiers
+     * @method updateSteps
      * @param wizard {Object} A jQuery wizard object
      * @param index {Integer} The start point for updating ids
      */
-    function updateIdentifiers(wizard, index)
+    function updateSteps(wizard, index)
     {
+        var options = wizard.data("options");
+
         for (var i = index; i < wizard.data("state").stepCount; i++)
         {
-            $(".steps > ol > li:eq(" + i + ") > a", wizard).attr("href", "#" + getUniqueId(wizard) + "-" + i);
-            $(".content > .title:eq(" + i + ")", wizard).attr("id", getUniqueId(wizard) + "-" + i);
+            var title = $(".content > .title:eq(" + i + ")", wizard).attr("id", getUniqueId(wizard) + "-" + i);
+            $(".steps > ol > li:eq(" + i + ") > a", wizard).attr("href", "#" + getUniqueId(wizard) + "-" + i)
+                .html(renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
         }
     }
 
