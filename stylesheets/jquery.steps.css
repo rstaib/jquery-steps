@@ -41,7 +41,6 @@
     position: relative;
     display: block;
     width: 600px;
-    height: 40px;
 }
 
 .wizard > .steps .number
@@ -65,8 +64,8 @@
 
 .wizard > .steps .disabled a
 {
-    color: #fff;
     background: #9ddcff;
+    color: #fff;
     cursor: default;
 }
 
@@ -80,11 +79,13 @@
 .wizard > .steps .done a
 {
     background: #9ddcff;
+    color: #2268b2;
 }
 
 .wizard > .steps .error a
 {
     background: #f00;
+    color: #474747;
 }
 
 .wizard > .content

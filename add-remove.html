@@ -37,12 +37,13 @@
                             $("#wizard").steps({
                                 headerTag: "h4",
                                 bodyTag: "section"
-                            });
-                            $("#wizard").steps("insert", 1, { 
+                            }).steps("add", { 
+                                title: "Fifth Step", 
+                                content: "New!" 
+                            }).steps("insert", 1, { 
                                 title: "Second Step", 
                                 content: "New!" 
-                            });
-                            $("#wizard").steps("remove", 2);
+                            }).steps("remove", 2);
                         });
                     </script>
 
