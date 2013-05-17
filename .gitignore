@@ -1,6 +1,7 @@
 dist
 build/dist
 docs
+downloads
 *~
 *.diff
 *.patch
