@@ -3,6 +3,9 @@
     display: block;
     width: 600px;
     overflow: hidden;
+    background: #fff;
+    padding: 10px;
+    border: 2px solid #efefef;
 }
 
 
@@ -18,6 +21,7 @@
 {
     list-style: none !important;
     padding: 0;
+    margin: 0;
 }
 
 .wizard ol > li,
