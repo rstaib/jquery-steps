@@ -1,0 +1,119 @@
+﻿.wizard
+{
+    width: 600px;
+}
+
+
+
+/* Common */
+.wizard a
+{
+    outline: 0;
+}
+
+.wizard ol,
+.wizard ul
+{
+    list-style: none;
+}
+
+
+
+/* Accessibility */
+.wizard > .steps .current-info
+{
+    position: absolute;
+    left: -999em;
+}
+
+
+.wizard > .steps
+{
+    width: 600px;
+    height: 30px;
+}
+
+.wizard > .steps .number
+{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.wizard > .steps > ol > li,
+.wizard > .actions > ul > li
+{
+    float: left;
+}
+
+.wizard > .steps a
+{
+    background: #999;
+}
+
+.wizard > .steps .disabled a
+{
+    background: #ccc;
+    cursor: default;
+}
+
+.wizard > .steps .current a
+{
+    background: rgb(241, 101, 41);
+    cursor: default;
+}
+
+.wizard > .steps .done a
+{
+    background: #4cff00;
+}
+
+.wizard > .steps .error a
+{
+    background: #f00;
+}
+
+.wizard > .content
+{
+    width: 600px;
+    height: 300px;
+}
+
+.wizard > .content > .title
+{
+    position: absolute;
+    left: -999em;
+}
+
+.wizard > .content > .body
+{
+    border: 1px solid #CCC;
+    float: left;
+    position: absolute;
+    width: 600px;
+    height: 300px;
+}
+
+.wizard > .content > .body > iframe
+{
+    border: 0 none;
+    width: 100%;
+    height: 200px;
+}
+
+.wizard > .actions
+{
+    width: 600px;
+}
+
+.wizard > .actions a.disabled
+{
+    background: #ccc;
+}
+
+.wizard > .loading
+{
+}
+
+.wizard > .loading .spinner
+{
+}
