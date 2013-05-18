@@ -16,6 +16,7 @@
  * - Add tests and styles for loading animation (Spinner)
  * - Add tests for add, insert and remove
  * - Shrink the comprehensive code
+ * - Add auto focus option (default = false)
  *
  * Planed Features:
  * - Progress bar
