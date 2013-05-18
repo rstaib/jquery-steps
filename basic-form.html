@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>jQuery Steps by rstaib</title>
+        <meta charset='utf-8'>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="description" content="A powerful jQuery wizard plugin that supports accessibility and HTML5.">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+        <link rel="stylesheet" href="stylesheets/jquery.steps.css">
+
+        <script src="javascripts/jquery-1.9.1.min.js"></script>
+        <script src="javascripts/jquery.steps.min.js"></script>
+        <script src="javascripts/jquery.validate-1.11.1.js"></script>
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <header>
+            <div class="inner">
+                <h1>jquery-steps</h1>
+                <h2>A powerful jQuery wizard plugin that supports accessibility and HTML5.</h2>
+                <a href="https://github.com/rstaib/jquery-steps" class="button"><small>View project on</small>GitHub</a>
+            </div>
+        </header>
+
+        <div id="content-wrapper">
+            <div class="inner clearfix">
+                <section id="main-content">
+                    <script>
+                        $(function ()
+                        {
+                            $("#form").validate();
+
+                            $("#wizard").steps({
+                                headerTag: "h4",
+                                bodyTag: "section",
+                                transitionEffect: "slideLeft",
+                                onStepChanging: function (event, currentIndex, newIndex)
+                                {
+                                    $("#form").validate().settings.ignore = ":disabled,:hidden";
+                                    return $("#form").valid();
+                                },
+                                onFinishing: function (event, currentIndex)
+                                {
+                                    $("#form").validate().settings.ignore = ":disabled";
+                                    return $("#form").valid();
+                                }
+                            });
+                        });
+                    </script>
+
+                    <h3>Basic Example</h3>
+                    <form id="form" action="#">
+                        <div id="wizard">
+                            <h4>Account</h4>
+                            <section>
+                                <label for="userName">User name *</label><br>
+                                <input id="userName" name="userName" type="text" class="required"><br>
+                                <label for="password">Password *</label><br>
+                                <input id="password" name="password" type="text" class="required"><br>
+                                <label for="confirm">Confirm Password *</label><br>
+                                <input id="confirm" name="confirm" type="text" class="required"><br>
+                                <p>(*) Mandatory</p>
+                            </section>
+
+                            <h4>Profile</h4>
+                            <section>
+                                <p>Donec mi sapien, hendrerit nec egestas a, rutrum vitae dolor. Nullam venenatis diam ac ligula elementum pellentesque. 
+                                    In lobortis sollicitudin felis non eleifend. Morbi tristique tellus est, sed tempor elit. Morbi varius, nulla quis condimentum 
+                                    dictum, nisi elit condimentum magna, nec venenatis urna quam in nisi. Integer hendrerit sapien a diam adipiscing consectetur. 
+                                    In euismod augue ullamcorper leo dignissim quis elementum arcu porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                    Vestibulum leo velit, blandit ac tempor nec, ultrices id diam. Donec metus lacus, rhoncus sagittis iaculis nec, malesuada a diam. 
+                                    Donec non pulvinar urna. Aliquam id velit lacus.</p>
+                            </section>
+
+                            <h4>Confirm</h4>
+                            <section>
+                                <p>Morbi ornare tellus at elit ultrices id dignissim lorem elementum. Sed eget nisl at justo condimentum dapibus. Fusce eros justo, 
+                                    pellentesque non euismod ac, rutrum sed quam. Ut non mi tortor. Vestibulum eleifend varius ullamcorper. Aliquam erat volutpat. 
+                                    Donec diam massa, porta vel dictum sit amet, iaculis ac massa. Sed elementum dui commodo lectus sollicitudin in auctor mauris 
+                                    venenatis.</p>
+                            </section>
+
+                            <h4>Finish</h4>
+                            <section>
+                                <p>Quisque at sem turpis, id sagittis diam. Suspendisse malesuada eros posuere mauris vehicula vulputate. Aliquam sed sem tortor. 
+                                    Quisque sed felis ut mauris feugiat iaculis nec ac lectus. Sed consequat vestibulum purus, imperdiet varius est pellentesque vitae. 
+                                    Suspendisse consequat cursus eros, vitae tempus enim euismod non. Nullam ut commodo tortor.</p>
+                            </section>
+                        </div>
+                    </form>
+
+                    <h3>License</h3>
+                    <p>Copyright (c) 2013 Rafael J. Staib Licensed under the <a href="https://github.com/rstaib/jquery-steps/blob/master/LICENSE.txt">MIT license</a>.</p>
+                </section>
+
+                <aside id="sidebar">
+                    <a href="https://github.com/rstaib/jquery-steps/zipball/master" class="button">
+                        <small>Download</small>
+                        .zip file
+                    </a>
+                    <a href="https://github.com/rstaib/jquery-steps/tarball/master" class="button">
+                        <small>Download</small>
+                        .tar.gz file
+                    </a>
+
+                    <p class="repo-owner"><a href="https://github.com/rstaib/jquery-steps"></a>is maintained by <a href="https://github.com/rstaib">rstaib</a>.</p>
+
+                    <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+                </aside>
+            </div>
+        </div>
+
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-40997516-1', 'rstaib.github.io');
+            ga('send', 'pageview');
+        </script>
+    </body>
+</html>

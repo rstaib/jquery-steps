@@ -125,6 +125,24 @@
     height: 280px;
 }
 
+.wizard > .content > .body input
+{
+    border: 1px solid #ccc;
+}
+
+.wizard > .content > .body input.error
+{
+    background: rgb(251, 227, 228);
+    border: 1px solid #fbc2c4;
+    color: #8a1f11;
+}
+
+.wizard > .content > .body label.error
+{
+    font-size: .85em;
+    color: #8a1f11; 
+}
+
 .wizard > .actions
 {
     position: relative;
