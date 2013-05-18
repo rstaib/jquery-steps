@@ -53,7 +53,7 @@
                                 <label for="text">HTML Content *</label><br />
                                 <textarea id="text" rows="5"></textarea>
                             </p>
-                            <p><a href="javascript:$('#wizard').steps('add', { title: $('#title').val(), content: $('#text').val() });">Add</a></p>
+                            <p><a href="javascript:void(0);" onclick="$('#wizard').steps('add', { title: $('#title').val(), content: $('#text').val() });">Add</a></p>
                             <p>(*) Mandatory</p>
                         </section>
 
@@ -67,7 +67,7 @@
                                 <label for="text2">HTML Content *</label><br />
                                 <textarea id="text2" rows="5"></textarea>
                             </p>
-                            <p><a href="javascript:$('#wizard').steps('insert', Number($('#position').val()), { title: $('#title2').val(), content: $('#text2').val() });">Insert</a></p>
+                            <p><a href="javascript:void(0);" onclick="$('#wizard').steps('insert', Number($('#position').val()), { title: $('#title2').val(), content: $('#text2').val() });">Insert</a></p>
                             <p>(*) Mandatory</p>
                         </section>
 
@@ -77,7 +77,7 @@
                                 <label for="position2">Position (zero-based) *</label><br />
                                 <input id="position2" type="text">
                             </p>
-                            <p><a href="javascript:$('#wizard').steps('remove', Number($('#position2').val()));">Remove</a></p>
+                            <p><a href="javascript:void(0);" onclick="$('#wizard').steps('remove', Number($('#position2').val()));">Remove</a></p>
                             <p>(*) Mandatory</p>
                         </section>
                     </div>
