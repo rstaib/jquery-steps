@@ -495,7 +495,7 @@
      **/
     function initialize(options)
     {
-        var opts = $.extend({}, $.fn.steps.defaults, options);
+        var opts = $.extend(true, {}, $.fn.steps.defaults, options);
 
         return this.each(function (i)
         {
