@@ -148,6 +148,15 @@ header a.button {
   top: 0;
   background: transparent url(../images/github-button.png) 0 0 no-repeat;
 }
+header .share {
+  position: absolute;
+  right: 0;
+  top: 100px;
+  width: 202px;
+}
+header .share > iframe {
+  margin: 0 10px 10px 0;
+}
 aside a.button {
   width: 138px;
   padding-left: 64px;
@@ -428,8 +437,9 @@ footer a:hover {
     background-image: none;
     width: auto;
     height: auto;
+    float: left;
     display: inline-block;
-    margin-top: 15px;
+    margin: 15px 15px 0 0;
     padding: 5px 10px;
     position: relative;
     text-align: center;
@@ -444,6 +454,13 @@ footer a:hover {
   header a.button small {
     font-size: 13px;
     display: inline;
+  }
+  header .share {
+    top: 0;
+    width: auto;
+    display: inline-block;
+    margin: 15px 15px 0 0;
+    position: relative;    
   }
   #main-content,
   aside#sidebar {
