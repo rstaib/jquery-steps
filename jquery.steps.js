@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.9.2 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.9.4 - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -7,7 +7,7 @@
  *
  * Follow me on twitter: https://twitter.com/@RafaelStaib
  *
- * Tested with jQuery v1.9.1 but should work with earlier and newer versions as well.
+ * Tested with jQuery v1.4.4 and newer versions as well.
  * Please report issues at: https://github.com/rstaib/jquery-steps/issues
  */
 
@@ -15,8 +15,8 @@
  * TODOs:
  * - Add tests and styles for loading animation (Spinner)
  * - Add tests for add, insert and remove
+ * - Add tests in general
  * - Shrink the comprehensive code
- * - Add auto focus option (default = false)
  *
  * Planed Features:
  * - Progress bar
@@ -176,6 +176,7 @@
          *
          * @property headerTag
          * @type String
+         * @default "h1"
          * @for defaults
          **/
         headerTag: "h1",
@@ -185,69 +186,307 @@
          *
          * @property bodyTag
          * @type String
+         * @default "div"
          * @for defaults
          **/
         bodyTag: "div",
 
         /**
-         * The content container tag that will be used to wrap all step contents.
+         * The content container tag which will be used to wrap all step contents.
          *
          * @property contentContainerTag
          * @type String
+         * @default "div"
          * @for defaults
          **/
         contentContainerTag: "div",
 
         /**
-         * The action container tag that will be used to wrap the pagination navigation.
+         * The action container tag which will be used to wrap the pagination navigation.
          *
          * @property actionContainerTag
          * @type String
+         * @default "div"
          * @for defaults
          **/
         actionContainerTag: "div",
 
         /**
-         * The steps container tag that will be used to wrap the steps navigation.
+         * The steps container tag which will be used to wrap the steps navigation.
          *
          * @property stepsContainerTag
          * @type String
+         * @default "div"
          * @for defaults
          **/
         stepsContainerTag: "div",
 
-        /* Templates */
+        /*
+         * Tempplates
+         */
+
+        /**
+         * The title template which will be used to create a step button.
+         *
+         * @property titleTemplate
+         * @type String
+         * @default "<span class=\"number\">#index#.</span> #title#"
+         * @for defaults
+         **/
         titleTemplate: "<span class=\"number\">#index#.</span> #title#",
+
+        /**
+         * The loading template which will be used to create the loading animation.
+         *
+         * @property loadingTemplate
+         * @type String
+         * @default "<span class=\"spinner\"></span> #text#"
+         * @for defaults
+         **/
         loadingTemplate: "<span class=\"spinner\"></span> #text#",
 
-        /* Behaviours */
-        enableAllSteps: false, /* If true, all steps are ebable from the begining (all steps are clickable) */
+        /*
+         * Behaviours
+         */
+
+        /**
+         * Sets the focus to the first wizard instance in order to enable the key navigation from the begining if true. 
+         *
+         * @property autoFocus
+         * @type Boolean
+         * @default false
+         * @for defaults
+         **/
+        autoFocus: false,
+
+        /**
+         * Enables all steps from the begining if true (all steps are clickable).
+         *
+         * @property enableAllSteps
+         * @type Boolean
+         * @default false
+         * @for defaults
+         **/
+        enableAllSteps: false,
+
+        /**
+         * Enables keyboard navigation if true (arrow left and arrow right).
+         *
+         * @property enableKeyNavigation
+         * @type Boolean
+         * @default true
+         * @for defaults
+         **/
         enableKeyNavigation: true,
+
+        /**
+         * Enables pagination if true.
+         *
+         * @property enablePagination
+         * @type Boolean
+         * @default true
+         * @for defaults
+         **/
         enablePagination: true,
-        suppressPaginationOnFocus: true, /* Suppress pagination if a form field is focused (within the current wizard)  */
+
+        /**
+         * Suppresses pagination if a form field is focused.
+         *
+         * @property suppressPaginationOnFocus
+         * @type Boolean
+         * @default true
+         * @for defaults
+         **/
+        suppressPaginationOnFocus: true,
+
+        /**
+         * Enables cache for async loaded or iframe embedded content.
+         *
+         * @property enableContentCache
+         * @type Boolean
+         * @default true
+         * @for defaults
+         **/
         enableContentCache: true,
+
+        /**
+         * Shows the finish button if enabled.
+         *
+         * @property enableFinishButton
+         * @type Boolean
+         * @default true
+         * @for defaults
+         **/
         enableFinishButton: true,
-        preloadContent: false, /* Not yet implemented */
+
+        /**
+         * Not yet implemented.
+         *
+         * @property preloadContent
+         * @type Boolean
+         * @default false
+         * @for defaults
+         **/
+        preloadContent: false,
+
+        /**
+         * Shows the finish always (on each step; right beside the next button) if true. 
+         * Otherwise the next button will be replaced by the finish on the last step.
+         *
+         * @property showFinishButtonAlways
+         * @type Boolean
+         * @default false
+         * @for defaults
+         **/
         showFinishButtonAlways: false,
+
+        /**
+         * Forces forward navigation (move backward is not possible).
+         *
+         * @property forceMoveForward
+         * @type Boolean
+         * @default false
+         * @for defaults
+         **/
         forceMoveForward: false,
-        startIndex: 0, /* zero-based index */
 
-        /* Animation Effect Settings */
+        /**
+         * The position to start (zero-based).
+         *
+         * @property startIndex
+         * @type Integer
+         * @default 0
+         * @for defaults
+         **/
+        startIndex: 0,
+
+        /*
+         * Animation Effect Settings
+         */
+
+        /**
+         * The animation effect which should be used for step transitions.
+         *
+         * @property transitionEffect
+         * @type transitionEffect
+         * @default none
+         * @for defaults
+         **/
         transitionEffect: $.fn.steps.transitionEffect.none,
-        transitionEffectSpeed: 200, /* In milliseconds */
 
-        /* Event Handlers */
-        onStepChanging: function (event, currentIndex, newIndex) { return true; }, /* If return false, the step changing process will stop; ideal for form validation */
+        /**
+         * The animation speed for step transitions (in milliseconds).
+         *
+         * @property transitionEffectSpeed
+         * @type Integer
+         * @default 200
+         * @for defaults
+         **/
+        transitionEffectSpeed: 200,
+
+        /*
+         * Event Handlers
+         */
+
+        /**
+         * Fires before the step changes and can be used to prevent step changing by returning false. 
+         * Very useful for form validation. 
+         *
+         * @property onStepChanging
+         * @type Event
+         * @default function (event, currentIndex, newIndex) { return true; }
+         * @for defaults
+         **/
+        onStepChanging: function (event, currentIndex, newIndex) { return true; },
+
+        /**
+         * Fires after the step has change. 
+         *
+         * @property onStepChanged
+         * @type Event
+         * @default function (event, currentIndex, priorIndex) { }
+         * @for defaults
+         **/
         onStepChanged: function (event, currentIndex, priorIndex) { },
-        onFinishing: function (event, currentIndex) { return true; }, /* If return false, the finishing process will stop; ideal for form validation */
+
+        /**
+         * Fires before finishing and can be used to prevent completion by returning false. 
+         * Very useful for form validation. 
+         *
+         * @property onFinishing
+         * @type Event
+         * @default function (event, currentIndex) { return true; }
+         * @for defaults
+         **/
+        onFinishing: function (event, currentIndex) { return true; },
+
+        /**
+         * Fires after the completion. 
+         *
+         * @property onFinished
+         * @type Event
+         * @default function (event, currentIndex) { }
+         * @for defaults
+         **/
         onFinished: function (event, currentIndex) { },
 
-        /* Labels */
+        /**
+         * Contains all labels. 
+         *
+         * @property labels
+         * @type Object
+         * @for defaults
+         **/
         labels: {
-            current: "current step:", /* For Accessability reasons */
+            /**
+             * This label is important for accessability reasons.
+             * Indicates which step is activated.
+             *
+             * @property current
+             * @type String
+             * @default "current step:"
+             * @for defaults
+             **/
+            current: "current step:",
+
+            /**
+             * Label for the finish button.
+             *
+             * @property finish
+             * @type String
+             * @default "Finish"
+             * @for defaults
+             **/
             finish: "Finish",
+
+            /**
+             * Label for the next button.
+             *
+             * @property next
+             * @type String
+             * @default "Next"
+             * @for defaults
+             **/
             next: "Next",
+
+            /**
+             * Label for the previous button.
+             *
+             * @property previous
+             * @type String
+             * @default "Previous"
+             * @for defaults
+             **/
             previous: "Previous",
+
+            /**
+             * Label for the loading animation.
+             *
+             * @property loading
+             * @type String
+             * @default "Loading ..."
+             * @for defaults
+             **/
             loading: "Loading ..."
         }
     };
@@ -422,8 +661,8 @@
      *     $("#wizard").steps().insert(0, {
      *         title: "Title",
      *         content: "", // optional
-     *         contentMode: "async",
-     *         contentUrl: "/Content/Step/1"
+     *         contentMode: "async", // optional
+     *         contentUrl: "/Content/Step/1" // optional
      *     });
      * @chainable
      **/
@@ -510,6 +749,11 @@
             createUniqueId($this);
 
             transform($this);
+
+            if (opts.autoFocus && _uniqueId === 1)
+            {
+                $(".steps li.current a", $this).focus();
+            }
 
             $this.bind("finishing.steps", opts.onFinishing);
             $this.bind("finished.steps", opts.onFinished);
