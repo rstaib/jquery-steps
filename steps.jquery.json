@@ -25,6 +25,7 @@
     "homepage": "http://rstaib.github.io/jquery-steps",
     "docs": "https://github.com/rstaib/jquery-steps/wiki",
     "download": "http://rstaib.github.io/jquery-steps",
+    "demo": "http://rstaib.github.io/jquery-steps/basic.html",
     "dependencies": {
         "jquery": ">=1.4.4"
     }
