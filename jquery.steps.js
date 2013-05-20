@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.9.4 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.9.5 - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -7,7 +7,7 @@
  *
  * Follow me on twitter: https://twitter.com/@RafaelStaib
  *
- * Tested with jQuery v1.4.4 and newer versions as well.
+ * Requires jQuery version 1.4.4 or higher
  * Please report issues at: https://github.com/rstaib/jquery-steps/issues
  */
 
@@ -618,18 +618,25 @@
         $(".body:eq(" + index + ")", contentContainer).remove();
         $(".steps > ol > li:eq(" + index + ")", wizard).remove();
 
+        // Reset state values
+        if (state.currentIndex > index)
+        {
+            state.currentIndex = state.currentIndex - 1;
+        }
+        state.stepCount--;
+        state.currentStep = getStepProperties(wizard, state.currentIndex);
+
+        // Set the "first" class to the new first step button 
         if (index === 0)
         {
-            $(".title:first", contentContainer).addClass("first");
+            $(".steps > ol > li:first", wizard).addClass("first");
         }
 
-        // Reset state values
-        if (state.currentIndex >= index)
+        // Set the "last" class to the new last step button 
+        if (index === state.stepCount)
         {
-            state.currentIndex = state.currentIndex + 1;
+            $(".steps > ol > li:eq(" + index + ")", wizard).addClass("last");
         }
-        state.stepCount = $(".body", contentContainer).length;
-        state.currentStep = getStepProperties(wizard, state.currentIndex);
 
         updateSteps(wizard, index);
         refreshActionState(wizard);
@@ -678,8 +685,14 @@
         }
 
         var contentContainer = wizard.children(".content"),
-            header = $(document.createElement(options.headerTag)),
-            body = $(document.createElement(options.bodyTag));
+            header = $(document.createElement(options.headerTag)).html(step.title),
+            body = $(document.createElement(options.bodyTag)).addClass("body").hide();
+
+        if (step.contentMode == null || step.contentMode === $.fn.steps.contentMode.html)
+        {
+            body.html(step.content);
+        }
+
         if (index === 0)
         {
             contentContainer.prepend(body).prepend(header);
@@ -689,31 +702,19 @@
             $(".body:eq(" + (index - 1) + ")", contentContainer).after(body).after(header);
         }
 
-        header.html(step.title);
-        transformTitle(wizard, header, index);
-
-        // Add click event
-        $(".steps > ol > li:eq(" + index + ") > a", wizard).bind("click.steps", stepClickHandler);
-
-        // Reset the current class
-        if (index === 0)
-        {
-            $(".steps > ol > li", wizard).removeClass("first").eq(index).addClass("first");
-        }
-
-        body.addClass("body").hide();
-        if (step.contentMode == null || step.contentMode === $.fn.steps.contentMode.html)
-        {
-            body.html(step.content);
-        }
-
         // Reset state values
         if (state.currentIndex >= index)
         {
             state.currentIndex = state.currentIndex + 1;
         }
-        state.stepCount = contentContainer.children(".body").length;
+        state.stepCount++;
+
+        transformTitle(wizard, header, index);
+
         state.currentStep = getStepProperties(wizard, state.currentIndex);
+
+        // Add click event
+        $(".steps > ol > li:eq(" + index + ") > a", wizard).bind("click.steps", stepClickHandler);
 
         updateSteps(wizard, index);
         refreshActionState(wizard);
@@ -781,14 +782,14 @@
      **/
     function actionClick(wizard, index)
     {
-        var options = wizard.data("options");
-        var state = wizard.data("state");
-        var oldIndex = state.currentIndex;
+        var options = wizard.data("options"),
+            state = wizard.data("state"),
+            oldIndex = state.currentIndex;
 
         if (index >= 0 && index < state.stepCount && !(options.forceMoveForward && index < state.currentIndex))
         {
-            var anchor = $(".steps a[href$='-" + index + "']", wizard);
-            var isDisabled = anchor.parent().hasClass("disabled");
+            var anchor = $(".steps a[href$='-" + index + "']", wizard),
+                isDisabled = anchor.parent().hasClass("disabled");
             // Remove the class to make the anchor clickable!
             anchor.parent().removeClass("disabled");
             anchor.click();
@@ -818,8 +819,8 @@
      **/
     function goToStep(wizard, index)
     {
-        var options = wizard.data("options");
-        var state = wizard.data("state");
+        var options = wizard.data("options"),
+            state = wizard.data("state");
 
         if (index < 0 || index >= state.stepCount || state.stepCount === 0)
         {
@@ -834,21 +835,12 @@
         var oldIndex = state.currentIndex;
         if (wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
         {
-            if (state.asyncRequest != null)
-            {
-                state.asyncRequest.abort();
-            }
-
             // Save new state
             state.currentIndex = index;
             state.currentStep = getStepProperties(wizard, index);
 
             // Change visualisation
-            var steps = $(".steps li", wizard),
-                currentInfo = $("a > .current-info", steps.eq(oldIndex));
-            steps.eq(oldIndex).addClass("done").removeClass("current error");
-            steps.eq(index).addClass("current").removeClass("disabled done")
-                .children("a").prepend(currentInfo).focus();
+            updateStepClasses(wizard, index, oldIndex);
 
             refreshActionState(wizard);
             loadAsyncContent(wizard);
@@ -916,7 +908,7 @@
     }
 
     /**
-     * Transforms the initial html structure/code.
+     * Transforms the hardcoded html structure to a new more useful html structure.
      *
      * @private
      * @method transform
@@ -932,10 +924,9 @@
         wizard.addClass("wizard").empty().append(contentWrapper);
 
         var stepTitles = contentWrapper.children(options.headerTag),
-            stepContents = contentWrapper.children(options.bodyTag).addClass("body");
+            stepContents = contentWrapper.children(options.bodyTag).addClass("body").hide();
 
-        // hides all contents except the defined start content
-        stepContents.not(":eq(" + options.startIndex + ")").hide();
+        // Make the start step visible
         stepContents.eq(options.startIndex).show();
 
         if (stepTitles.length > stepContents.length)
@@ -947,6 +938,8 @@
             throw new Error("One or more corresponding step titles are missing.");
         }
 
+        state.stepCount = stepContents.length;
+
         var stepsWrapper = $(document.createElement(options.stepsContainerTag))
             .addClass("steps").append($(document.createElement("ol")));
         wizard.prepend(stepsWrapper);
@@ -954,10 +947,20 @@
         stepTitles.each(function (index)
         {
             transformTitle(wizard, $(this), index);
+
+            if (index < options.startIndex)
+            {
+                $(".steps > ol > li:eq(" + index + ")", wizard).addClass("done");
+            }
+
+            if (index > options.startIndex && !options.enableAllSteps)
+            {
+                $(".steps > ol > li:eq(" + index + ")", wizard).addClass("disabled");
+            }
         });
 
-        // Set state values
-        state.stepCount = stepContents.length;
+        updateStepClasses(wizard, options.startIndex);
+
         state.currentStep = getStepProperties(wizard, state.currentIndex);
 
         if (options.enablePagination)
@@ -994,13 +997,12 @@
      */
     function transformTitle(wizard, header, index)
     {
-        // TODO: Some code for currentand so on!
-
-        var options = wizard.data("options");
-
         header.attr("id", getUniqueId(wizard) + "-" + index).attr("tabindex", "-1").addClass("title");
 
-        var title = renderTemplate(options.titleTemplate, {
+        var options = wizard.data("options"),
+            state = wizard.data("state"),
+            stepCollection = $(".steps > ol", wizard),
+            title = renderTemplate(options.titleTemplate, {
                 index: index + 1,
                 title: header.html()
             }),
@@ -1008,33 +1010,23 @@
 
         if (index === 0)
         {
-            stepItem.addClass("first");
-        }
-
-        if (index === options.startIndex)
-        {
-            stepItem.addClass("current").children("a").prepend("<span class=\"current-info\">" + 
-                options.labels.current + " </span>");
-        }
-
-        if (index < options.startIndex)
-        {
-            stepItem.addClass("done");
-        }
-
-        if (index > options.startIndex && !options.enableAllSteps)
-        {
-            stepItem.addClass("disabled");
-        }
-        
-        var stepCollection = $(".steps > ol", wizard);
-        if (index === 0)
-        {
             stepCollection.prepend(stepItem);
         }
         else
         {
             $("li:eq(" + (index - 1) + ")", stepCollection).after(stepItem);
+        }
+
+        // Set the "first" class to the new first step button
+        if (index === 0)
+        {
+            $("li", stepCollection).removeClass("first").eq(index).addClass("first");
+        }
+
+        // Set the "last" class to the new last step button
+        if (index === (state.stepCount - 1))
+        {
+            $("li", stepCollection).removeClass("last").eq(index).addClass("last");
         }
     }
 
@@ -1074,7 +1066,7 @@
     }
 
     /**
-     * Updates step buttons and their related titles.
+     * Updates step buttons and their related titles beyond a certain position.
      *
      * @private
      * @method updateSteps
@@ -1094,7 +1086,33 @@
     }
 
     /**
-     * Refreshs the action navigation.
+     * Updates step button classes after initialization or step changing.
+     *
+     * @private
+     * @method updateStepClasses
+     * @param wizard {Object} A jQuery wizard object
+     * @param index {Integer} The index of the new current step
+     * @param [oldIndex] {Integer} The index of the prior step
+     */
+    function updateStepClasses(wizard, index, oldIndex)
+    {
+        var options = wizard.data("options"),
+            steps = $(".steps li", wizard),
+            currentOrNewStep = steps.eq(index),
+            currentInfo = $("<span class=\"current-info\">" + options.labels.current + " </span>");
+
+        if (oldIndex != null)
+        {
+            var oldStep = steps.eq(oldIndex).addClass("done").removeClass("current error");
+            currentInfo = $("a > .current-info", oldStep);
+            currentOrNewStep.focus();
+        }
+
+        currentOrNewStep.addClass("current").removeClass("disabled done").children("a").prepend(currentInfo);
+    }
+
+    /**
+     * Refreshs the visualization for the complete action navigation.
      *
      * @private
      * @method refreshActionState
@@ -1167,7 +1185,7 @@
     }
 
     /**
-     * Renders a template and substitutes all placeholder.
+     * Renders a template and replaces all placeholder.
      *
      * @private
      * @method renderTemplate
@@ -1223,8 +1241,8 @@
             header = $(".content > .title:eq(" + index + ")", wizard),
             content = header.next(".body"),
             mode = (content.data("mode") == null) ? $.fn.steps.contentMode.html :
-            getValidEnumValue($.fn.steps.contentMode, (/^\s*$/.test(content.data("mode")) || isNaN(content.data("mode"))) ? 
-                content.data("mode") : Number(content.data("mode"))),
+                getValidEnumValue($.fn.steps.contentMode, (/^\s*$/.test(content.data("mode")) || isNaN(content.data("mode"))) ? 
+                    content.data("mode") : Number(content.data("mode"))),
             contentUrl = (mode === $.fn.steps.contentMode.html || content.data("url") === undefined) ?
                 "" : content.data("url"),
             contentLoaded = (mode !== $.fn.steps.contentMode.html && content.data("loaded") === "1");

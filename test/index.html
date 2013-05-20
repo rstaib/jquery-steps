@@ -6,7 +6,19 @@
         <link rel="stylesheet" href="qunit/qunit-1.11.0.css">
     </head>
     <body>
-        <div id="qunit"></div>
+	    <h1 id="qunit-header">
+		    <a href="http://rstaib.github.io/jquery-steps">jQuery Steps Plugin</a> Test Suite
+		</h1>
+	    <div id="qunit-banner"></div>
+	    <div id="qunit-testrunner-toolbar"><span>jQuery Versions: <input id="version-144" name="version" type="radio" value="1.4.4" /><label for="version-144">jQuery 1.4.4</label> 
+            <input id="version-152" name="version" type="radio" value="1.5.2" /><label for="version-152">jQuery 1.5.2</label> 
+            <input id="version-164" name="version" type="radio" value="1.6.4" /><label for="version-164">jQuery 1.6.4</label> 
+            <input id="version-172" name="version" type="radio" value="1.7.2" /><label for="version-172">jQuery 1.7.2</label> 
+            <input id="version-183" name="version" type="radio" value="1.8.3" /><label for="version-183">jQuery 1.8.3</label> 
+            <input id="version-191" name="version" type="radio" value="1.9.1" /><label for="version-191">jQuery 1.9.1</label>
+            <input id="version-latest" name="version" type="radio" value="latest" /><label for="version-latest">jQuery Latest (git)</label></span></div>
+	    <h2 id="qunit-userAgent"></h2>
+	    <ol id="qunit-tests"></ol>
         <div id="qunit-fixture">
             <div id="contentModeWithEmptyStringArgument">
                 <h1>contentModeWithEmptyStringArgument</h1>
@@ -45,7 +57,31 @@
         </div>
         <script src="qunit/qunit-1.11.0.js"></script>
         <script src="tests.js"></script>
-        <script src="../lib/jquery-1.9.1.min.js"></script>
+        <script src="jquery.js"></script>
         <script src="../jquery.steps.js"></script>
+        <script>
+            $(function ()
+            {
+                $("input[name='version']").click(function ()
+                {
+                    location.href = "?version=" + $(this).val();
+                });
+
+                var versionPattern = /^[\?|\&]{1}version=(\d\.\d\.\d|latest)/,
+                    version = versionPattern.exec(location.search),
+                    defaultVersion = "1.9.1";
+
+                if (version != null && version.length > 0)
+                {
+                    version = version[1];
+                }
+                else
+                {
+                    version = defaultVersion;
+                }
+
+                $("input[value='" + version + "']").attr("checked", "checked");
+            });
+        </script>
     </body>
 </html>
