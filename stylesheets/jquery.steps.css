@@ -118,6 +118,16 @@
     padding: 10px;
 }
 
+.wizard > .content > .body ul
+{
+    list-style: disc !important;
+}
+
+.wizard > .content > .body ul > li
+{
+    display: list-item;
+}
+
 .wizard > .content > .body > iframe
 {
     border: 0 none;
