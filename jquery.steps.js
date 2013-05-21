@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.9.5 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.9.6b - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -25,12 +25,14 @@
  * - Implement functionality to skip a certain amount of steps 
  * - Dynamic settings change
  * - Dynamic step update
+ * - Save Step State to a cookie
+ * - Jump from any page to a specific step
  *
  */
 
 /**
  * @module jQuery.steps
- * @requires jQuery
+ * @requires jQuery (always required), jQuery.cookie (only required if saveState is `true`)
  */
 (function ($)
 {
@@ -351,7 +353,18 @@
         forceMoveForward: false,
 
         /**
-         * The position to start (zero-based).
+         * Saves the current state (step position) to a cookie.
+         * By coming next time the last active step becomes activated.
+         *
+         * @property saveState
+         * @type Boolean
+         * @default false
+         * @for defaults
+         **/
+        saveState: false,
+
+        /**
+         * The position to start on (zero-based).
          *
          * @property startIndex
          * @type Integer
@@ -365,7 +378,7 @@
          */
 
         /**
-         * The animation effect which should be used for step transitions.
+         * The animation effect which will be used for step transitions.
          *
          * @property transitionEffect
          * @type transitionEffect
@@ -375,7 +388,7 @@
         transitionEffect: $.fn.steps.transitionEffect.none,
 
         /**
-         * The animation speed for step transitions (in milliseconds).
+         * Animation speed for step transitions (in milliseconds).
          *
          * @property transitionEffectSpeed
          * @type Integer
@@ -1337,11 +1350,37 @@
      * @private
      * @method getUniqueId
      * @param wizard {Object} A jQuery wizard object
-     * @return {String} Returns the unique for the given wizard
+     * @return {String} Returns the unique id for the given wizard
      */
     function getUniqueId(wizard)
     {
         return wizard.data("uid");
+    }
+
+    /**
+     * Gets the current unique step id by the given step anchor DOM element.
+     *
+     * @private
+     * @method getUniqueStepId
+     * @param anchor {Object} The step anchor DOM element
+     * @return {String} Returns the unique step id
+     */
+    function getUniqueStepId(anchor)
+    {
+        return anchor.attr("href").substring(anchor.attr("href").lastIndexOf("#"));
+    }
+
+    /**
+     * Gets the step position (zero-based) by the given step anchor DOM element.
+     *
+     * @private
+     * @method getStepPosition
+     * @param anchor {Object} The step anchor DOM element
+     * @return {String} Returns the step position
+     */
+    function getStepPosition(anchor)
+    {
+        return Number(anchor.attr("href").substring(anchor.attr("href").lastIndexOf("-") + 1));
     }
 
     /**
@@ -1386,7 +1425,7 @@
 
         var anchor = $(this),
             wizard = anchor.parents(".wizard");
-        switch (anchor.attr("href").substring(anchor.attr("href").lastIndexOf("#")))
+        switch (getUniqueStepId(anchor))
         {
             case "#finish":
                 wizard.steps("finish");
@@ -1420,7 +1459,7 @@
 
         if (anchor.parent().is(":not(.disabled):not(.current)"))
         {
-            goToStep(wizard, Number(anchor.attr("href").substring(anchor.attr("href").lastIndexOf("-") + 1)));
+            goToStep(wizard, getStepPosition(anchor));
         }
 
         // If nothing has changed

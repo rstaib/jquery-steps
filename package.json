@@ -1,7 +1,7 @@
 {
   "name": "jQuery-steps",
   "title": "jQuery Wizard Plugin",
-  "version": "0.9.5",
+  "version": "0.9.6b",
   "description": "A powerful jQuery wizard plugin that supports accessibility and HTML5",
   "homepage": "https://github.com/rstaib/jquery-steps",
   "author": {
