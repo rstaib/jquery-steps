@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>jQuery Steps</title>
+        <title>jQuery Steps - Tabs Demo</title>
 
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -20,8 +20,10 @@
         <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
         <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
         <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+        <link rel="stylesheet" type="text/css" href="stylesheets/jquery.steps.css">
 
         <script src="javascripts/jquery-1.9.1.min.js"></script>
+        <script src="javascripts/jquery.steps.min.js"></script>
         <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -42,43 +44,69 @@
         <div id="content-wrapper">
             <div class="inner clearfix">
                 <section id="main-content">
-                    <h3>Overview</h3>
-                    <p>jQuery Steps is a smart UI component which allows you to easily create wizard-like interfaces. 
-                        This plugin groups content into sections for a more structured and orderly page view. 
-                        Furthermore, it is as simple as 1-2-3 to add plugins such as jQuery Validation which can prevent step changing or submission. 
-                        Check out the demos and get a first-hand impression!</p>
-                    <ul>
-                        <li><a href="basic.html">Basic Example</a></li>
-                        <li>Async Example</li>
-                        <li><a href="iframe.html">Embedded Iframe Example</a></li>
-                        <li><a href="basic-form.html">Basic Form Example</a></li>
-                        <li>Advanced Form Example</li>
-                        <li><a href="add-remove.html">Dynamic Manipulation Example</a></li>
-                        <li>Pagination Example</li>
-                        <li><a href="tabs.html">Tabs Example</a></li>
-                        <li>Multiple Wizard Example</li>
-                    </ul>
+                    <script>
+                        $(function ()
+                        {
+                            $("#wizard").steps({
+                                headerTag: "h4",
+                                bodyTag: "section",
+                                transitionEffect: "slideLeft",
+                                autoFocus: true,
+                                enableFinishButton: false,
+                                enablePagination: false,
+                                enableAllSteps: true,
+                                titleTemplate: "#title#"
+                            });
+                        });
+                    </script>
 
-                    <h3>Features</h3>
-                    <ul>
-                        <li>HTML5 and Accessability support</li>
-                        <li>Async (AJAX) content loading</li>
-                        <li>Form validation made easy</li>
-                        <li>Embedded iframe content</li>
-                        <li>Cool transition effects</li>
-                        <li>Keyboard navigation</li>
-                        <li>Simple Step Manipulation</li>
-                        <li>Multiple wizards in one page</li>
-                        <li>Easy Navigation</li>
-                        <li>And much more ...</li>
-                    </ul>
+                    <h3>Tabs Example</h3>
+                    <p>Note: Design for the tabs example will be updated soon!</p>
+                    <div id="wizard">
+                        <h4>Keyboard</h4>
+                        <section>
+                            <p>What is needed to transform it to a tabs component? Not much. Just override some properties and done.</p>
+                            <pre class="highlight"><code>$(<span class="s2">"#wizard"</span>).steps({
+    <span class="c1">// Disables the finish button (required if pagination is enabled)</span>
+    enableFinishButton: <span class="kc">false</span>, 
+    <span class="c1">// Disables the next and previous buttons (optional)</span>
+    enablePagination: <span class="kc">false</span>, 
+    <span class="c1">// Enables all steps from the begining</span>
+    enableAllSteps: <span class="kc">true</span>, 
+    <span class="c1">// Removes the number from the title</span>
+    titleTemplate: <span class="s2">"#title#"</span> 
+});</code></pre>
+                        </section>
 
-                    <h3>Download</h3>
-                    <ul>
-                        <li><a href="https://github.com/rstaib/jquery-steps/blob/master/README.md">Readme</a></li>
-                        <li><a href="downloads/jquery.steps.min.js">Minified</a></li>
-                        <li><a href="downloads/jquery.steps.js">Uncompressed</a></li>
-                    </ul>
+                        <h4>Other demos</h4>
+                        <section>
+                            <ul>
+                                <li><a href="basic.html">Basic Example</a></li>
+                                <li>Async Example</li>
+                                <li><a href="iframe.html">Embedded Iframe Example</a></li>
+                                <li><a href="basic-form.html">Basic Form Example</a></li>
+                                <li>Advanced Form Example</li>
+                                <li><a href="add-remove.html">Dynamic Manipulation Example</a></li>
+                                <li>Pagination Example</li>
+                                <li>Multiple Wizard Example</li>
+                            </ul>
+                        </section>
+
+                        <h4>Documentation</h4>
+                        <section>
+                            <p>For more information <a href="https://github.com/rstaib/jquery-steps/wiki">check out the documentation</a>!</p>
+                        </section>
+
+                        <h4>Download</h4>
+                        <section>
+                            <p>You could easily download the latest version direct from here!</p>
+                            <ul>
+                                <li><a href="https://github.com/rstaib/jquery-steps/blob/master/README.md">Readme</a></li>
+                                <li><a href="downloads/jquery.steps.min.js">Minified</a></li>
+                                <li><a href="downloads/jquery.steps.js">Uncompressed</a></li>
+                            </ul>
+                        </section>
+                    </div>
 
                     <h3>License</h3>
                     <p>Copyright (c) 2013 Rafael J. Staib Licensed under the <a href="https://github.com/rstaib/jquery-steps/blob/master/LICENSE.txt">MIT license</a>.</p>
