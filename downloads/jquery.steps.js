@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.9.5 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.9.6 - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -25,12 +25,14 @@
  * - Implement functionality to skip a certain amount of steps 
  * - Dynamic settings change
  * - Dynamic step update
+ * - Jump from any page to a specific step
+ * - Add Swipe gesture for devices that support touch
  *
  */
 
 /**
  * @module jQuery.steps
- * @requires jQuery
+ * @requires jQuery (always required), jQuery.cookie (only required if saveState is `true`)
  */
 (function ($)
 {
@@ -43,6 +45,16 @@
      * @type Integer
      **/
     var _uniqueId = 0;
+
+    /**
+     * The plugin prefix for cookies.
+     *
+     * @final
+     * @private
+     * @property _cookiePrefix
+     * @type String
+     **/
+    var _cookiePrefix = "jQu3ry_5teps_St@te_";
 
     /**
      * Represents a jQuery wizard plugin.
@@ -221,6 +233,20 @@
          **/
         stepsContainerTag: "div",
 
+        /**
+         * The css class which will be added to the outer component wrapper.
+         *
+         * @property cssClass
+         * @type String
+         * @default "wizard"
+         * @for defaults
+         * @example
+         *     <div class="wizard">
+         *         ...
+         *     </div>
+         **/
+        cssClass: "wizard",
+
         /*
          * Tempplates
          */
@@ -250,7 +276,7 @@
          */
 
         /**
-         * Sets the focus to the first wizard instance in order to enable the key navigation from the begining if true. 
+         * Sets the focus to the first wizard instance in order to enable the key navigation from the begining if `true`. 
          *
          * @property autoFocus
          * @type Boolean
@@ -260,7 +286,7 @@
         autoFocus: false,
 
         /**
-         * Enables all steps from the begining if true (all steps are clickable).
+         * Enables all steps from the begining if `true` (all steps are clickable).
          *
          * @property enableAllSteps
          * @type Boolean
@@ -270,7 +296,7 @@
         enableAllSteps: false,
 
         /**
-         * Enables keyboard navigation if true (arrow left and arrow right).
+         * Enables keyboard navigation if `true` (arrow left and arrow right).
          *
          * @property enableKeyNavigation
          * @type Boolean
@@ -280,7 +306,7 @@
         enableKeyNavigation: true,
 
         /**
-         * Enables pagination if true.
+         * Enables pagination if `true`.
          *
          * @property enablePagination
          * @type Boolean
@@ -330,7 +356,7 @@
         preloadContent: false,
 
         /**
-         * Shows the finish always (on each step; right beside the next button) if true. 
+         * Shows the finish always (on each step; right beside the next button) if `true`. 
          * Otherwise the next button will be replaced by the finish on the last step.
          *
          * @property showFinishButtonAlways
@@ -351,7 +377,18 @@
         forceMoveForward: false,
 
         /**
-         * The position to start (zero-based).
+         * Saves the current state (step position) to a cookie.
+         * By coming next time the last active step becomes activated.
+         *
+         * @property saveState
+         * @type Boolean
+         * @default false
+         * @for defaults
+         **/
+        saveState: false,
+
+        /**
+         * The position to start on (zero-based).
          *
          * @property startIndex
          * @type Integer
@@ -365,7 +402,7 @@
          */
 
         /**
-         * The animation effect which should be used for step transitions.
+         * The animation effect which will be used for step transitions.
          *
          * @property transitionEffect
          * @type transitionEffect
@@ -375,7 +412,7 @@
         transitionEffect: $.fn.steps.transitionEffect.none,
 
         /**
-         * The animation speed for step transitions (in milliseconds).
+         * Animation speed for step transitions (in milliseconds).
          *
          * @property transitionEffectSpeed
          * @type Integer
@@ -389,7 +426,7 @@
          */
 
         /**
-         * Fires before the step changes and can be used to prevent step changing by returning false. 
+         * Fires before the step changes and can be used to prevent step changing by returning `false`. 
          * Very useful for form validation. 
          *
          * @property onStepChanging
@@ -410,7 +447,7 @@
         onStepChanged: function (event, currentIndex, priorIndex) { },
 
         /**
-         * Fires before finishing and can be used to prevent completion by returning false. 
+         * Fires before finishing and can be used to prevent completion by returning `false`. 
          * Very useful for form validation. 
          *
          * @property onFinishing
@@ -621,7 +658,8 @@
         // Reset state values
         if (state.currentIndex > index)
         {
-            state.currentIndex = state.currentIndex - 1;
+            state.currentIndex--;
+            saveStateToCookie(wizard, state.currentIndex);
         }
         state.stepCount--;
         state.currentStep = getStepProperties(wizard, state.currentIndex);
@@ -705,7 +743,8 @@
         // Reset state values
         if (state.currentIndex >= index)
         {
-            state.currentIndex = state.currentIndex + 1;
+            state.currentIndex++;
+            saveStateToCookie(wizard, state.currentIndex);
         }
         state.stepCount++;
 
@@ -729,6 +768,7 @@
     /**
      * Initializes the component.
      *
+     * @static
      * @private
      * @method initialize
      * @param options {Object} The component settings
@@ -774,6 +814,7 @@
     /**
      * Fires the action next or previous click event.
      *
+     * @static
      * @private
      * @method actionClick
      * @param wizard {Object} The jQuery wizard object
@@ -789,16 +830,17 @@
         if (index >= 0 && index < state.stepCount && !(options.forceMoveForward && index < state.currentIndex))
         {
             var anchor = $(".steps a[href$='-" + index + "']", wizard),
-                isDisabled = anchor.parent().hasClass("disabled");
+                parent = anchor.parent(),
+                isDisabled = parent.hasClass("disabled");
             // Remove the class to make the anchor clickable!
-            anchor.parent().removeClass("disabled");
+            parent.removeClass("disabled");
             anchor.click();
 
             // An error occured
             if (oldIndex === state.currentIndex && isDisabled)
             {
                 // Add the class again to disable the anchor; avoid click action.
-                anchor.parent().addClass("disabled");
+                parent.addClass("disabled");
                 return false;
             }
 
@@ -811,6 +853,7 @@
     /**
      * Routes to a specific step by a given index.
      *
+     * @static
      * @private
      * @method goToStep
      * @param wizard {Object} The jQuery wizard object
@@ -837,6 +880,7 @@
         {
             // Save new state
             state.currentIndex = index;
+            saveStateToCookie(wizard, index);
             state.currentStep = getStepProperties(wizard, index);
 
             // Change visualisation
@@ -852,7 +896,7 @@
                     state.transitionShowElement = stepContents.eq(index);
                     stepContents.eq(oldIndex).fadeOut(options.transitionEffectSpeed, function ()
                     {
-                        var wizard = $(this).parents(".wizard");
+                        var wizard = $(this).parents(":has(.steps)");
                         var state = wizard.data("state");
 
                         if (state.transitionShowElement)
@@ -867,7 +911,7 @@
                     state.transitionShowElement = stepContents.eq(index);
                     stepContents.eq(oldIndex).slideUp(options.transitionEffectSpeed, function ()
                     {
-                        var wizard = $(this).parents(".wizard");
+                        var wizard = $(this).parents(":has(.steps)");
                         var state = wizard.data("state");
 
                         if (state.transitionShowElement)
@@ -910,6 +954,7 @@
     /**
      * Transforms the hardcoded html structure to a new more useful html structure.
      *
+     * @static
      * @private
      * @method transform
      * @param wizard {Object} The jQuery wizard object
@@ -918,16 +963,14 @@
     {
         var options = wizard.data("options"),
             state = wizard.data("state"),
-            contentWrapper = $(document.createElement(options.contentContainerTag)).addClass("content");
+            contentWrapper = $(document.createElement(options.contentContainerTag)).addClass("content"),
+            startIndex = options.startIndex;
 
         contentWrapper.html(wizard.html());
-        wizard.addClass("wizard").empty().append(contentWrapper);
+        wizard.addClass(options.cssClass).empty().append(contentWrapper);
 
         var stepTitles = contentWrapper.children(options.headerTag),
             stepContents = contentWrapper.children(options.bodyTag).addClass("body").hide();
-
-        // Make the start step visible
-        stepContents.eq(options.startIndex).show();
 
         if (stepTitles.length > stepContents.length)
         {
@@ -940,6 +983,20 @@
 
         state.stepCount = stepContents.length;
 
+        // Tries to load the saved state (step position)
+        if (options.saveState && $.cookie)
+        {
+            var savedState = $.cookie(_cookiePrefix + getUniqueId(wizard));
+            // Sets the saved position to the start index if not undefined or out of range set 
+            if (savedState != null && Number(savedState) < state.stepCount)
+            {
+                startIndex = Number(savedState);
+            }
+        }
+
+        // Make the start step visible
+        stepContents.eq(startIndex).show();
+
         var stepsWrapper = $(document.createElement(options.stepsContainerTag))
             .addClass("steps").append($(document.createElement("ol")));
         wizard.prepend(stepsWrapper);
@@ -948,19 +1005,20 @@
         {
             transformTitle(wizard, $(this), index);
 
-            if (index < options.startIndex)
+            if (index < startIndex)
             {
                 $(".steps > ol > li:eq(" + index + ")", wizard).addClass("done");
             }
 
-            if (index > options.startIndex && !options.enableAllSteps)
+            if (index > startIndex && !options.enableAllSteps)
             {
                 $(".steps > ol > li:eq(" + index + ")", wizard).addClass("disabled");
             }
         });
 
-        updateStepClasses(wizard, options.startIndex);
+        updateStepClasses(wizard, startIndex);
 
+        state.currentIndex = startIndex;
         state.currentStep = getStepProperties(wizard, state.currentIndex);
 
         if (options.enablePagination)
@@ -990,6 +1048,7 @@
     /**
      * Transforms the title to a step item button.
      *
+     * @static
      * @private
      * @param wizard {Object} A jQuery wizard object
      * @param header {Object} A jQuery header object
@@ -1033,6 +1092,7 @@
     /**
      * Loads and includes async content.
      *
+     * @static
      * @private
      * @method loadAsyncContent
      * @param wizard {Object} A jQuery wizard object
@@ -1068,6 +1128,7 @@
     /**
      * Updates step buttons and their related titles beyond a certain position.
      *
+     * @static
      * @private
      * @method updateSteps
      * @param wizard {Object} A jQuery wizard object
@@ -1086,8 +1147,9 @@
     }
 
     /**
-     * Updates step button classes after initialization or step changing.
+     * Updates step classes after initialization or step changing.
      *
+     * @static
      * @private
      * @method updateStepClasses
      * @param wizard {Object} A jQuery wizard object
@@ -1099,21 +1161,25 @@
         var options = wizard.data("options"),
             steps = $(".steps li", wizard),
             currentOrNewStep = steps.eq(index),
-            currentInfo = $("<span class=\"current-info\">" + options.labels.current + " </span>");
+            currentInfo = $("<span class=\"current-info\">" + options.labels.current + " </span>"),
+            stepTitles = $(".content > .title", wizard);
 
         if (oldIndex != null)
         {
             var oldStep = steps.eq(oldIndex).addClass("done").removeClass("current error");
+            stepTitles.eq(oldIndex).removeClass("current").next(".body").removeClass("current");
             currentInfo = $("a > .current-info", oldStep);
-            currentOrNewStep.focus();
+            currentOrNewStep.children("a").focus();
         }
 
         currentOrNewStep.addClass("current").removeClass("disabled done").children("a").prepend(currentInfo);
+        stepTitles.eq(index).addClass("current").next(".body").addClass("current");
     }
 
     /**
      * Refreshs the visualization for the complete action navigation.
      *
+     * @static
      * @private
      * @method refreshActionState
      * @param wizard {Object} A jQuery wizard object
@@ -1166,7 +1232,7 @@
                     finish.hide();
                     next.show().addClass("disabled");
                 }
-                else if (state.stepCount > 1 && state.stepCount > (state.currentIndex + 1))
+                else if (state.stepCount > (state.currentIndex + 1))
                 {
                     finish.hide();
                     next.show().removeClass("disabled");
@@ -1178,7 +1244,7 @@
                 else
                 {
                     finish.show();
-                    next.hide().removeClass("disabled");
+                    next.hide().addClass("disabled");
                 }
             }
         }
@@ -1187,6 +1253,7 @@
     /**
      * Renders a template and replaces all placeholder.
      *
+     * @static
      * @private
      * @method renderTemplate
      * @param template {String} A template
@@ -1210,6 +1277,7 @@
     /**
      * Gets a substitute by key.
      *
+     * @static
      * @private
      * @method getSubstitute
      * @param substitutes {Object} A list of substitute
@@ -1229,6 +1297,7 @@
     /**
      * Gets a step by an given index.
      *
+     * @static
      * @private
      * @method getStepProperties
      * @param wizard {Object} A jQuery wizard object  
@@ -1259,6 +1328,7 @@
     /**
      * Gets a valid enum value by checking a specific enum key or value.
      * 
+     * @static
      * @private
      * @method getValidEnumValue
      * @param enumType {Object} Type of enum
@@ -1303,6 +1373,7 @@
     /**
      * Checks an argument for null or undefined and throws an error if one check applies.
      *
+     * @static
      * @private
      * @method validateArgument
      * @param argumentName {String} The name of the given argument
@@ -1319,6 +1390,7 @@
     /**
      * Creates an unique id and adds this to the corresponding wizard instance.
      *
+     * @static
      * @private
      * @method createUniqueId
      * @param wizard {Object} A jQuery wizard object
@@ -1334,10 +1406,11 @@
     /**
      * Retrieves the unique id from the given wizard instance.
      *
+     * @static
      * @private
      * @method getUniqueId
      * @param wizard {Object} A jQuery wizard object
-     * @return {String} Returns the unique for the given wizard
+     * @return {String} Returns the unique id for the given wizard
      */
     function getUniqueId(wizard)
     {
@@ -1345,8 +1418,41 @@
     }
 
     /**
+     * Gets the step position (zero-based) by the given step anchor DOM element.
+     *
+     * @static
+     * @private
+     * @method getStepPosition
+     * @param anchor {Object} The step anchor DOM element
+     * @return {String} Returns the step position
+     */
+    function getStepPosition(anchor)
+    {
+        return Number(anchor.attr("href").substring(anchor.attr("href").lastIndexOf("-") + 1));
+    }
+
+    /**
+     * Saves the state for a step by its given unique id.
+     *
+     * @static
+     * @private
+     * @method saveStateToCookie
+     * @param wizard {Object} A jQuery wizard object
+     * @param index {Integer} The position (zero-based) to be saved
+     */
+    function saveStateToCookie(wizard, index)
+    {
+        var options = wizard.data("options");
+        if (options.saveState && $.cookie)
+        {
+            $.cookie(_cookiePrefix + getUniqueId(wizard), index);
+        }
+    }
+
+    /**
      * Handles the keyup DOM event.
      *
+     * @static
      * @private
      * @event keyup
      * @param event {Object} An event object
@@ -1376,6 +1482,7 @@
     /**
      * Fires when a action click happens.
      *
+     * @static
      * @private
      * @event click
      * @param event {Object} An event object
@@ -1385,8 +1492,9 @@
         event.preventDefault();
 
         var anchor = $(this),
-            wizard = anchor.parents(".wizard");
-        switch (anchor.attr("href").substring(anchor.attr("href").lastIndexOf("#")))
+            wizard = anchor.parents(":has(.steps)"),
+            href = anchor.attr("href");
+        switch (href.substring(href.lastIndexOf("#")))
         {
             case "#finish":
                 wizard.steps("finish");
@@ -1405,6 +1513,7 @@
     /**
      * Fires when a step click happens.
      *
+     * @static
      * @private
      * @event click
      * @param event {Object} An event object
@@ -1414,13 +1523,13 @@
         event.preventDefault();
 
         var anchor = $(this),
-            wizard = anchor.parents(".wizard"),
+            wizard = anchor.parents(":has(.steps)"),
             state = wizard.data("state"),
             oldIndex = state.currentIndex;
 
         if (anchor.parent().is(":not(.disabled):not(.current)"))
         {
-            goToStep(wizard, Number(anchor.attr("href").substring(anchor.attr("href").lastIndexOf("-") + 1)));
+            goToStep(wizard, getStepPosition(anchor));
         }
 
         // If nothing has changed
