@@ -10,7 +10,9 @@
         "component",
         "HTML5",
         "accessibility",
-        "validation"
+        "validation",
+        "tabs",
+        "steps"
     ],
     "version": "0.9.5",
     "author": {
