@@ -27,6 +27,7 @@
  * - Dynamic step update
  * - Save Step State to a cookie
  * - Jump from any page to a specific step
+ * - Add Swipe gesture for devices that support touch
  *
  */
 
