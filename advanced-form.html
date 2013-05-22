@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>jQuery Steps - Basic Form Demo</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="author" content="Rafael J. Staib">
+        <meta name="description" content="A powerful jQuery wizard plugin that supports accessibility and HTML5.">
+        <meta name="keywords" content="jQuery, plugin, UI, component, wizard, tabs, steps, HTML5, javascript, accessibility, form, validation">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        <!-- Required for Open Graph -->
+        <meta property="og:title" content="jQuery Steps, a powerful jQuery wizard plugin that supports accessibility and HTML5.">
+        <meta property="og:site_name" content="jQuery Steps, a powerful jQuery wizard plugin that supports accessibility and HTML5.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://rstaib.github.io/jquery-steps">
+
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Architects+Daughter">
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+        <link rel="stylesheet" type="text/css" href="stylesheets/jquery.steps.css">
+
+        <script src="javascripts/jquery-1.9.1.min.js"></script>
+        <script src="javascripts/jquery.steps.min.js"></script>
+        <script src="javascripts/jquery.validate-1.11.1.js"></script>
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <header>
+            <div class="inner">
+                <h1>jquery-steps</h1>
+                <h2>A powerful jQuery wizard plugin that supports accessibility and HTML5.</h2>
+                <a href="https://github.com/rstaib/jquery-steps" class="button"><small>View project on</small>GitHub</a>
+                <div class="share">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-via="RafaelStaib" data-hashtags="jquerysteps">Tweet</a>
+                    <iframe src="http://ghbtns.com/github-btn.html?user=rstaib&repo=jquery-steps&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+                </div>
+            </div>
+        </header>
+
+        <div id="content-wrapper">
+            <div class="inner clearfix">
+                <section id="main-content">
+                    <script>
+                        $(function ()
+                        {
+                            $("#form").steps({
+                                headerTag: "h4",
+                                bodyTag: "fieldset",
+                                transitionEffect: "slideLeft",
+                                onStepChanging: function (event, currentIndex, newIndex)
+                                {
+                                    $("#form").validate().settings.ignore = ":disabled,:hidden";
+                                    return $("#form").valid();
+                                },
+                                onFinishing: function (event, currentIndex)
+                                {
+                                    $("#form").validate().settings.ignore = ":disabled";
+                                    return $("#form").valid();
+                                },
+                                onFinished: function (event, currentIndex)
+                                {
+                                    alert("Submitted!");
+                                }
+                            });
+
+                            $("#form").validate({
+                                rules: {
+                                    confirm: {
+                                        equalTo: "#password"
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+
+                    <h3>Advanced Form Example</h3>
+                    <form id="form" action="#">
+                        <h4>Account</h4>
+                        <fieldset>
+                            <legend>Account Information</legend>
+
+                            <label for="userName">User name *</label><br>
+                            <input id="userName" name="userName" type="text" class="required"><br>
+                            <label for="password">Password *</label><br>
+                            <input id="password" name="password" type="text" class="required"><br>
+                            <label for="confirm">Confirm Password *</label><br>
+                            <input id="confirm" name="confirm" type="text" class="required"><br>
+                            <input id="specialRole" name="specialRole" type="checkbox"> <label for="specialRole">Special User Role (if activated you will enter the hint step after profile step)</label><br>
+                            <p>(*) Mandatory</p>
+                        </fieldset>
+
+                        <h4>Profile</h4>
+                        <fieldset>
+                            <legend>Profile Information</legend>
+
+                            <label for="name">First name *</label><br>
+                            <input id="name" name="name" type="text" class="required"><br>
+                            <label for="surname">Last name *</label><br>
+                            <input id="surname" name="surname" type="text" class="required"><br>
+                            <label for="email">Email *</label><br>
+                            <input id="email" name="email" type="text" class="required email"><br>
+                            <label for="address">Address</label><br>
+                            <input id="address" name="address" type="text"><br>
+                            <p>(*) Mandatory</p>
+                        </fieldset>
+
+                        <h4>Hints</h4>
+                        <fieldset>
+                            <legend>Hints</legend>
+
+                            <p>You are a special user because of your role! That's why you see this content.</p>
+
+                            <input id="readHint" name="readHint" type="checkbox" class="required" disabled> <label for="readHint">I have read that and agree.</label>
+                        </fieldset>
+
+                        <h4>Finish</h4>
+                        <fieldset>
+                            <legend>Terms and Conditions</legend>
+
+                            <input id="acceptTerms" name="acceptTerms" type="checkbox" class="required"> <label for="acceptTerms">I agree with the Terms and Conditions.</label>
+                        </fieldset>
+                    </form>
+
+                    <h3>License</h3>
+                    <p>Copyright (c) 2013 Rafael J. Staib Licensed under the <a href="https://github.com/rstaib/jquery-steps/blob/master/LICENSE.txt">MIT license</a>.</p>
+                </section>
+
+                <aside id="sidebar">
+                    <a href="https://github.com/rstaib/jquery-steps/zipball/master" class="button">
+                        <small>Download</small>
+                        .zip file
+                    </a>
+                    <a href="https://github.com/rstaib/jquery-steps/tarball/master" class="button">
+                        <small>Download</small>
+                        .tar.gz file
+                    </a>
+
+                    <p class="repo-owner"><a href="https://github.com/rstaib/jquery-steps"></a>is maintained by <a href="https://github.com/rstaib">rstaib</a>.</p>
+
+                    <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+                </aside>
+            </div>
+        </div>
+
+        <script>
+            // GitHub Star Button
+            !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');
+            
+            // Google Analytics
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-40997516-1', 'rstaib.github.io');
+            ga('send', 'pageview');
+
+            // Anchor Event Tracking
+            $(function()
+            {
+                var filetypes = /\.(zip|exe|pdf|doc*|xls*|ppt*|mp3|js|md)$/i,
+                    baseHref = "";
+                if ($("base").attr("href") != undefined)
+                {
+                    baseHref = $("base").attr("href");
+                }
+
+                $("a").each(function()
+                {
+                    var href = $(this).attr("href");
+                    if (href && (href.match(/^https?\:/i)) && (!href.match(document.domain)))
+                    {
+                        $(this).click(function()
+                        {
+                            ga("send", "event", "External", "Click", href.replace(/^https?\:\/\//i, ""));
+                            if ($(this).attr("target") != null && $(this).attr("target").toLowerCase() !== "_blank")
+                            {
+                                setTimeout(function() { location.href = href; }, 200);
+                                return false;
+                            }
+                        });
+                    }
+                    else if (href && href.match(/^mailto\:/i))
+                    {
+                        $(this).click(function()
+                        {
+                            ga("send", "event", "Email", "Click", href.replace(/^mailto\:/i, ""));
+                        });
+                    }
+                    else if (href && href.match(filetypes))
+                    {
+                        $(this).click(function()
+                        {
+                            ga("send", "event", "Download", "Click", href);
+                            if ($(this).attr("target") != null && $(this).attr("target").toLowerCase() !== "_blank")
+                            {
+                                setTimeout(function() { location.href = baseHref + href; }, 200);
+                                return false;
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
