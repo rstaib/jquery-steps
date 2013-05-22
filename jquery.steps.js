@@ -23,9 +23,9 @@
  * - Advanced Accessibility support (WAI-ARIA)
  * - Implement preloadContent for async and iframe content types.
  * - Implement functionality to skip a certain amount of steps 
- * - Dynamic settings change
- * - Dynamic step update
- * - Jump from any page to a specific step
+ * - Dynamic settings change (setOptions({ enablePagination: false }))
+ * - Dynamic step update (setStepContent(0, { title: "", content: "" }))
+ * - Jump from any page to a specific step (via uri hash tag test.html#steps-uid-1-3)
  * - Add Swipe gesture for devices that support touch
  *
  */
