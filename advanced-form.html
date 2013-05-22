@@ -66,6 +66,14 @@
                                         return false;
                                     }
 
+                                    // Needed in some cases if the user went back (clean up)
+                                    if (currentIndex < newIndex)
+                                    {
+                                        // To remove error styles
+                                        $("#form .body:eq(" + newIndex + ") label.error").remove();
+                                        $("#form .body:eq(" + newIndex + ") .error").removeClass("error");
+                                    }
+
                                     $("#form").validate().settings.ignore = ":disabled,:hidden";
                                     return $("#form").valid();
                                 },
