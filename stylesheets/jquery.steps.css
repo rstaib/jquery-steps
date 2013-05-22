@@ -1,4 +1,9 @@
-﻿.wizard
+﻿/*
+    Common 
+*/
+
+.wizard,
+.tabcontrol
 {
     display: block;
     width: 600px;
@@ -8,16 +13,16 @@
     border: 2px solid #efefef;
 }
 
-
-
-/* Common */
-.wizard a
+.wizard a,
+.tabcontrol a
 {
     outline: 0;
 }
 
 .wizard ol,
-.wizard ul
+.wizard ul,
+.tabcontrol ol,
+.tabcontrol ul
 {
     list-style: none !important;
     padding: 0;
@@ -25,20 +30,34 @@
 }
 
 .wizard ol > li,
-.wizard ul > li
+.wizard ul > li,
+.tabcontrol ol > li,
+.tabcontrol ul > li
 {
     display: block;
     padding: 0;
 }
 
-
-
 /* Accessibility */
-.wizard > .steps .current-info
+.wizard > .steps .current-info,
+.tabcontrol > .steps .current-info
 {
     position: absolute;
     left: -999em;
 }
+
+.wizard > .content > .title,
+.tabcontrol > .content > .title
+{
+    position: absolute;
+    left: -999em;
+}
+
+
+
+/*
+    Wizard
+*/
 
 .wizard > .steps
 {
@@ -101,12 +120,6 @@
     width: 600px;
     height: 300px;
     overflow: hidden;
-}
-
-.wizard > .content > .title
-{
-    position: absolute;
-    left: -999em;
 }
 
 .wizard > .content > .body
@@ -194,4 +207,96 @@
 
 .wizard > .loading .spinner
 {
+}
+
+
+
+/*
+    Tabcontrol
+*/
+
+.tabcontrol > .steps
+{
+    position: relative;
+    display: block;
+    width: 600px;
+}
+
+.tabcontrol > .steps > ol
+{
+    position: relative;
+    margin: 6px 0 0 0;
+    top: 1px;
+    z-index: 1;
+}
+
+.tabcontrol > .steps > ol > li
+{
+    background: #edecec;
+    border: 1px solid #bbb;
+    float: left;
+    margin: 5px -1px 0 0;
+}
+
+.tabcontrol > .steps > ol > li:hover
+{
+    background: #fff;
+}
+
+.tabcontrol > .steps > ol > li.current
+{
+    background: #fff;
+    border-bottom: 0 none;
+    padding-bottom: 1px;
+    margin-top: 0;
+}
+
+.tabcontrol > .steps > ol > li > a
+{
+    display: inline-block;
+    font: 1em/1em Arial, Verdana, sans-serif;
+    border: 0 none;
+    margin: 0;
+    padding: 10px 30px;
+    color: #5f5f5f;
+}
+
+.tabcontrol > .steps > ol > li > a:hover
+{
+    text-decoration: none;
+}
+
+.tabcontrol > .steps > ol > li.current > a
+{
+    padding: 15px 30px 10px 30px;
+}
+
+.tabcontrol > .content
+{
+    position: relative;
+    display: inline-block;
+    width: 600px;
+    height: 300px;
+    overflow: hidden;
+    border-top: 1px solid #bbb;
+    padding-top: 20px;
+}
+
+.tabcontrol > .content > .body
+{
+    float: left;
+    position: absolute;
+    width: 580px;
+    height: 280px;
+    padding: 10px;
+}
+
+.tabcontrol > .content > .body ul
+{
+    list-style: disc !important;
+}
+
+.tabcontrol > .content > .body ul > li
+{
+    display: list-item;
 }
