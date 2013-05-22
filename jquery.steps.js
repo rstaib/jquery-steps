@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.9.6 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v0.9.7b - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -627,7 +627,7 @@
         }
         else
         {
-            currentStep.eq(state.currentIndex).addClass("error");
+            currentStep.addClass("error");
         }
     };
 
