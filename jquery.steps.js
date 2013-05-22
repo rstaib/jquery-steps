@@ -99,7 +99,7 @@
         html: 0,
 
         /**
-         * IFrame included content
+         * IFrame embedded content
          *
          * @readOnly
          * @property iframe
@@ -272,7 +272,7 @@
         loadingTemplate: "<span class=\"spinner\"></span> #text#",
 
         /*
-         * Behaviours
+         * Behaviour
          */
 
         /**
@@ -356,8 +356,8 @@
         preloadContent: false,
 
         /**
-         * Shows the finish always (on each step; right beside the next button) if `true`. 
-         * Otherwise the next button will be replaced by the finish on the last step.
+         * Shows the finish button always (on each step; right beside the next button) if `true`. 
+         * Otherwise the next button will be replaced by the finish button if the last step becomes active.
          *
          * @property showFinishButtonAlways
          * @type Boolean
@@ -367,7 +367,7 @@
         showFinishButtonAlways: false,
 
         /**
-         * Forces forward navigation (move backward is not possible).
+         * Prevents jumping to a previous step.
          *
          * @property forceMoveForward
          * @type Boolean
@@ -398,7 +398,7 @@
         startIndex: 0,
 
         /*
-         * Animation Effect Settings
+         * Animation Effect Configuration
          */
 
         /**
@@ -422,7 +422,7 @@
         transitionEffectSpeed: 200,
 
         /*
-         * Event Handlers
+         * Events
          */
 
         /**
@@ -458,7 +458,7 @@
         onFinishing: function (event, currentIndex) { return true; },
 
         /**
-         * Fires after the completion. 
+         * Fires after completion. 
          *
          * @property onFinished
          * @type Event
@@ -548,7 +548,7 @@
      * Gets the current step object.
      *
      * @method getCurrentStep
-     * @return {Integer} The actual step object
+     * @return {Object} The actual step object
      **/
     $.fn.steps.getCurrentStep = function ()
     {
@@ -560,7 +560,7 @@
      *
      * @method getStep
      * @param index {Integer} An integer that belongs to the position of a step
-     * @return {Integer} A specific step object
+     * @return {Object} A specific step object
      **/
     $.fn.steps.getStep = function (index)
     {
@@ -609,7 +609,7 @@
     };
 
     /**
-     * Completes editing.
+     * Triggers the onFinishing and onFinished event.
      *
      * @method finish
      **/
