@@ -54,8 +54,34 @@
                                 transitionEffect: "slideLeft",
                                 onStepChanging: function (event, currentIndex, newIndex)
                                 {
+                                    // Allways allow previous action even if the current form is not valid!
+                                    if (currentIndex > newIndex)
+                                    {
+                                        return true;
+                                    }
+
+                                    // Forbid next action on "Warning" step if the user is to young
+                                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                                    {
+                                        return false;
+                                    }
+
                                     $("#form").validate().settings.ignore = ":disabled,:hidden";
                                     return $("#form").valid();
+                                },
+                                onStepChanged: function (event, currentIndex, priorIndex)
+                                {
+                                    // Used to skip the "Warning" step if the user is old enough.
+                                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                                    {
+                                        $("#form").steps("next");
+                                    }
+
+                                    // Used to skip the "Warning" step if the user is old enough and wants to the previous step.
+                                    if (currentIndex === 2 && priorIndex === 3)
+                                    {
+                                        $("#form").steps("previous");
+                                    }
                                 },
                                 onFinishing: function (event, currentIndex)
                                 {
@@ -90,7 +116,6 @@
                             <input id="password" name="password" type="text" class="required"><br>
                             <label for="confirm">Confirm Password *</label><br>
                             <input id="confirm" name="confirm" type="text" class="required"><br>
-                            <input id="specialRole" name="specialRole" type="checkbox"> <label for="specialRole">Special User Role (if activated you will enter the hint step after profile step)</label><br>
                             <p>(*) Mandatory</p>
                         </fieldset>
 
@@ -106,16 +131,16 @@
                             <input id="email" name="email" type="text" class="required email"><br>
                             <label for="address">Address</label><br>
                             <input id="address" name="address" type="text"><br>
+                            <label for="age">Age (Hint page will show up if age is less than 18) *</label><br>
+                            <input id="age" name="age" type="text" class="required number"><br>
                             <p>(*) Mandatory</p>
                         </fieldset>
 
-                        <h4>Hints</h4>
+                        <h4>Warning</h4>
                         <fieldset>
-                            <legend>Hints</legend>
+                            <legend>You are to young</legend>
 
-                            <p>You are a special user because of your role! That's why you see this content.</p>
-
-                            <input id="readHint" name="readHint" type="checkbox" class="required" disabled> <label for="readHint">I have read that and agree.</label>
+                            <p>Please go away ;-)</p>
                         </fieldset>
 
                         <h4>Finish</h4>
