@@ -988,10 +988,11 @@
         if (options.saveState && $.cookie)
         {
             var savedState = $.cookie(_cookiePrefix + getUniqueId(wizard));
-            // Sets the saved position to the start index if not undefined or out of range set 
-            if (savedState != null && Number(savedState) < state.stepCount)
+            // Sets the saved position to the start index if not undefined or out of range 
+            var savedIndex = parseInt(savedState, 0);
+            if (!isNaN(savedIndex) && savedIndex < state.stepCount)
             {
-                startIndex = Number(savedState);
+                startIndex = savedIndex;
             }
         }
 
@@ -1312,7 +1313,7 @@
             content = header.next(".body"),
             mode = (content.data("mode") == null) ? $.fn.steps.contentMode.html :
                 getValidEnumValue($.fn.steps.contentMode, (/^\s*$/.test(content.data("mode")) || isNaN(content.data("mode"))) ? 
-                    content.data("mode") : Number(content.data("mode"))),
+                    content.data("mode") : parseInt(content.data("mode"), 0)),
             contentUrl = (mode === $.fn.steps.contentMode.html || content.data("url") === undefined) ?
                 "" : content.data("url"),
             contentLoaded = (mode !== $.fn.steps.contentMode.html && content.data("loaded") === "1");
@@ -1429,7 +1430,7 @@
      */
     function getStepPosition(anchor)
     {
-        return Number(anchor.attr("href").substring(anchor.attr("href").lastIndexOf("-") + 1));
+        return parseInt(anchor.attr("href").substring(anchor.attr("href").lastIndexOf("-") + 1), 0);
     }
 
     /**
