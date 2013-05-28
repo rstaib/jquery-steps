@@ -155,8 +155,7 @@ header .share {
   top: 100px;
   width: 202px;
 }
-header .share > iframe,
-header .share > div {
+header .share > iframe {
   margin: 0 10px 10px 0;
 }
 aside a.button {
