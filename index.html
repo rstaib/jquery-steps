@@ -35,6 +35,7 @@
                 <div class="share">
                     <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rstaib.github.io/jquery-steps/" data-text="jQuery Steps" data-via="RafaelStaib" data-hashtags="jquerysteps">Tweet</a>
                     <iframe src="http://ghbtns.com/github-btn.html?user=rstaib&repo=jquery-steps&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+                    <div class="fb-like" data-href="http://rstaib.github.io/jquery-steps" data-send="false" data-layout="button_count" data-width="110" data-show-faces="false" data-font="arial"></div>
                 </div>
             </div>
         </header>
@@ -103,10 +104,14 @@
             </div>
         </div>
 
+        <div id="fb-root"></div>
         <script>
-            // GitHub Star Button
+            // Twitter Star Button
             !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');
             
+            // Facebook Like Button
+            (function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
+
             // Google Analytics
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
