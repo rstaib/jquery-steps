@@ -20,7 +20,6 @@
  *
  * Planed Features:
  * - Progress bar
- * - Advanced Accessibility support (WAI-ARIA)
  * - Implement preloadContent for async and iframe content types.
  * - Implement functionality to skip a certain amount of steps 
  * - Dynamic settings change (setOptions({ enablePagination: false }))
@@ -286,6 +285,7 @@
          * @type Boolean
          * @default false
          * @for defaults
+         * @since 0.9.4
          **/
         autoFocus: false,
 
@@ -766,10 +766,16 @@
         transformBody(wizard, body, index);
         transformTitle(wizard, header, index);
 
+        var currentStep = $("li[role=tab]:eq(" + index + ")", wizard);
+        if (state.currentIndex > index)
+        {
+            currentStep.removeClass("disabled").attr("aria-disabled", "false").addClass("done");
+        }
+
         state.currentStep = getStepProperties(wizard, state.currentIndex);
 
         // Add click event
-        $("li[role=tab]:eq(" + index + ") > a", wizard).bind("click.steps", stepClickHandler);
+        currentStep.children("a").bind("click.steps", stepClickHandler);
 
         updateSteps(wizard, index);
         refreshActionState(wizard);
@@ -1034,13 +1040,7 @@
 
             if (index < startIndex)
             {
-                $("li[role=tab]:eq(" + index + ")", wizard).addClass("done");
-            }
-
-            if (index > startIndex && !options.enableAllSteps)
-            {
-                $("li[role=tab]:eq(" + index + ")", wizard).addClass("disabled")
-                    .attr("aria-disabled", "true");
+                $("li[role=tab]:eq(" + index + ")", wizard).removeClass("disabled").attr("aria-disabled", "false").addClass("done");
             }
         });
 
@@ -1116,6 +1116,11 @@
             }),
             stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId + 
                 "\" aria-controls=\"" + uniqueBodyId + "\">" + title + "</a></li>");
+        
+        if (!options.enableAllSteps)
+        {
+            stepItem.addClass("disabled").attr("aria-disabled", "true");
+        }
 
         header.attr("id", uniqueHeaderId).attr("tabindex", "-1").addClass("title");
 
@@ -1165,12 +1170,12 @@
                     break;
 
                 case $.fn.steps.contentMode.async:
-                    var currentStepContent = $(".content > .body", wizard).eq(state.currentIndex)
+                    var currentStepContent = $(".content > .body", wizard).eq(state.currentIndex).attr("aria-busy", "true")
                         .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
                     $.ajax({ url: state.currentStep.contentUrl, cache: false })
                         .done(function (data)
                         {
-                            currentStepContent.empty().html(data).data("loaded", "1");
+                            currentStepContent.empty().html(data).attr("aria-busy", "false").data("loaded", "1");
                         });
                     break;
             }
