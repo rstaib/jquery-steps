@@ -20,7 +20,7 @@
 
 
 /* Accessibility */
-.wizard > .steps .current-info
+.wizard .audible
 {
     position: absolute;
     left: -999em;
@@ -105,9 +105,9 @@
     width: 600px;
 }
 
-.wizard > .actions a.disabled
+.wizard > .actions [aria-disabled="true"] a
 {
-    background: #ccc;
+    color: #aaa;
 }
 
 .wizard > .loading
