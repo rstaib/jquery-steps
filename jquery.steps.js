@@ -739,7 +739,7 @@
 
         var contentContainer = wizard.children(".content"),
             header = $(document.createElement(options.headerTag)).html(step.title),
-            body = $(document.createElement(options.bodyTag)).addClass("body").hide();
+            body = $(document.createElement(options.bodyTag));
 
         if (step.contentMode == null || step.contentMode === $.fn.steps.contentMode.html)
         {
@@ -763,6 +763,7 @@
         }
         state.stepCount++;
 
+        transformBody(wizard, body, index);
         transformTitle(wizard, header, index);
 
         state.currentStep = getStepProperties(wizard, state.currentIndex);
@@ -849,14 +850,14 @@
                 parent = anchor.parent(),
                 isDisabled = parent.hasClass("disabled");
             // Remove the class to make the anchor clickable!
-            parent.removeClass("disabled");
+            parent.removeClass("disabled").attr("aria-disabled", "false");
             anchor.click();
 
             // An error occured
             if (oldIndex === state.currentIndex && isDisabled)
             {
                 // Add the class again to disable the anchor; avoid click action.
-                parent.addClass("disabled");
+                parent.addClass("disabled").attr("aria-disabled", "true");
                 return false;
             }
 
@@ -912,12 +913,13 @@
                     state.transitionShowElement = stepContents.eq(index);
                     stepContents.eq(oldIndex).fadeOut(options.transitionEffectSpeed, function ()
                     {
-                        var wizard = $(this).parents(":has(.steps)");
+                        var wizard = $(this).attr("aria-hidden", "true").parents(":has(.steps)");
                         var state = wizard.data("state");
 
                         if (state.transitionShowElement)
                         {
-                            state.transitionShowElement.fadeIn(options.transitionEffectSpeed);
+                            state.transitionShowElement.fadeIn(options.transitionEffectSpeed,
+                                function () { $(this).attr("aria-hidden", "false"); });
                             state.transitionShowElement = null;
                         }
                     }).promise();
@@ -927,12 +929,13 @@
                     state.transitionShowElement = stepContents.eq(index);
                     stepContents.eq(oldIndex).slideUp(options.transitionEffectSpeed, function ()
                     {
-                        var wizard = $(this).parents(":has(.steps)");
+                        var wizard = $(this).attr("aria-hidden", "true").parents(":has(.steps)");
                         var state = wizard.data("state");
 
                         if (state.transitionShowElement)
                         {
-                            state.transitionShowElement.slideDown(options.transitionEffectSpeed);
+                            state.transitionShowElement.slideDown(options.transitionEffectSpeed,
+                                function () { $(this).attr("aria-hidden", "false"); });
                             state.transitionShowElement = null;
                         }
                     }).promise();
@@ -946,14 +949,14 @@
                             posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
                         currentStep.animate({ left: posFadeOut }, options.transitionEffectSpeed, 
-                            function () { $(this).hide(); }).promise();
-                        newStep.css("left", posFadeIn + "px").show();
+                            function () { $(this).hide().attr("aria-hidden", "true"); }).promise();
+                        newStep.css("left", posFadeIn + "px").show().attr("aria-hidden", "false");
                         newStep.animate({ left: 0 }, options.transitionEffectSpeed).promise();
                         break;
 
                 default:
-                    stepContents.eq(oldIndex).hide();
-                    stepContents.eq(index).show();
+                    stepContents.eq(oldIndex).hide().attr("aria-hidden", "true");
+                    stepContents.eq(index).show().attr("aria-hidden", "false");
                     break;
             }
 
@@ -987,7 +990,7 @@
         wizard.attr("role", "application").addClass(options.cssClass).empty().append(contentWrapper);
 
         var stepTitles = contentWrapper.children(options.headerTag),
-            stepContents = contentWrapper.children(options.bodyTag).addClass("body").hide();
+            stepContents = contentWrapper.children(options.bodyTag);
 
         if (stepTitles.length > stepContents.length)
         {
@@ -1012,11 +1015,17 @@
             }
         }
 
+        // Add WIA-ARIA support
+        stepContents.each(function (index)
+        {
+            transformBody(wizard, $(this), index);
+        });
+
         // Make the start step visible
-        stepContents.eq(startIndex).show();
+        stepContents.eq(startIndex).show().attr("aria-hidden", "false");
 
         var stepsWrapper = $(document.createElement(options.stepsContainerTag))
-            .addClass("steps").append($(document.createElement("ol")));
+            .addClass("steps").append($("<ol role=\"tablist\"></ol>"));
         wizard.prepend(stepsWrapper);
 
         stepTitles.each(function (index)
@@ -1030,7 +1039,8 @@
 
             if (index > startIndex && !options.enableAllSteps)
             {
-                $(".steps > ol > li:eq(" + index + ")", wizard).addClass("disabled");
+                $(".steps > ol > li:eq(" + index + ")", wizard).addClass("disabled")
+                    .attr("aria-disabled", "true");
             }
         });
 
@@ -1064,6 +1074,25 @@
     }
 
     /**
+     * Transforms the body to a proper tabpanel.
+     *
+     * @static
+     * @private
+     * @param wizard {Object} A jQuery wizard object
+     * @param body {Object} A jQuery body object
+     * @param index {Integer} The position of the body
+     * @since 0.9.7
+     */
+    function transformBody(wizard, body, index)
+    {
+        var uniqueId = getUniqueId(wizard),
+            uniqueBodyId = uniqueId + "-tabpanel-" + index,
+            uniqueHeaderId = uniqueId + "-header-" + index;
+        body.attr("id", uniqueBodyId).attr("role", "tabpanel").attr("aria-labelledby", uniqueHeaderId)
+            .addClass("body").hide().attr("aria-hidden", "true");
+    }
+
+    /**
      * Transforms the title to a step item button.
      *
      * @static
@@ -1074,16 +1103,21 @@
      */
     function transformTitle(wizard, header, index)
     {
-        header.attr("id", getUniqueId(wizard) + "-" + index).attr("tabindex", "-1").addClass("title");
-
-        var options = wizard.data("options"),
+        var uniqueId = getUniqueId(wizard),
+            uniqueStepId = uniqueId + "-tab-" + index,
+            uniqueBodyId = uniqueId + "-tabpanel-" + index,
+            uniqueHeaderId = uniqueId + "-header-" + index,
+            options = wizard.data("options"),
             state = wizard.data("state"),
             stepCollection = $(".steps > ol", wizard),
             title = renderTemplate(options.titleTemplate, {
                 index: index + 1,
                 title: header.html()
             }),
-            stepItem = $("<li><a href=\"#" + header.attr("id") + "\">" + title + "</a></li>");
+            stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId + 
+                "\" aria-controls=\"" + uniqueBodyId + "\">" + title + "</a></li>");
+
+        header.attr("id", uniqueHeaderId).attr("tabindex", "-1").addClass("title");
 
         if (index === 0)
         {
@@ -1159,10 +1193,15 @@
 
         for (var i = index; i < wizard.data("state").stepCount; i++)
         {
-            var uniqueStepId = getUniqueId(wizard) + "-" + i,
-                title = $(".content > .title:eq(" + i + ")", wizard).attr("id", uniqueStepId);
-            $(".steps > ol > li:eq(" + i + ") > a", wizard).attr("href", "#" + uniqueStepId)
+            var uniqueStepId = uniqueId + "-tab-" + i,
+                uniqueBodyId = uniqueId + "-tabpanel-" + i,
+                uniqueHeaderId = uniqueId + "-header-" + i,
+                title = $(".content > .title:eq(" + i + ")", wizard).attr("id", uniqueHeaderId);
+            $(".steps > ol > li:eq(" + i + ") > a", wizard).attr("id", uniqueStepId)
+                .attr("aria-controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
                 .html(renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
+            $(".content > .body:eq(" + i + ")", wizard).attr("id", uniqueBodyId)
+                .attr("aria-labelledby", uniqueHeaderId);
         }
     }
 
@@ -1192,7 +1231,8 @@
             currentOrNewStep.children("a").focus();
         }
 
-        currentOrNewStep.addClass("current").removeClass("disabled done").children("a").prepend(currentInfo);
+        currentOrNewStep.addClass("current").removeClass("disabled done")
+            .attr("aria-disabled", "false").children("a").prepend(currentInfo);
         stepTitles.eq(index).addClass("current").next(".body").addClass("current");
     }
 
