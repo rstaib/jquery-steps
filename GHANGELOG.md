@@ -13,5 +13,5 @@
 - Make css class for the outer component wrapper editable
 - Add saveState option flag to enable/disable state persistence (saves last active step position)
 - Add current class to step title and body for convinient css targeting [#2](https://github.com/rstaib/jquery-steps/issues/2)
-- Fixed a bug related to startIndex
-- Fixed a bug related to focusing after stepChanges
+- Add a bugfix related to startIndex
+- Add a bugfix related to focusing after stepChanges
