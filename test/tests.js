@@ -38,7 +38,7 @@ test("stepClassFirstAndLast", 12, function ()
 {
     function checkOnlyFirstItemHasClass()
     {
-        var steps = $("#vis > .steps > ol > li");
+        var steps = $("#vis li[role=tab]");
         for (var i = 0; i < steps.length; i++)
         {
             if (i > 0 && steps.eq(i).hasClass("first"))
@@ -51,7 +51,7 @@ test("stepClassFirstAndLast", 12, function ()
 
     function checkOnlyLastItemHasClass()
     {
-        var steps = $("#vis > .steps > ol > li");
+        var steps = $("#vis li[role=tab]");
         for (var i = 0; i < steps.length; i++)
         {
             if (i < (steps.length - 1) && steps.eq(i).hasClass("last"))
@@ -96,7 +96,7 @@ test("stepClassCurrent", 6, function ()
 {
     function checkOnlyItemOnPositionHasClass(index)
     {
-        var steps = $("#vis > .steps > ol > li");
+        var steps = $("#vis li[role=tab]");
         for (var i = 0; i < steps.length; i++)
         {
             if (i !== index && steps.eq(i).hasClass("current"))
@@ -135,7 +135,7 @@ test("stepClassDisabledAndDone", 12, function ()
 {
     function checkOnlyItemAfterPositionHasClass(index)
     {
-        var steps = $("#vis > .steps > ol > li");
+        var steps = $("#vis li[role=tab]");
         for (var i = 0; i < steps.length; i++)
         {
             if (i <= index && steps.eq(i).hasClass("disabled"))
@@ -143,12 +143,12 @@ test("stepClassDisabledAndDone", 12, function ()
                 return false;
             }
         }
-        return (index > (steps.length - 1)) ? $("#vis > .steps > ol > li:gt(" + index + ")").hasClass("disabled") : true;
+        return (index > (steps.length - 1)) ? $("#vis li[role=tab]:gt(" + index + ")").hasClass("disabled") : true;
     }
 
     function checkOnlyItemBeforePositionHasClass(index)
     {
-        var steps = $("#vis > .steps > ol > li");
+        var steps = $("#vis li[role=tab]");
         for (var i = 0; i < steps.length; i++)
         {
             if (i >= index && steps.eq(i).hasClass("done"))
@@ -156,7 +156,7 @@ test("stepClassDisabledAndDone", 12, function ()
                 return false;
             }
         }
-        return (index > 0) ? $("#vis > .steps > ol > li:lt(" + index + ")").hasClass("done") : true;
+        return (index > 0) ? $("#vis li[role=tab]:lt(" + index + ")").hasClass("done") : true;
     }
 
     ok(checkOnlyItemAfterPositionHasClass(0), "Valid after init (disabled)!");

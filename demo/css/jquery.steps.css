@@ -39,35 +39,35 @@
     font-weight: bold;
 }
 
-.wizard > .steps > ol > li,
-.wizard > .actions > ul > li
+.wizard li[role="tab"],
+.wizard > .actions li
 {
     float: left;
 }
 
-.wizard > .steps a
+.wizard li[role="tab"] a
 {
     background: #999;
 }
 
-.wizard > .steps .disabled a
+.wizard li[role="tab"].disabled a
 {
     background: #ccc;
     cursor: default;
 }
 
-.wizard > .steps .current a
+.wizard li[role="tab"].current a
 {
     background: rgb(241, 101, 41);
     cursor: default;
 }
 
-.wizard > .steps .done a
+.wizard li[role="tab"].done a
 {
     background: #4cff00;
 }
 
-.wizard > .steps .error a
+.wizard li[role="tab"].error a
 {
     background: #f00;
 }

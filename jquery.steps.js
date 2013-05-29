@@ -633,7 +633,7 @@
         var wizard = $(this),
             options = wizard.data("options"),
             state = wizard.data("state"),
-            currentStep = $(".steps li:eq(" + state.currentIndex + ")", wizard);
+            currentStep = $("li[role=tab]:eq(" + state.currentIndex + ")", wizard);
 
         if (wizard.triggerHandler("finishing", [state.currentIndex]))
         {
@@ -668,7 +668,7 @@
         var contentContainer = wizard.children(".content");
         $(".title:eq(" + index + ")", contentContainer).remove();
         $(".body:eq(" + index + ")", contentContainer).remove();
-        $(".steps > ol > li:eq(" + index + ")", wizard).remove();
+        $("li[role=tab]:eq(" + index + ")", wizard).remove();
 
         // Reset state values
         if (state.currentIndex > index)
@@ -682,13 +682,13 @@
         // Set the "first" class to the new first step button 
         if (index === 0)
         {
-            $(".steps > ol > li:first", wizard).addClass("first");
+            $("li[role=tab]:first", wizard).addClass("first");
         }
 
         // Set the "last" class to the new last step button 
         if (index === state.stepCount)
         {
-            $(".steps > ol > li:eq(" + index + ")", wizard).addClass("last");
+            $("li[role=tab]:eq(" + index + ")", wizard).addClass("last");
         }
 
         updateSteps(wizard, index);
@@ -769,7 +769,7 @@
         state.currentStep = getStepProperties(wizard, state.currentIndex);
 
         // Add click event
-        $(".steps > ol > li:eq(" + index + ") > a", wizard).bind("click.steps", stepClickHandler);
+        $("li[role=tab]:eq(" + index + ") > a", wizard).bind("click.steps", stepClickHandler);
 
         updateSteps(wizard, index);
         refreshActionState(wizard);
@@ -810,7 +810,7 @@
 
             if (opts.autoFocus && _uniqueId === 1)
             {
-                $(".steps li.current a", $this).focus();
+                $("li[role=tab].current a", $this).focus();
             }
 
             $this.bind("finishing.steps", opts.onFinishing);
@@ -1025,7 +1025,7 @@
         stepContents.eq(startIndex).show().attr("aria-hidden", "false");
 
         var stepsWrapper = $(document.createElement(options.stepsContainerTag))
-            .addClass("steps").append($("<ol role=\"tablist\"></ol>"));
+            .addClass("steps").append($("<ul role=\"tablist\"></ul>"));
         wizard.prepend(stepsWrapper);
 
         stepTitles.each(function (index)
@@ -1034,12 +1034,12 @@
 
             if (index < startIndex)
             {
-                $(".steps > ol > li:eq(" + index + ")", wizard).addClass("done");
+                $("li[role=tab]:eq(" + index + ")", wizard).addClass("done");
             }
 
             if (index > startIndex && !options.enableAllSteps)
             {
-                $(".steps > ol > li:eq(" + index + ")", wizard).addClass("disabled")
+                $("li[role=tab]:eq(" + index + ")", wizard).addClass("disabled")
                     .attr("aria-disabled", "true");
             }
         });
@@ -1109,7 +1109,7 @@
             uniqueHeaderId = uniqueId + "-header-" + index,
             options = wizard.data("options"),
             state = wizard.data("state"),
-            stepCollection = $(".steps > ol", wizard),
+            stepCollection = $(".steps > ul", wizard),
             title = renderTemplate(options.titleTemplate, {
                 index: index + 1,
                 title: header.html()
@@ -1197,7 +1197,7 @@
                 uniqueBodyId = uniqueId + "-tabpanel-" + i,
                 uniqueHeaderId = uniqueId + "-header-" + i,
                 title = $(".content > .title:eq(" + i + ")", wizard).attr("id", uniqueHeaderId);
-            $(".steps > ol > li:eq(" + i + ") > a", wizard).attr("id", uniqueStepId)
+            $("li[role=tab]:eq(" + i + ") > a", wizard).attr("id", uniqueStepId)
                 .attr("aria-controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
                 .html(renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
             $(".content > .body:eq(" + i + ")", wizard).attr("id", uniqueBodyId)
@@ -1225,13 +1225,13 @@
 
         if (oldIndex != null)
         {
-            var oldStep = steps.eq(oldIndex).addClass("done").removeClass("current error");
+            var oldStep = steps.eq(oldIndex).addClass("done").removeClass("current error").attr("aria-selected", "false");
             stepTitles.eq(oldIndex).removeClass("current").next(".body").removeClass("current");
             currentInfo = $("a > .current-info", oldStep);
             currentOrNewStep.children("a").focus();
         }
 
-        currentOrNewStep.addClass("current").removeClass("disabled done")
+        currentOrNewStep.addClass("current").attr("aria-selected", "true").removeClass("disabled done")
             .attr("aria-disabled", "false").children("a").prepend(currentInfo);
         stepTitles.eq(index).addClass("current").next(".body").addClass("current");
     }
