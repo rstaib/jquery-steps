@@ -7,3 +7,11 @@
 - Replace Number() by parseInt() for parsing `string` to `int` values
 - Add `"use strict";` and some other recommended things like the leading `;`
 - Substitute `ol` by `ul` tag for step navigation
+
+## 0.9.6
+
+- Make css class for the outer component wrapper editable
+- Add saveState option flag to enable/disable state persistence (saves last active step position)
+- Add current class to step title and body for convinient css targeting [#2](https://github.com/rstaib/jquery-steps/issues/2)
+- Fixed a bug related to startIndex
+- Fixed a bug related to focusing after stepChanges
