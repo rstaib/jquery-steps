@@ -7,6 +7,7 @@
 - Replace Number() by parseInt() for parsing `string` to `int` values
 - Add `"use strict";` and some other recommended things like the leading `;`
 - Substitute `ol` by `ul` tag for step navigation
+- Improve performance due to code refactoring
 
 ## 0.9.6
 
