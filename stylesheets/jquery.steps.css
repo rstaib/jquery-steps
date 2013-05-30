@@ -19,9 +19,7 @@
     outline: 0;
 }
 
-.wizard ol,
 .wizard ul,
-.tabcontrol ol,
 .tabcontrol ul
 {
     list-style: none !important;
@@ -29,9 +27,7 @@
     margin: 0;
 }
 
-.wizard ol > li,
 .wizard ul > li,
-.tabcontrol ol > li,
 .tabcontrol ul > li
 {
     display: block;
@@ -71,7 +67,7 @@
     font-size: 22px;
 }
 
-.wizard > .steps > ol > li,
+.wizard > .steps > ul > li,
 .wizard > .actions > ul > li
 {
     float: left;
@@ -222,7 +218,7 @@
     width: 600px;
 }
 
-.tabcontrol > .steps > ol
+.tabcontrol > .steps > ul
 {
     position: relative;
     margin: 6px 0 0 0;
@@ -230,7 +226,7 @@
     z-index: 1;
 }
 
-.tabcontrol > .steps > ol > li
+.tabcontrol > .steps > ul > li
 {
     background: #edecec;
     border: 1px solid #bbb;
@@ -238,12 +234,12 @@
     margin: 5px -1px 0 0;
 }
 
-.tabcontrol > .steps > ol > li:hover
+.tabcontrol > .steps > ul > li:hover
 {
     background: #fff;
 }
 
-.tabcontrol > .steps > ol > li.current
+.tabcontrol > .steps > ul > li.current
 {
     background: #fff;
     border-bottom: 0 none;
@@ -251,7 +247,7 @@
     margin-top: 0;
 }
 
-.tabcontrol > .steps > ol > li > a
+.tabcontrol > .steps > ul > li > a
 {
     display: inline-block;
     font: 1em/1em Arial, Verdana, sans-serif;
@@ -261,12 +257,12 @@
     color: #5f5f5f;
 }
 
-.tabcontrol > .steps > ol > li > a:hover
+.tabcontrol > .steps > ul > li > a:hover
 {
     text-decoration: none;
 }
 
-.tabcontrol > .steps > ol > li.current > a
+.tabcontrol > .steps > ul > li.current > a
 {
     padding: 15px 30px 10px 30px;
 }
