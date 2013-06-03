@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.8pre
+
+- Nested tags which have the same node name as the body tag cause an exception. Closes issue [#4](https://github.com/rstaib/jquery-steps/issues/4)
+
 ## 0.9.7
 
 - On finish failed the last step button does not become highlighted as error. Closes issue [#3](https://github.com/rstaib/jquery-steps/issues/3)

@@ -1030,8 +1030,8 @@
         contentWrapper.html(wizard.html());
         wizard.attr("role", "application").addClass(options.cssClass).empty().append(contentWrapper);
 
-        var stepTitles = contentWrapper.find(options.headerTag),
-            stepContents = contentWrapper.find(options.bodyTag);
+        var stepTitles = contentWrapper.children(options.headerTag),
+            stepContents = contentWrapper.children(options.bodyTag);
 
         if (stepTitles.length > stepContents.length)
         {
