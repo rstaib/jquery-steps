@@ -37,7 +37,7 @@
  */
 ;(function ($, undefined)
 {
-    "use strict";
+    //"use strict";
 
     /**
      * A global unique id count.
@@ -982,18 +982,18 @@
                     }).promise();
                     break;
 
-                    case $.fn.steps.transitionEffect.slideLeft:
-                        var newStep = stepContents.eq(index),
-                            currentStep = stepContents.eq(oldIndex),
-                            outerWidth = currentStep.outerWidth(true),
-                            posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
-                            posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
+                case $.fn.steps.transitionEffect.slideLeft:
+                    var newStep = stepContents.eq(index),
+                        currentStep = stepContents.eq(oldIndex),
+                        outerWidth = currentStep.outerWidth(true),
+                        posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
+                        posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
-                        currentStep.animate({ left: posFadeOut }, options.transitionEffectSpeed, 
-                            function () { $(this).hide().attr("aria-hidden", "true"); }).promise();
-                        newStep.css("left", posFadeIn + "px").show().attr("aria-hidden", "false");
-                        newStep.animate({ left: 0 }, options.transitionEffectSpeed).promise();
-                        break;
+                    currentStep.animate({ left: posFadeOut }, options.transitionEffectSpeed, 
+                        function () { $(this).hide().attr("aria-hidden", "true"); }).promise();
+                    newStep.css("left", posFadeIn + "px").show().attr("aria-hidden", "false");
+                    newStep.animate({ left: 0 }, options.transitionEffectSpeed).promise();
+                    break;
 
                 default:
                     stepContents.eq(oldIndex).hide().attr("aria-hidden", "true");
@@ -1530,7 +1530,8 @@
      */
     function getStepPosition(anchor)
     {
-        return parseInt(anchor.attr("href").substring(anchor.attr("href").lastIndexOf("-") + 1), 0);
+        var href = anchor.attr("href");
+        return parseInt(href.substring(href.lastIndexOf("-") + 1), 0);
     }
 
     /**
