@@ -31,12 +31,13 @@
 
         <script src="javascripts/jquery-1.9.1.min.js"></script>
         <script src="javascripts/jquery.steps.min.js"></script>
+        <script src="javascripts/jquery.stickyscroll.js"></script>
         <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
     </head>
     <body>
-        <header>
+        <header id="header">
             <div class="inner">
                 <h1>jquery-steps</h1>
                 <h2>A powerful jQuery wizard plugin that supports accessibility and HTML5.</h2>
@@ -60,7 +61,7 @@
             <section></section>
         </div>
 
-        <footer role="contentinfo">
+        <footer id="footer" role="contentinfo">
             <p>Copyright 2013 by Rafael J. Staib</p>
         </footer>
 
@@ -77,74 +78,77 @@
                     enablePagination: false
                 });
 
-                tabControl.find(".steps").append('<div class="share">' +
-                    '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rstaib.github.io/jquery-steps" data-text="jQuery Steps" data-via="RafaelStaib" data-hashtags="jquerysteps">Tweet</a>' +
-                    '<div class="fb-like" data-href="http://rstaib.github.io/jquery-steps" data-send="false" data-layout="button_count" data-width="110" data-show-faces="false" data-font="arial"></div>' +
-                    '<iframe src="http://ghbtns.com/github-btn.html?user=rstaib&repo=jquery-steps&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>' +
-                '</div>');
+                var headerHeight = $("#header").height();
+                $("#content-wrapper > .steps").stickyscroll({ t: headerHeight });
+
+                //tabControl.find(".steps").append('<div class="share">' +
+                //    '<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rstaib.github.io/jquery-steps" data-text="jQuery Steps" data-via="RafaelStaib" data-hashtags="jquerysteps">Tweet</a>' +
+                //    '<div class="fb-like" data-href="http://rstaib.github.io/jquery-steps" data-send="false" data-layout="button_count" data-width="110" data-show-faces="false" data-font="arial"></div>' +
+                //    '<iframe src="http://ghbtns.com/github-btn.html?user=rstaib&repo=jquery-steps&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>' +
+                //'</div>');
 
                 // Twitter Star Button
-                !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');
+                //!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');
 
                 // Facebook Like Button
-                (function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
+                //(function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
             });
 
             // Google Analytics
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            //(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            //(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            //m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            //})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-            ga('create', 'UA-40997516-1', 'rstaib.github.io');
-            ga('send', 'pageview');
+            //ga('create', 'UA-40997516-1', 'rstaib.github.io');
+            //ga('send', 'pageview');
 
             // Anchor Event Tracking
-            $(function()
-            {
-                var filetypes = /\.(zip|exe|pdf|doc*|xls*|ppt*|mp3|js|md)$/i,
-                    baseHref = "";
-                if ($("base").attr("href") != undefined)
-                {
-                    baseHref = $("base").attr("href");
-                }
+            //$(function()
+            //{
+            //    var filetypes = /\.(zip|exe|pdf|doc*|xls*|ppt*|mp3|js|md)$/i,
+            //        baseHref = "";
+            //    if ($("base").attr("href") != undefined)
+            //    {
+            //        baseHref = $("base").attr("href");
+            //    }
 
-                $("a").each(function()
-                {
-                    var href = $(this).attr("href");
-                    if (href && (href.match(/^https?\:/i)) && (!href.match(document.domain)))
-                    {
-                        $(this).click(function()
-                        {
-                            ga("send", "event", "External", "Click", href.replace(/^https?\:\/\//i, ""));
-                            if ($(this).attr("target") != null && $(this).attr("target").toLowerCase() !== "_blank")
-                            {
-                                setTimeout(function() { location.href = href; }, 200);
-                                return false;
-                            }
-                        });
-                    }
-                    else if (href && href.match(/^mailto\:/i))
-                    {
-                        $(this).click(function()
-                        {
-                            ga("send", "event", "Email", "Click", href.replace(/^mailto\:/i, ""));
-                        });
-                    }
-                    else if (href && href.match(filetypes))
-                    {
-                        $(this).click(function()
-                        {
-                            ga("send", "event", "Download", "Click", href);
-                            if ($(this).attr("target") != null && $(this).attr("target").toLowerCase() !== "_blank")
-                            {
-                                setTimeout(function() { location.href = baseHref + href; }, 200);
-                                return false;
-                            }
-                        });
-                    }
-                });
-            });
+            //    $("a").each(function()
+            //    {
+            //        var href = $(this).attr("href");
+            //        if (href && (href.match(/^https?\:/i)) && (!href.match(document.domain)))
+            //        {
+            //            $(this).click(function()
+            //            {
+            //                ga("send", "event", "External", "Click", href.replace(/^https?\:\/\//i, ""));
+            //                if ($(this).attr("target") != null && $(this).attr("target").toLowerCase() !== "_blank")
+            //                {
+            //                    setTimeout(function() { location.href = href; }, 200);
+            //                    return false;
+            //                }
+            //            });
+            //        }
+            //        else if (href && href.match(/^mailto\:/i))
+            //        {
+            //            $(this).click(function()
+            //            {
+            //                ga("send", "event", "Email", "Click", href.replace(/^mailto\:/i, ""));
+            //            });
+            //        }
+            //        else if (href && href.match(filetypes))
+            //        {
+            //            $(this).click(function()
+            //            {
+            //                ga("send", "event", "Download", "Click", href);
+            //                if ($(this).attr("target") != null && $(this).attr("target").toLowerCase() !== "_blank")
+            //                {
+            //                    setTimeout(function() { location.href = baseHref + href; }, 200);
+            //                    return false;
+            //                }
+            //            });
+            //        }
+            //    });
+            //});
         </script>
     </body>
 </html>
