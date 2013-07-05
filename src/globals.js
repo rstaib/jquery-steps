@@ -1,14 +1,12 @@
-$.fn.extends({
-    _ariaPrefix: "aria-",
-
+$.fn.extend({
     aria: function (name, value)
     {
-        return this.attr(_ariaPrefix + name, value);
+        return this.attr("aria-" + name, value);
     },
 
     removeAria: function (name)
     {
-        return this.attr(_ariaPrefix + name);
+        return this.removeAttr("aria-" + name);
     },
 
     enableAria: function()
@@ -29,5 +27,20 @@ $.fn.extends({
     showAria: function ()
     {
         return this.show().aria("hidden", "false");
+    },
+
+    selectAria: function ()
+    {
+        return this.addClass("current").aria("selected", "true");
+    },
+
+    deselectAria: function ()
+    {
+        return this.removeClass("current").aria("selected", "false");
+    },
+
+    setId: function (id)
+    {
+        return this.attr("id", id);
     }
 });

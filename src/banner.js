@@ -1,5 +1,5 @@
 /*!
- * jQuery Steps Plugin v0.9.7 - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * jQuery Steps Plugin v1.0.0pre - A powerful jQuery wizard plugin that supports accessibility and HTML5
  * https://github.com/rstaib/jquery-steps
  *
  * Copyright (c) 2013 Rafael J. Staib
@@ -37,4 +37,4 @@
  */
 ;(function ($, undefined)
 {
-    "use strict";
+    //"use strict";
