@@ -4,8 +4,21 @@ var privates = {
         wizard.data("steps").push(step);
     },
 
-    analyzeData: function (wizard, options, state, stepTitles)
+    analyzeData: function (wizard, options, state)
     {
+        var stepTitles = wizard.children(options.headerTag),
+            stepContents = wizard.children(options.bodyTag);
+
+        // Validate content
+        if (stepTitles.length > stepContents.length)
+        {
+            throw new Error("One or more corresponding step contents are missing.");
+        }
+        else if (stepTitles.length < stepContents.length)
+        {
+            throw new Error("One or more corresponding step titles are missing.");
+        }
+
         var startIndex = options.startIndex;
 
         state.stepCount = stepTitles.length;
@@ -13,7 +26,7 @@ var privates = {
         // Tries to load the saved state (step position)
         if (options.saveState && $.cookie)
         {
-            var savedState = $.cookie(_cookiePrefix + getUniqueId(wizard));
+            var savedState = $.cookie(_cookiePrefix + privates.getUniqueId(wizard));
             // Sets the saved position to the start index if not undefined or out of range 
             var savedIndex = parseInt(savedState, 0);
             if (!isNaN(savedIndex) && savedIndex < state.stepCount)
@@ -24,30 +37,43 @@ var privates = {
 
         state.currentIndex = startIndex;
 
-        stepTitles.each(function ()
+        stepTitles.each(function (index)
         {
             var item = $(this), // item == header
-                content = item.next(".body"),
-                mode = (content.data("mode") == null) ? $.fn.steps.contentMode.html :
-                    getValidEnumValue($.fn.steps.contentMode, (/^\s*$/.test(content.data("mode")) || isNaN(content.data("mode"))) ? 
-                        content.data("mode") : parseInt(content.data("mode"), 0)),
+                content = stepContents.eq(index),
+                modeData = content.data("mode"),
+                mode = (modeData == null) ? $.fn.steps.contentMode.html : privates.getValidEnumValue($.fn.steps.contentMode,
+                    (/^\s*$/.test(modeData) || isNaN(modeData)) ? modeData : parseInt(modeData, 0)),
                 contentUrl = (mode === $.fn.steps.contentMode.html || content.data("url") === undefined) ?
                     "" : content.data("url"),
-                contentLoaded = (mode !== $.fn.steps.contentMode.html && content.data("loaded") === "1");
+                contentLoaded = (mode !== $.fn.steps.contentMode.html && content.data("loaded") === "1"),
+                step = $.extend({}, $.fn.steps.stepModel, {
+                    title: item.html(),
+                    content: (mode === $.fn.steps.contentMode.html) ? content.html() : "",
+                    contentUrl: contentUrl,
+                    contentMode: mode,
+                    contentLoaded: contentLoaded
+                });
 
-            addStep(wizard, {
-                title: item.html(),
-                content: (mode === $.fn.steps.contentMode.html) ? content.html() : "",
-                contentUrl: contentUrl,
-                contentMode: mode,
-                contentLoaded: contentLoaded
-            });
+            privates.addStep(wizard, step);
         });
     },
 
     generateMenuItem: function (tag, label)
     {
         return "<li><a href=\"#" + tag + "\" role=\"menuitem\">" + label + "</a></li>";
+    },
+
+    getStep: function (wizard, index)
+    {
+        var steps = wizard.data("steps");
+
+        if (index < 0 || index >= steps.length)
+        {
+            throw new Error("Index out of range.");
+        }
+
+        return steps[index];
     },
 
     getUniqueId: function (wizard)
@@ -74,8 +100,8 @@ var privates = {
      */
     getValidEnumValue: function (enumType, keyOrValue)
     {
-        validateArgument("enumType", enumType);
-        validateArgument("keyOrValue", keyOrValue);
+        privates.validateArgument("enumType", enumType);
+        privates.validateArgument("keyOrValue", keyOrValue);
 
         // Is key
         if (typeof keyOrValue === "string")
@@ -137,15 +163,15 @@ var privates = {
         {
             // Save new state
             state.currentIndex = index;
-            saveCurrentStateToCookie(wizard, options, state);
+            privates.saveCurrentStateToCookie(wizard, options, state);
 
             // Change visualisation
-            refreshStepNavigation(wizard, options, state, oldIndex);
-            refreshPagination(wizard, options, state);
-            loadAsyncContent(wizard, options, state);
+            privates.refreshStepNavigation(wizard, options, state, oldIndex);
+            privates.refreshPagination(wizard, options, state);
+            privates.loadAsyncContent(wizard, options, state);
 
             var stepContents = wizard.find(".content > .body");
-            switch (getValidEnumValue($.fn.steps.transitionEffect, options.transitionEffect))
+            switch (privates.getValidEnumValue($.fn.steps.transitionEffect, options.transitionEffect))
             {
                 case $.fn.steps.transitionEffect.fade:
                     state.transitionShowElement = stepContents.eq(index);
@@ -219,7 +245,7 @@ var privates = {
     initialize: function (options)
     {
         /*jshint -W040 */
-        var opts = $.extend(true, {}, defaults, options);
+        var opts = $.extend(true, {}, $.fn.steps.defaults, options);
 
         return this.each(function (i)
         {
@@ -236,15 +262,21 @@ var privates = {
             wizard.data("state", state);
             wizard.data("steps", []);
 
-            render(wizard, opts, state);
-            registerEvents(wizard, opts);
+            privates.analyzeData(wizard, opts, state);
+            privates.render(wizard, opts, state);
+            privates.registerEvents(wizard, opts);
 
             // Trigger focus
             if (opts.autoFocus && _uniqueId === 0)
             {
-                wizard.find("#" + getUniqueId(wizard) + _tabSuffix + opts.startIndex).focus();
+                wizard.find("#" + privates.getUniqueId(wizard) + _tabSuffix + opts.startIndex).focus();
             }
         });
+    },
+
+    insertStep: function (wizard, index, step)
+    {
+        wizard.data("steps").splice(index, 0, step);
     },
 
     /**
@@ -290,20 +322,22 @@ var privates = {
      */
     loadAsyncContent: function (wizard, options, state)
     {
-        if (!options.enableContentCache || !state.currentStep.contentLoaded)
+        var currentStep = wizard.steps("getCurrentStep");
+
+        if (!options.enableContentCache || !currentStep.contentLoaded)
         {
-            switch (getValidEnumValue($.fn.steps.contentMode, state.currentStep.contentMode))
+            switch (privates.getValidEnumValue($.fn.steps.contentMode, currentStep.contentMode))
             {
                 case $.fn.steps.contentMode.iframe:
                     wizard.find(".content > .body").eq(state.currentIndex).empty()
-                        .html($("<iframe src=\"" + state.currentStep.contentUrl + "\" />"))
+                        .html($("<iframe src=\"" + currentStep.contentUrl + "\" />"))
                         .data("loaded", "1");
                     break;
 
                 case $.fn.steps.contentMode.async:
-                    var currentStepContent = wizard.find("#" + getUniqueId(wizard) + _tabpanelSuffix + state.currentIndex).aria("busy", "true")
-                        .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
-                    $.ajax({ url: state.currentStep.contentUrl, cache: false })
+                    var currentStepContent = wizard.find("#" + privates.getUniqueId(wizard) + _tabpanelSuffix + state.currentIndex).aria("busy", "true")
+                        .empty().append(privates.renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
+                    $.ajax({ url: currentStep.contentUrl, cache: false })
                         .done(function (data)
                         {
                             currentStepContent.empty().html(data).aria("busy", "false").data("loaded", "1");
@@ -331,7 +365,7 @@ var privates = {
 
         if (index >= 0 && index < state.stepCount && !(options.forceMoveForward && index < state.currentIndex))
         {
-            var anchor = wizard.find("#" + getUniqueId(wizard) + _tabSuffix + index),
+            var anchor = wizard.find("#" + privates.getUniqueId(wizard) + _tabSuffix + index),
                 parent = anchor.parent(),
                 isDisabled = parent.hasClass("disabled");
             // Remove the class to make the anchor clickable!
@@ -470,7 +504,7 @@ var privates = {
      */
     refreshStepNavigation: function (wizard, options, state, oldIndex)
     {
-        var uniqueId = getUniqueId(wizard),
+        var uniqueId = privates.getUniqueId(wizard),
             currentOrNewStepAnchor = wizard.find("#" + uniqueId + _tabSuffix + state.currentIndex),
             currentInfo = $("<span class=\"current-info audible\">" + options.labels.current + " </span>"),
             stepTitles = wizard.find(".content > .title");
@@ -501,7 +535,7 @@ var privates = {
      */
     refreshSteps: function (wizard, options, state, index)
     {
-        var uniqueId = getUniqueId(wizard);
+        var uniqueId = privates.getUniqueId(wizard);
 
         for (var i = index; i < state.stepCount; i++)
         {
@@ -512,7 +546,7 @@ var privates = {
 
             wizard.find(".steps a").eq(i).setId(uniqueStepId)
                 .aria("controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
-                .html(renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
+                .html(privates.renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
             wizard.find(".body").eq(i).setId(uniqueBodyId)
                 .aria("labelledby", uniqueHeaderId);
         }
@@ -527,11 +561,16 @@ var privates = {
 
         if (options.enableKeyNavigation)
         {
-            wizard.bind("keyup.steps", keyUpHandler);
+            wizard.bind("keyup.steps", privates.keyUpHandler);
         }
 
-        wizard.find(".steps a").bind("click.steps", stepClickHandler);
-        wizard.find(".actions a").bind("click.steps", paginationClickHandler);
+        wizard.find(".steps a").bind("click.steps", privates.stepClickHandler); // TODO: Try to move this code line to renderTitle
+        wizard.find(".actions a").bind("click.steps", privates.paginationClickHandler);
+    },
+
+    removeStep: function (wizard, index)
+    {
+        wizard.data("steps").splice(index, 1);
     },
 
     /**
@@ -552,26 +591,13 @@ var privates = {
             stepTitles = contentWrapper.children(options.headerTag),
             stepContents = contentWrapper.children(options.bodyTag);
 
-        // Validate content
-        if (stepTitles.length > stepContents.length)
-        {
-            throw new Error("One or more corresponding step contents are missing.");
-        }
-        else if (stepTitles.length < stepContents.length)
-        {
-            throw new Error("One or more corresponding step titles are missing.");
-        }
-
-        // Data will be load here to avoid unnecessary DOM payloads
-        analyzeData(wizard, options, state, stepTitles);
-
         // Transform the wizard wrapper and remove the inner HTML
         wizard.attr("role", "application").addClass(options.cssClass).empty().append(contentWrapper);
 
         // Add WIA-ARIA support
         stepContents.each(function (index)
         {
-            renderBody(wizard, $(this), index);
+            privates.renderBody(wizard, $(this), index);
         });
 
         // Make the start step visible
@@ -583,16 +609,17 @@ var privates = {
 
         stepTitles.each(function (index)
         {
-            renderTitle(wizard, options, state, $(this), index);
+            privates.renderTitle(wizard, options, state, $(this), index);
 
+            // TODO: Try to move this code block to renderTitle
             if (index < state.currentIndex)
             {
                 wizard.find(".steps li").eq(index).disableAria().addClass("done");
             }
         });
 
-        refreshStepNavigation(wizard, options, state);
-        renderPagination(wizard, options, state);
+        privates.refreshStepNavigation(wizard, options, state);
+        privates.renderPagination(wizard, options, state);
     },
 
     /**
@@ -607,7 +634,7 @@ var privates = {
      */
     renderBody: function (wizard, body, index)
     {
-        var uniqueId = getUniqueId(wizard),
+        var uniqueId = privates.getUniqueId(wizard),
             uniqueBodyId = uniqueId + _tabpanelSuffix + index,
             uniqueHeaderId = uniqueId + _titleSuffix + index;
 
@@ -636,18 +663,18 @@ var privates = {
 
             if (!options.forceMoveForward)
             {
-                actionCollection.append(generateMenuItem("previous", options.labels.previous));
+                actionCollection.append(privates.generateMenuItem("previous", options.labels.previous));
             }
 
-            actionCollection.append(generateMenuItem("next", options.labels.next));
+            actionCollection.append(privates.generateMenuItem("next", options.labels.next));
 
             if (options.enableFinishButton)
             {
-                actionCollection.append(generateMenuItem("finish", options.labels.finish));
+                actionCollection.append(privates.generateMenuItem("finish", options.labels.finish));
             }
 
-            refreshPagination(wizard, options, state);
-            loadAsyncContent(wizard, options, state);
+            privates.refreshPagination(wizard, options, state);
+            privates.loadAsyncContent(wizard, options, state);
         }
     },
 
@@ -693,12 +720,12 @@ var privates = {
      */
     renderTitle: function (wizard, options, state, header, index)
     {
-        var uniqueId = getUniqueId(wizard),
+        var uniqueId = privates.getUniqueId(wizard),
             uniqueStepId = uniqueId + _tabSuffix + index,
             uniqueBodyId = uniqueId + _tabpanelSuffix + index,
             uniqueHeaderId = uniqueId + _titleSuffix + index,
             stepCollection = wizard.find(".steps > ul"),
-            title = renderTemplate(options.titleTemplate, {
+            title = privates.renderTemplate(options.titleTemplate, {
                 index: index + 1,
                 title: header.html()
             }),
@@ -748,7 +775,7 @@ var privates = {
     {
         if (options.saveState && $.cookie)
         {
-            $.cookie(_cookiePrefix + getUniqueId(wizard), state.currentIndex);
+            $.cookie(_cookiePrefix + privates.getUniqueId(wizard), state.currentIndex);
         }
     },
 
@@ -766,6 +793,7 @@ var privates = {
 
         var anchor = $(this),
             wizard = anchor.parents(":has(.steps)"),
+            options = wizard.data("options"),
             state = wizard.data("state"),
             oldIndex = state.currentIndex;
 
@@ -774,13 +802,13 @@ var privates = {
             var href = anchor.attr("href"),
                 position = parseInt(href.substring(href.lastIndexOf("-") + 1), 0);
 
-            goToStep(wizard, position);
+            privates.goToStep(wizard, options, state, position);
         }
 
         // If nothing has changed
         if (oldIndex === state.currentIndex)
         {
-            wizard.find("#" + getUniqueId(wizard) + _tabSuffix + oldIndex).focus();
+            wizard.find("#" + privates.getUniqueId(wizard) + _tabSuffix + oldIndex).focus();
             return false;
         }
     },

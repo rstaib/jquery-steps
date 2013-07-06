@@ -8,7 +8,17 @@ module.exports = function (grunt)
         concat: {
             dist: {
                 files: {
-                    'dist/jquery.steps.js': ['jquery.steps.js']
+                    'dist/jquery.steps.js': [
+                        'src/banner.js',
+                        'src/variables.js',
+                        'src/privates.js',
+                        'src/publics.js',
+                        'src/enums.js',
+                        'src/model.js',
+                        'src/defaults.js',
+                        'src/globals.js',
+                        'src/footer.js'
+                    ]
                 }
             }
         },
@@ -35,6 +45,7 @@ module.exports = function (grunt)
                         src: [
                             'README.md',
                             /*'changelog.txt',*/
+                            'src/**/*.*',
                             'docs/**/*.*',
                             'demo/**/*.*',
                             'lib/*.*',
@@ -71,7 +82,7 @@ module.exports = function (grunt)
                 }
             },
             files: [
-                'jquery.steps.js'
+                'dist/jquery-steps.js'
             ],
             test: {
                 options: {
@@ -128,7 +139,7 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['jshint', 'qunit']);
+    grunt.registerTask('default', ['concat', 'jshint', 'qunit']);
     grunt.registerTask('api', ['clean', 'yuidoc']);
-    grunt.registerTask('release', ['default', 'api', 'concat', 'uglify', 'compress']);
+    grunt.registerTask('release', ['default', 'api', 'uglify', 'compress']);
 };
