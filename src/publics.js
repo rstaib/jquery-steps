@@ -150,18 +150,6 @@ $.fn.steps.insert = function (index, step)
 
     privates.renderBody(this, body, index);
     privates.renderTitle(this, options, state, header, index);
-
-    // TODO: Try to move this code block to renderTitle
-    var currentStepAnchor = this.find("#" + uniqueId + _tabSuffix + index);
-    var currentStep = currentStepAnchor.parent();
-    if (state.currentIndex > index)
-    {
-        currentStep.enableAria().addClass("done");
-    }
-
-    // TODO: Try to move this code line to renderTitle
-    currentStepAnchor.bind("click.steps", privates.stepClickHandler);
-
     privates.refreshSteps(this, options, state, index);
     privates.refreshPagination(this, options, state);
 
@@ -238,6 +226,18 @@ $.fn.steps.remove = function (index)
     privates.refreshPagination(this, options, state);
 
     return true;
+};
+
+/**
+ * Sets a specific step object by index.
+ *
+ * @method setStep
+ * @param index {Integer} An integer that belongs to the position of a step
+ * @param step {Object} The step object to change
+ **/
+$.fn.steps.setStep = function (index, step)
+{
+    throw new Error("Not yet implemented!");
 };
 
 /**

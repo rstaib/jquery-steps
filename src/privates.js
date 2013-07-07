@@ -564,7 +564,6 @@ var privates = {
             wizard.bind("keyup.steps", privates.keyUpHandler);
         }
 
-        wizard.find(".steps a").bind("click.steps", privates.stepClickHandler); // TODO: Try to move this code line to renderTitle
         wizard.find(".actions a").bind("click.steps", privates.paginationClickHandler);
     },
 
@@ -588,11 +587,14 @@ var privates = {
         // Create a content wrapper and copy HTML from the intial wizard structure
         var contentWrapper = $(document.createElement(options.contentContainerTag))
                 .addClass("content").html(wizard.html()),
+            stepsWrapper = $(document.createElement(options.stepsContainerTag))
+                .addClass("steps").append($("<ul role=\"tablist\"></ul>")),
             stepTitles = contentWrapper.children(options.headerTag),
             stepContents = contentWrapper.children(options.bodyTag);
 
         // Transform the wizard wrapper and remove the inner HTML
-        wizard.attr("role", "application").addClass(options.cssClass).empty().append(contentWrapper);
+        wizard.attr("role", "application").addClass(options.cssClass).empty()
+            .append(stepsWrapper).append(contentWrapper);
 
         // Add WIA-ARIA support
         stepContents.each(function (index)
@@ -603,19 +605,9 @@ var privates = {
         // Make the start step visible
         stepContents.eq(state.currentIndex).showAria();
 
-        var stepsWrapper = $(document.createElement(options.stepsContainerTag))
-            .addClass("steps").append($("<ul role=\"tablist\"></ul>"));
-        wizard.prepend(stepsWrapper);
-
         stepTitles.each(function (index)
         {
             privates.renderTitle(wizard, options, state, $(this), index);
-
-            // TODO: Try to move this code block to renderTitle
-            if (index < state.currentIndex)
-            {
-                wizard.find(".steps li").eq(index).disableAria().addClass("done");
-            }
         });
 
         privates.refreshStepNavigation(wizard, options, state);
@@ -737,6 +729,11 @@ var privates = {
             stepItem.disableAria();
         }
 
+        if (state.currentIndex > index)
+        {
+            stepItem.enableAria().addClass("done");
+        }
+
         header.setId(uniqueHeaderId).attr("tabindex", "-1").addClass("title");
 
         if (index === 0)
@@ -759,6 +756,9 @@ var privates = {
         {
             stepCollection.find("li").removeClass("last").eq(index).addClass("last");
         }
+
+        // Register click event
+        stepItem.children("a").bind("click.steps", privates.stepClickHandler);
     },
 
     /**

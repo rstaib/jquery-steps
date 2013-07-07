@@ -37,4 +37,3 @@
  */
 ;(function ($, undefined)
 {
-    //"use strict";
