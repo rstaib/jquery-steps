@@ -707,6 +707,8 @@ var privates = {
      * @private
      * @method renderTitle
      * @param wizard {Object} A jQuery wizard object
+     * @param options {Object} Settings of the current wizard
+     * @param state {Object} The state container of the current wizard
      * @param header {Object} A jQuery header object
      * @param index {Integer} The position of the header
      */
