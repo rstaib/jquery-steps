@@ -1,3 +1,4 @@
+/*jshint -W024 */
 /*jshint -W117 */
 
 module("general");

@@ -115,7 +115,7 @@ $.fn.steps.insert = function (index, step)
     var options = this.data("options"),
         state = this.data("state");
 
-    return privates.insertStep(this, options, state, state.stepCount, step);
+    return privates.insertStep(this, options, state, index, step);
 };
 
 /**
