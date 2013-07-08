@@ -68,6 +68,30 @@ var privates = {
         });
     },
 
+    /**
+     * Triggers the onFinishing and onFinished event.
+     *
+     * @static
+     * @private
+     * @method finishStep
+     * @param wizard {Object} The jQuery wizard object
+     * @param state {Object} The state container of the current wizard
+     **/
+    finishStep: function (wizard, state)
+    {
+        var currentStep = wizard.find(".steps li").eq(state.currentIndex);
+
+        if (wizard.triggerHandler("finishing", [state.currentIndex]))
+        {
+            currentStep.addClass("done").removeClass("error");
+            wizard.triggerHandler("finished", [state.currentIndex]);
+        }
+        else
+        {
+            currentStep.addClass("error");
+        }
+    },
+
     generateMenuItem: function (tag, label)
     {
         return "<li><a href=\"#" + tag + "\" role=\"menuitem\">" + label + "</a></li>";
@@ -159,6 +183,38 @@ var privates = {
         {
             throw new Error("Invalid key or value type.");
         }
+    },
+
+    /**
+     * Routes to the next step.
+     *
+     * @static
+     * @private
+     * @method goToNextStep
+     * @param wizard {Object} The jQuery wizard object
+     * @param options {Object} Settings of the current wizard
+     * @param state {Object} The state container of the current wizard
+     * @return {Boolean} Indicates whether the action executed
+     **/
+    goToNextStep: function (wizard, options, state)
+    {
+        return privates.paginationClick(wizard, options, state, $.fn.steps.currentIndex.increase(state, 1));
+    },
+
+    /**
+     * Routes to the previous step.
+     *
+     * @static
+     * @private
+     * @method goToPreviousStep
+     * @param wizard {Object} The jQuery wizard object
+     * @param options {Object} Settings of the current wizard
+     * @param state {Object} The state container of the current wizard
+     * @return {Boolean} Indicates whether the action executed
+     **/
+    goToPreviousStep: function (wizard, options, state)
+    {
+        return privates.paginationClick(wizard, options, state, $.fn.steps.currentIndex.decrease(state, 1));
     },
 
     /**
@@ -393,9 +449,11 @@ var privates = {
      */
     keyUpHandler: function (event)
     {
-        var wizard = $(this);
+        var wizard = $(this),
+            options = wizard.data("options"),
+            state = wizard.data("state");
 
-        if (wizard.data("options").suppressPaginationOnFocus && wizard.find(":focus").is(":input"))
+        if (options.suppressPaginationOnFocus && wizard.find(":focus").is(":input"))
         {
             event.preventDefault();
             return false;
@@ -405,12 +463,12 @@ var privates = {
         if (event.keyCode === keyCodes.left)
         {
             event.preventDefault();
-            wizard.steps("previous");
+            privates.goToPreviousStep(wizard, options, state);
         }
         else if (event.keyCode === keyCodes.right)
         {
             event.preventDefault();
-            wizard.steps("next");
+            privates.goToNextStep(wizard, options, state);
         }
     },
 
@@ -458,14 +516,14 @@ var privates = {
      * @private
      * @method paginationClick
      * @param wizard {Object} The jQuery wizard object
+     * @param options {Object} Settings of the current wizard
+     * @param state {Object} The state container of the current wizard
      * @param index {Integer} The position (zero-based) to route to
      * @return {Boolean} Indicates whether the event fired successfully or not
      **/
-    paginationClick: function (wizard, index)
+    paginationClick: function (wizard, options, state, index)
     {
-        var options = wizard.data("options"),
-            state = wizard.data("state"),
-            oldIndex = state.currentIndex;
+        var oldIndex = state.currentIndex;
 
         if (index >= 0 && index < state.stepCount && !(options.forceMoveForward && index < state.currentIndex))
         {
@@ -504,20 +562,22 @@ var privates = {
 
         var anchor = $(this),
             wizard = anchor.parents(":has(.steps)"),
+            options = wizard.data("options"),
+            state = wizard.data("state"),
             href = anchor.attr("href");
 
         switch (href.substring(href.lastIndexOf("#")))
         {
             case "#finish":
-                wizard.steps("finish");
+                privates.finishStep(wizard, options, state);
                 break;
 
             case "#next":
-                wizard.steps("next");
+                privates.goToNextStep(wizard, options, state);
                 break;
 
             case "#previous":
-                wizard.steps("previous");
+                privates.goToPreviousStep(wizard, options, state)
                 break;
         }
     },

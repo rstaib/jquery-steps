@@ -39,5 +39,10 @@
     "grunt-cli": "~0.1.9"
   },
   "readmeFilename": "README.md",
-  "gitHead": "0d9f4f8b6a0c3d3b8a73eabf6a4b8cececd52f7a"
+  "gitHead": "0d9f4f8b6a0c3d3b8a73eabf6a4b8cececd52f7a",
+  "folders": { 
+	"dist": "build",
+	"src": "src",
+	"docs": "docs"
+  }
 }

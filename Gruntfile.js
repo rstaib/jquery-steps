@@ -8,16 +8,15 @@ module.exports = function (grunt)
         concat: {
             dist: {
                 files: {
-                    'dist/jquery.steps.js': [
-                        'src/banner.js',
-                        'src/variables.js',
-                        'src/privates.js',
-                        'src/publics.js',
-                        'src/enums.js',
-                        'src/model.js',
-                        'src/defaults.js',
-                        'src/globals.js',
-                        'src/footer.js'
+                    '<%= pkg.folders.dist %>/jquery.steps.js': [
+                        '<%= pkg.folders.src %>/banner.js',
+                        '<%= pkg.folders.src %>/variables.js',
+                        '<%= pkg.folders.src %>/privates.js',
+                        '<%= pkg.folders.src %>/publics.js',
+                        '<%= pkg.folders.src %>/objects.js',
+                        '<%= pkg.folders.src %>/defaults.js',
+                        '<%= pkg.folders.src %>/helper.js',
+                        '<%= pkg.folders.src %>/footer.js'
                     ]
                 }
             }
@@ -31,22 +30,22 @@ module.exports = function (grunt)
             },
             all: {
                 files: {
-                    'dist/jquery.steps.min.js': ['dist/jquery.steps.js']
+                    '<%= pkg.folders.dist %>/jquery.steps.min.js': ['<%= pkg.folders.dist %>/jquery.steps.js']
                 }
             }
         },
         compress: {
             main: {
                 options: {
-                    archive: 'dist/<%= pkg.name %>-<%= pkg.version %>.zip'
+                    archive: '<%= pkg.folders.dist %>/<%= pkg.name %>-<%= pkg.version %>.zip'
                 },
                 files: [
                     {
                         src: [
                             'README.md',
                             /*'changelog.txt',*/
-                            'src/**/*.*',
-                            'docs/**/*.*',
+                            '<%= pkg.folders.src %>/**/*.*',
+                            '<%= pkg.folders.docs %>/**/*.*',
                             'demo/**/*.*',
                             'lib/*.*',
                             'test/**/*.*'
@@ -54,7 +53,7 @@ module.exports = function (grunt)
                     },
                     {
                         flatten: true,
-                        src: ['dist/*.js'],
+                        src: ['<%= pkg.folders.dist %>/*.js'],
                         filter: 'isFile'
                     }
                 ]
@@ -82,7 +81,7 @@ module.exports = function (grunt)
                 }
             },
             files: [
-                'dist/jquery-steps.js'
+                '<%= pkg.folders.dist %>/jquery-steps.js'
             ],
             test: {
                 options: {
@@ -124,11 +123,14 @@ module.exports = function (grunt)
                 options: {
                     exclude: 'qunit-1.11.0.js',
                     paths: '.',
-                    outdir: 'docs/'
+                    outdir: '<%= pkg.folders.docs %>/'
                 }
             }
         },
-        clean: ["dist", "docs"]
+        clean: {
+            api: ["<%= pkg.folders.docs %>"],
+            build: ["<%= pkg.folders.dist %>"]
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -139,7 +141,8 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['concat', 'jshint', 'qunit']);
-    grunt.registerTask('api', ['clean', 'yuidoc']);
-    grunt.registerTask('release', ['default', 'api', 'uglify', 'compress']);
+    grunt.registerTask('default', ['build']);
+    grunt.registerTask('api', ['clean:api', 'yuidoc']);
+    grunt.registerTask('build', ['clean:build', 'concat', 'jshint', 'qunit']);
+    grunt.registerTask('release', ['build', 'api', 'uglify', 'compress']);
 };

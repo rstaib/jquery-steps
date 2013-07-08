@@ -45,19 +45,9 @@ $.fn.steps.add = function (step)
  **/
 $.fn.steps.finish = function ()
 {
-    var options = this.data("options"),
-        state = this.data("state"),
-        currentStep = this.find(".steps li").eq(state.currentIndex);
+    var state = this.data("state");
 
-    if (this.triggerHandler("finishing", [state.currentIndex]))
-    {
-        currentStep.addClass("done").removeClass("error");
-        this.triggerHandler("finished", [state.currentIndex]);
-    }
-    else
-    {
-        currentStep.addClass("error");
-    }
+    privates.finishStep(this, state);
 };
 
 /**
@@ -126,7 +116,10 @@ $.fn.steps.insert = function (index, step)
  **/
 $.fn.steps.next = function ()
 {
-    return privates.paginationClick(this, this.data("state").currentIndex + 1);
+    var options = this.data("options"),
+        state = this.data("state");
+
+    return privates.goToNextStep(this, options, state);
 };
 
 /**
@@ -137,7 +130,10 @@ $.fn.steps.next = function ()
  **/
 $.fn.steps.previous = function ()
 {
-    return privates.paginationClick(this, this.data("state").currentIndex - 1);
+    var options = this.data("options"),
+        state = this.data("state");
+
+    return privates.goToPreviousStep(this, options, state);
 };
 
 /**
