@@ -1,5 +1,14 @@
 var privates = {
-    addStep: function (wizard, step)
+    /**
+     * Adds a step to the cache.
+     *
+     * @static
+     * @private
+     * @method addStepToCache
+     * @param wizard {Object} A jQuery wizard object
+     * @param step {Object} The step object to add
+     **/
+    addStepToCache: function (wizard, step)
     {
         wizard.data("steps").push(step);
     },
@@ -18,7 +27,7 @@ var privates = {
         {
             throw new Error("One or more corresponding step titles are missing.");
         }
-
+        
         var startIndex = options.startIndex;
 
         state.stepCount = stepTitles.length;
@@ -55,7 +64,7 @@ var privates = {
                     contentLoaded: contentLoaded
                 });
 
-            privates.addStep(wizard, step);
+            privates.addStepToCache(wizard, step);
         });
     },
 
@@ -64,6 +73,15 @@ var privates = {
         return "<li><a href=\"#" + tag + "\" role=\"menuitem\">" + label + "</a></li>";
     },
 
+    /**
+     * Gets a specific step object by index.
+     *
+     * @static
+     * @private
+     * @method getStep
+     * @param index {Integer} An integer that belongs to the position of a step
+     * @return {Object} A specific step object
+     **/
     getStep: function (wizard, index)
     {
         var steps = wizard.data("steps");
@@ -76,6 +94,15 @@ var privates = {
         return steps[index];
     },
 
+    /**
+     * Gets or creates if not exist an unique id from the given wizard instance.
+     *
+     * @static
+     * @private
+     * @method getUniqueId
+     * @param wizard {Object} A jQuery wizard object
+     * @return {String} Returns the unique id for the given wizard
+     */
     getUniqueId: function (wizard)
     {
         var uniqueId = wizard.data("uid");
@@ -274,7 +301,84 @@ var privates = {
         });
     },
 
-    insertStep: function (wizard, index, step)
+    /**
+     * Inserts a new step to a specific position.
+     *
+     * @static
+     * @private
+     * @method insertStep
+     * @param wizard {Object} The jQuery wizard object
+     * @param options {Object} Settings of the current wizard
+     * @param state {Object} The state container of the current wizard
+     * @param index {Integer} The position (zero-based) to add
+     * @param step {Object} The step object to add
+     * @example
+     *     $("#wizard").steps().insert(0, {
+     *         title: "Title",
+     *         content: "", // optional
+     *         contentMode: "async", // optional
+     *         contentUrl: "/Content/Step/1" // optional
+     *     });
+     * @chainable
+     **/
+    insertStep: function (wizard, options, state, index, step)
+    {
+        var uniqueId = privates.getUniqueId(wizard);
+
+        if (index < 0 || index > state.stepCount)
+        {
+            throw new Error("Index out of range.");
+        }
+
+        // TODO: Validate step object
+
+        // Change data
+        step = $.extend({}, $.fn.steps.stepModel, step);
+        privates.insertStepToCache(wizard, index, step);
+        if (state.currentIndex >= index)
+        {
+            state.currentIndex++;
+            privates.saveCurrentStateToCookie(wizard, options, state);
+        }
+        state.stepCount++;
+
+        var contentContainer = wizard.find(".content"),
+            header = $(document.createElement(options.headerTag)).html(step.title),
+            body = $(document.createElement(options.bodyTag));
+
+        if (step.contentMode == null || step.contentMode === $.fn.steps.contentMode.html)
+        {
+            body.html(step.content);
+        }
+
+        if (index === 0)
+        {
+            contentContainer.prepend(body).prepend(header);
+        }
+        else
+        {
+            contentContainer.find("#" + uniqueId + _tabpanelSuffix + (index - 1)).after(body).after(header);
+        }
+
+        privates.renderBody(wizard, body, index);
+        privates.renderTitle(wizard, options, state, header, index);
+        privates.refreshSteps(wizard, options, state, index);
+        privates.refreshPagination(wizard, options, state);
+
+        return wizard;
+    },
+
+    /**
+     * Inserts a step object to the cache at a specific position.
+     *
+     * @static
+     * @private
+     * @method insertStepToCache
+     * @param wizard {Object} A jQuery wizard object
+     * @param index {Integer} The position (zero-based) to add
+     * @param step {Object} The step object to add
+     **/
+    insertStepToCache: function (wizard, index, step)
     {
         wizard.data("steps").splice(index, 0, step);
     },
@@ -567,7 +671,60 @@ var privates = {
         wizard.find(".actions a").bind("click.steps", privates.paginationClickHandler);
     },
 
-    removeStep: function (wizard, index)
+    /**
+     * Removes a specific step by an given index.
+     *
+     * @static
+     * @private
+     * @method removeStep
+     * @param wizard {Object} A jQuery wizard object
+     * @param options {Object} Settings of the current wizard
+     * @param state {Object} The state container of the current wizard
+     * @param index {Integer} The position (zero-based) of the step to remove
+     * @return Indecates whether the item is removed.
+     **/
+    removeStep: function (wizard, options, state, index)
+    {
+        var uniqueId = privates.getUniqueId(wizard);
+
+        // Index out of range and try deleting current item will return false.
+        if (index < 0 || index >= state.stepCount || state.currentIndex === index)
+        {
+            return false;
+        }
+
+        // Change data
+        privates.removeStepToCache(wizard, index);
+        if (state.currentIndex > index)
+        {
+            state.currentIndex--;
+            privates.saveCurrentStateToCookie(wizard, options, state);
+        }
+        state.stepCount--;
+
+        wizard.find("#" + uniqueId + _titleSuffix + index).remove();
+        wizard.find("#" + uniqueId + _tabpanelSuffix + index).remove();
+        wizard.find("#" + uniqueId + _tabSuffix + index).parent().remove();
+
+        // Set the "first" class to the new first step button 
+        if (index === 0)
+        {
+            wizard.find(".steps li").first().addClass("first");
+        }
+
+        // Set the "last" class to the new last step button 
+        if (index === state.stepCount)
+        {
+            wizard.find(".steps li").eq(index).addClass("last");
+        }
+
+        privates.refreshSteps(wizard, options, state, index);
+        privates.refreshPagination(wizard, options, state);
+
+        return true;
+    },
+
+    removeStepToCache: function (wizard, index)
     {
         wizard.data("steps").splice(index, 1);
     },

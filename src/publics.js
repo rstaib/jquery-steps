@@ -32,7 +32,10 @@ $.fn.steps = function (method)
  **/
 $.fn.steps.add = function (step)
 {
-    return this.steps("insert", this.data("state").stepCount, step);
+    var options = this.data("options"),
+        state = this.data("state");
+
+    return privates.insertStep(this, options, state, state.stepCount, step);
 };
 
 /**
@@ -109,51 +112,10 @@ $.fn.steps.getStep = function (index)
  **/
 $.fn.steps.insert = function (index, step)
 {
-    var uniqueId = privates.getUniqueId(this),
-        options = this.data("options"),
+    var options = this.data("options"),
         state = this.data("state");
 
-    if (index < 0 || index > state.stepCount)
-    {
-        throw new Error("Index out of range.");
-    }
-
-    // TODO: Validate step object
-
-    // Change data
-    step = $.extend({}, $.fn.steps.stepModel, step);
-    privates.insertStep(this, index, step);
-    if (state.currentIndex >= index)
-    {
-        state.currentIndex++;
-        privates.saveCurrentStateToCookie(this, options, state);
-    }
-    state.stepCount++;
-
-    var contentContainer = this.find(".content"),
-        header = $(document.createElement(options.headerTag)).html(step.title),
-        body = $(document.createElement(options.bodyTag));
-
-    if (step.contentMode == null || step.contentMode === $.fn.steps.contentMode.html)
-    {
-        body.html(step.content);
-    }
-
-    if (index === 0)
-    {
-        contentContainer.prepend(body).prepend(header);
-    }
-    else
-    {
-        contentContainer.find("#" + uniqueId + _tabpanelSuffix + (index - 1)).after(body).after(header);
-    }
-
-    privates.renderBody(this, body, index);
-    privates.renderTitle(this, options, state, header, index);
-    privates.refreshSteps(this, options, state, index);
-    privates.refreshPagination(this, options, state);
-
-    return this;
+    return privates.insertStep(this, options, state, state.stepCount, step);
 };
 
 /**
@@ -187,45 +149,10 @@ $.fn.steps.previous = function ()
  **/
 $.fn.steps.remove = function (index)
 {
-    var uniqueId = privates.getUniqueId(this),
-        options = this.data("options"),
+    var options = this.data("options"),
         state = this.data("state");
 
-    // Index out of range and try deleting current item will return false.
-    if (index < 0 || index >= state.stepCount || state.currentIndex === index)
-    {
-        return false;
-    }
-
-    // Change data
-    privates.removeStep(this, index);
-    if (state.currentIndex > index)
-    {
-        state.currentIndex--;
-        privates.saveCurrentStateToCookie(this, options, state);
-    }
-    state.stepCount--;
-
-    this.find("#" + uniqueId + _titleSuffix + index).remove();
-    this.find("#" + uniqueId + _tabpanelSuffix + index).remove();
-    this.find("#" + uniqueId + _tabSuffix + index).parent().remove();
-
-    // Set the "first" class to the new first step button 
-    if (index === 0)
-    {
-        this.find(".steps li").first().addClass("first");
-    }
-
-    // Set the "last" class to the new last step button 
-    if (index === state.stepCount)
-    {
-        this.find(".steps li").eq(index).addClass("last");
-    }
-
-    privates.refreshSteps(this, options, state, index);
-    privates.refreshPagination(this, options, state);
-
-    return true;
+    return privates.removeStep(this, options, state, index);
 };
 
 /**
