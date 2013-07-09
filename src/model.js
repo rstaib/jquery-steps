@@ -1,7 +1,7 @@
-$.fn.steps.stepModel = {
+var stepModel = $.fn.steps.stepModel = {
     title: "",
     content: "",
     contentUrl: "",
-    contentMode: $.fn.steps.contentMode.html,
+    contentMode: contentMode.html,
     contentLoaded: false
 };

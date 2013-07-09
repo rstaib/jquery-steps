@@ -13,7 +13,7 @@
  *   // Initialization approach
  *   $("#wizard").steps({ headerTag: "h3" });
  **/
-$.fn.steps.defaults = {
+var defaults = $.fn.steps.defaults = {
     /**
      * The header tag is used to find the step button text within the declared wizard area.
      *
@@ -241,7 +241,7 @@ $.fn.steps.defaults = {
      * @default none
      * @for defaults
      **/
-    transitionEffect: $.fn.steps.transitionEffect.none,
+    transitionEffect: transitionEffect.none,
 
     /**
      * Animation speed for step transitions (in milliseconds).

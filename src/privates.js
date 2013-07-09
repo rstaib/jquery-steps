@@ -123,14 +123,14 @@ function analyzeData(wizard, options, state)
         var item = $(this), // item == header
             content = stepContents.eq(index),
             modeData = content.data("mode"),
-            mode = (modeData == null) ? $.fn.steps.contentMode.html : getValidEnumValue($.fn.steps.contentMode,
+            mode = (modeData == null) ? contentMode.html : getValidEnumValue(contentMode,
                 (/^\s*$/.test(modeData) || isNaN(modeData)) ? modeData : parseInt(modeData, 0)),
-            contentUrl = (mode === $.fn.steps.contentMode.html || content.data("url") === undefined) ?
+            contentUrl = (mode === contentMode.html || content.data("url") === undefined) ?
                 "" : content.data("url"),
-            contentLoaded = (mode !== $.fn.steps.contentMode.html && content.data("loaded") === "1"),
-            step = $.extend({}, $.fn.steps.stepModel, {
+            contentLoaded = (mode !== contentMode.html && content.data("loaded") === "1"),
+            step = $.extend({}, stepModel, {
                 title: item.html(),
-                content: (mode === $.fn.steps.contentMode.html) ? content.html() : "",
+                content: (mode === contentMode.html) ? content.html() : "",
                 contentUrl: contentUrl,
                 contentMode: mode,
                 contentLoaded: contentLoaded
@@ -179,11 +179,6 @@ function format(format)
     }
 
     return format;
-}
-
-function generateMenuItem(tag, label)
-{
-    return "<li><a href=\"#" + tag + "\" role=\"menuitem\">" + label + "</a></li>";
 }
 
 function getOptions(wizard)
@@ -358,9 +353,9 @@ function goToStep(wizard, options, state, index)
         loadAsyncContent(wizard, options, state);
 
         var stepContents = wizard.find(".content > .body");
-        switch (getValidEnumValue($.fn.steps.transitionEffect, options.transitionEffect))
+        switch (getValidEnumValue(transitionEffect, options.transitionEffect))
         {
-            case $.fn.steps.transitionEffect.fade:
+            case transitionEffect.fade:
                 state.transitionShowElement = stepContents.eq(index);
                 stepContents.eq(oldIndex).fadeOut(options.transitionEffectSpeed, function ()
                 {
@@ -376,7 +371,7 @@ function goToStep(wizard, options, state, index)
                 }).promise();
                 break;
 
-            case $.fn.steps.transitionEffect.slide:
+            case transitionEffect.slide:
                 state.transitionShowElement = stepContents.eq(index);
                 stepContents.eq(oldIndex).slideUp(options.transitionEffectSpeed, function ()
                 {
@@ -392,7 +387,7 @@ function goToStep(wizard, options, state, index)
                 }).promise();
                 break;
 
-            case $.fn.steps.transitionEffect.slideLeft:
+            case transitionEffect.slideLeft:
                 var newStep = stepContents.eq(index),
                     currentStep = stepContents.eq(oldIndex),
                     outerWidth = currentStep.outerWidth(true),
@@ -437,7 +432,7 @@ function increaseCurrentIndexBy(state, increaseBy)
 function initialize(options)
 {
     /*jshint -W040 */
-    var opts = $.extend(true, {}, $.fn.steps.defaults, options);
+    var opts = $.extend(true, {}, defaults, options);
 
     return this.each(function (i)
     {
@@ -498,7 +493,7 @@ function insertStep(wizard, options, state, index, step)
     // TODO: Validate step object
 
     // Change data
-    step = $.extend({}, $.fn.steps.stepModel, step);
+    step = $.extend({}, stepModel, step);
     insertStepToCache(wizard, index, step);
     if (state.currentIndex >= index)
     {
@@ -508,10 +503,10 @@ function insertStep(wizard, options, state, index, step)
     state.stepCount++;
 
     var contentContainer = wizard.find(".content"),
-        header = $(document.createElement(options.headerTag)).html(step.title),
-        body = $(document.createElement(options.bodyTag));
+        header = $(format("<{0}>{1}</{0}>", options.headerTag, step.title)),
+        body = $(format("<{0}></{0}>", options.bodyTag));
 
-    if (step.contentMode == null || step.contentMode === $.fn.steps.contentMode.html)
+    if (step.contentMode == null || step.contentMode === contentMode.html)
     {
         body.html(step.content);
     }
@@ -597,15 +592,15 @@ function loadAsyncContent(wizard, options, state)
 
     if (!options.enableContentCache || !currentStep.contentLoaded)
     {
-        switch (getValidEnumValue($.fn.steps.contentMode, currentStep.contentMode))
+        switch (getValidEnumValue(contentMode, currentStep.contentMode))
         {
-            case $.fn.steps.contentMode.iframe:
+            case contentMode.iframe:
                 wizard.find(".content > .body").eq(state.currentIndex).empty()
-                    .html($("<iframe src=\"" + currentStep.contentUrl + "\" />"))
+                    .html("<iframe src=\"" + currentStep.contentUrl + "\" />")
                     .data("loaded", "1");
                 break;
 
-            case $.fn.steps.contentMode.async:
+            case contentMode.async:
                 var currentStepContent = wizard.find("#" + getUniqueId(wizard) + _tabpanelSuffix + state.currentIndex).aria("busy", "true")
                     .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
                 $.ajax({ url: currentStep.contentUrl, cache: false })
@@ -863,7 +858,7 @@ function removeStep(wizard, options, state, index)
     }
 
     // Change data
-    removeStepToCache(wizard, index);
+    removeStepFromCache(wizard, index);
     if (state.currentIndex > index)
     {
         state.currentIndex--;
@@ -893,7 +888,7 @@ function removeStep(wizard, options, state, index)
     return true;
 }
 
-function removeStepToCache(wizard, index)
+function removeStepFromCache(wizard, index)
 {
     getSteps(wizard).splice(index, 1);
 }
@@ -911,10 +906,9 @@ function removeStepToCache(wizard, index)
 function render(wizard, options, state)
 {
     // Create a content wrapper and copy HTML from the intial wizard structure
-    var contentWrapper = $(document.createElement(options.contentContainerTag))
-            .addClass("content").html(wizard.html()),
-        stepsWrapper = $(document.createElement(options.stepsContainerTag))
-            .addClass("steps").append($("<ul role=\"tablist\"></ul>")),
+    var wrapperTemplate = "<{0} class=\"{1}\">{2}</{0}>",
+        contentWrapper = $(format(wrapperTemplate, options.contentContainerTag, "content", wizard.html())),
+        stepsWrapper = $(format(wrapperTemplate, options.stepsContainerTag, "steps", "<ul role=\"tablist\"></ul>")),
         stepTitles = contentWrapper.children(options.headerTag),
         stepContents = contentWrapper.children(options.bodyTag);
 
@@ -974,22 +968,23 @@ function renderPagination(wizard, options, state)
 {
     if (options.enablePagination)
     {
-        var actionCollection = $("<ul role=\"menu\" aria-label=\"" + options.labels.pagination + "\"></ul>"),
-            actionWrapper = $(document.createElement(options.actionContainerTag))
-                .addClass("actions").append(actionCollection);
-        wizard.append(actionWrapper);
+        var pagination = "<{0} class=\"actions\"><ul role=\"menu\" aria-label=\"{1}\">{2}</ul></{0}>",
+            buttonTemplate = "<li><a href=\"#{0}\" role=\"menuitem\">{1}</a></li>",
+            buttons = "";
 
         if (!options.forceMoveForward)
         {
-            actionCollection.append(generateMenuItem("previous", options.labels.previous));
+            buttons += format(buttonTemplate, "previous", options.labels.previous);
         }
 
-        actionCollection.append(generateMenuItem("next", options.labels.next));
+        buttons += format(buttonTemplate, "next", options.labels.next);
 
         if (options.enableFinishButton)
         {
-            actionCollection.append(generateMenuItem("finish", options.labels.finish));
+            buttons += format(buttonTemplate, "finish", options.labels.finish);
         }
+
+        wizard.append(format(pagination, options.actionContainerTag, options.labels.pagination, buttons));
 
         refreshPagination(wizard, options, state);
         loadAsyncContent(wizard, options, state);

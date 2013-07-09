@@ -4,7 +4,7 @@
  * @class contentMode
  * @for steps
  **/
-$.fn.steps.contentMode = {
+var contentMode = $.fn.steps.contentMode = {
     /**
      * HTML embedded content
      *
@@ -42,7 +42,7 @@ $.fn.steps.contentMode = {
  * @class transitionEffect
  * @for steps
  **/
-$.fn.steps.transitionEffect = {
+var transitionEffect = $.fn.steps.transitionEffect = {
     /**
      * No transition animation
      *
