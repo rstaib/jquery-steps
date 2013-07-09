@@ -1,9 +1,3 @@
-/*
- * Enums
- */
-
-
-
 /**
  * An enum represents the different content types of a step and their loading mechanisms.
  *
@@ -88,39 +82,4 @@ $.fn.steps.transitionEffect = {
      * @for transitionEffect
      **/
     slideLeft: 3
-};
-
-
-
-/*
- * Model
- */
-
-
-
-$.fn.steps.stepModel = {
-    title: "",
-    content: "",
-    contentUrl: "",
-    contentMode: $.fn.steps.contentMode.html,
-    contentLoaded: false
-};
-
-
-
-/*
- * Model
- */
-
-
-
-$.fn.steps.currentIndex = {
-    decrease: function (state, decreaseBy)
-    {
-        return state.currentIndex - decreaseBy;
-    },
-    increase: function (state, increaseBy)
-    {
-        return state.currentIndex + increaseBy;
-    }
 };

@@ -10,10 +10,10 @@ module.exports = function (grunt)
                 files: {
                     '<%= pkg.folders.dist %>/jquery.steps.js': [
                         '<%= pkg.folders.src %>/banner.js',
-                        '<%= pkg.folders.src %>/variables.js',
                         '<%= pkg.folders.src %>/privates.js',
                         '<%= pkg.folders.src %>/publics.js',
-                        '<%= pkg.folders.src %>/objects.js',
+                        '<%= pkg.folders.src %>/enums.js',
+                        '<%= pkg.folders.src %>/model.js',
                         '<%= pkg.folders.src %>/defaults.js',
                         '<%= pkg.folders.src %>/helper.js',
                         '<%= pkg.folders.src %>/footer.js'

@@ -15,7 +15,7 @@ $.fn.steps = function (method)
     }
     else if (typeof method === "object" || !method)
     {
-        return privates.initialize.apply(this, arguments);
+        return initialize.apply(this, arguments);
     }
     else
     {
@@ -32,10 +32,10 @@ $.fn.steps = function (method)
  **/
 $.fn.steps.add = function (step)
 {
-    var options = this.data("options"),
-        state = this.data("state");
+    var options = getOptions(this),
+        state = getState(this);
 
-    return privates.insertStep(this, options, state, state.stepCount, step);
+    return insertStep(this, options, state, state.stepCount, step);
 };
 
 /**
@@ -45,9 +45,9 @@ $.fn.steps.add = function (step)
  **/
 $.fn.steps.finish = function ()
 {
-    var state = this.data("state");
+    var state = getState(this);
 
-    privates.finishStep(this, state);
+    finishStep(this, state);
 };
 
 /**
@@ -59,7 +59,7 @@ $.fn.steps.finish = function ()
  **/
 $.fn.steps.getCurrentIndex = function ()
 {
-    return this.data("state").currentIndex;
+    return getState(this).currentIndex;
 };
 
 /**
@@ -70,7 +70,7 @@ $.fn.steps.getCurrentIndex = function ()
  **/
 $.fn.steps.getCurrentStep = function ()
 {
-    return privates.getStep(this, this.data("state").currentIndex);
+    return getStep(this, getState(this).currentIndex);
 };
 
 /**
@@ -82,7 +82,7 @@ $.fn.steps.getCurrentStep = function ()
  **/
 $.fn.steps.getStep = function (index)
 {
-    return privates.getStep(this, index);
+    return getStep(this, index);
 };
 
 /**
@@ -102,10 +102,10 @@ $.fn.steps.getStep = function (index)
  **/
 $.fn.steps.insert = function (index, step)
 {
-    var options = this.data("options"),
-        state = this.data("state");
+    var options = getOptions(this),
+        state = getState(this);
 
-    return privates.insertStep(this, options, state, index, step);
+    return insertStep(this, options, state, index, step);
 };
 
 /**
@@ -116,10 +116,10 @@ $.fn.steps.insert = function (index, step)
  **/
 $.fn.steps.next = function ()
 {
-    var options = this.data("options"),
-        state = this.data("state");
+    var options = getOptions(this),
+        state = getState(this);
 
-    return privates.goToNextStep(this, options, state);
+    return goToNextStep(this, options, state);
 };
 
 /**
@@ -130,10 +130,10 @@ $.fn.steps.next = function ()
  **/
 $.fn.steps.previous = function ()
 {
-    var options = this.data("options"),
-        state = this.data("state");
+    var options = getOptions(this),
+        state = getState(this);
 
-    return privates.goToPreviousStep(this, options, state);
+    return goToPreviousStep(this, options, state);
 };
 
 /**
@@ -145,10 +145,10 @@ $.fn.steps.previous = function ()
  **/
 $.fn.steps.remove = function (index)
 {
-    var options = this.data("options"),
-        state = this.data("state");
+    var options = getOptions(this),
+        state = getState(this);
 
-    return privates.removeStep(this, options, state, index);
+    return removeStep(this, options, state, index);
 };
 
 /**

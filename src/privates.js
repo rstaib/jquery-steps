@@ -1,1051 +1,1169 @@
-var privates = {
-    /**
-     * Adds a step to the cache.
-     *
-     * @static
-     * @private
-     * @method addStepToCache
-     * @param wizard {Object} A jQuery wizard object
-     * @param step {Object} The step object to add
-     **/
-    addStepToCache: function (wizard, step)
-    {
-        wizard.data("steps").push(step);
-    },
+/**
+ * A global unique id count.
+ *
+ * @static
+ * @private
+ * @property _uniqueId
+ * @type Integer
+ **/
+var _uniqueId = 0;
 
-    analyzeData: function (wizard, options, state)
-    {
-        var stepTitles = wizard.children(options.headerTag),
-            stepContents = wizard.children(options.bodyTag);
+/**
+ * The plugin prefix for cookies.
+ *
+ * @final
+ * @private
+ * @property _cookiePrefix
+ * @type String
+ **/
+var _cookiePrefix = "jQu3ry_5teps_St@te_";
 
-        // Validate content
-        if (stepTitles.length > stepContents.length)
-        {
-            throw new Error("One or more corresponding step contents are missing.");
-        }
-        else if (stepTitles.length < stepContents.length)
-        {
-            throw new Error("One or more corresponding step titles are missing.");
-        }
+/**
+ * Suffix for the unique tab id.
+ *
+ * @final
+ * @private
+ * @property _tabSuffix
+ * @type String
+ * @since 0.9.7
+ **/
+var _tabSuffix = "-t-";
+
+/**
+ * Suffix for the unique tabpanel id.
+ *
+ * @final
+ * @private
+ * @property _tabpanelSuffix
+ * @type String
+ * @since 0.9.7
+ **/
+var _tabpanelSuffix = "-p-";
+
+/**
+ * Suffix for the unique title id.
+ *
+ * @final
+ * @private
+ * @property _titleSuffix
+ * @type String
+ * @since 0.9.7
+ **/
+var _titleSuffix = "-h-";
+
+/**
+ * An error message for an "index out of range" error.
+ *
+ * @final
+ * @private
+ * @property _indexOutOfRangeErrorMessage
+ * @type String
+ **/
+var _indexOutOfRangeErrorMessage = "Index out of range.";
+
+/**
+ * An error message for an "missing corresponding element" error.
+ *
+ * @final
+ * @private
+ * @property _missingCorrespondingElementErrorMessage
+ * @type String
+ **/
+var _missingCorrespondingElementErrorMessage = "One or more corresponding step {0} are missing.";
+
+/**
+ * Adds a step to the cache.
+ *
+ * @static
+ * @private
+ * @method addStepToCache
+ * @param wizard {Object} A jQuery wizard object
+ * @param step {Object} The step object to add
+ **/
+function addStepToCache(wizard, step)
+{
+    getSteps(wizard).push(step);
+}
+
+function analyzeData(wizard, options, state)
+{
+    var stepTitles = wizard.children(options.headerTag),
+        stepContents = wizard.children(options.bodyTag);
+
+    // Validate content
+    if (stepTitles.length > stepContents.length)
+    {
+        throwError(_missingCorrespondingElementErrorMessage, "contents");
+    }
+    else if (stepTitles.length < stepContents.length)
+    {
+        throwError(_missingCorrespondingElementErrorMessage, "titles");
+    }
         
-        var startIndex = options.startIndex;
+    var startIndex = options.startIndex;
 
-        state.stepCount = stepTitles.length;
+    state.stepCount = stepTitles.length;
 
-        // Tries to load the saved state (step position)
-        if (options.saveState && $.cookie)
+    // Tries to load the saved state (step position)
+    if (options.saveState && $.cookie)
+    {
+        var savedState = $.cookie(_cookiePrefix + getUniqueId(wizard));
+        // Sets the saved position to the start index if not undefined or out of range 
+        var savedIndex = parseInt(savedState, 0);
+        if (!isNaN(savedIndex) && savedIndex < state.stepCount)
         {
-            var savedState = $.cookie(_cookiePrefix + privates.getUniqueId(wizard));
-            // Sets the saved position to the start index if not undefined or out of range 
-            var savedIndex = parseInt(savedState, 0);
-            if (!isNaN(savedIndex) && savedIndex < state.stepCount)
+            startIndex = savedIndex;
+        }
+    }
+
+    state.currentIndex = startIndex;
+
+    stepTitles.each(function (index)
+    {
+        var item = $(this), // item == header
+            content = stepContents.eq(index),
+            modeData = content.data("mode"),
+            mode = (modeData == null) ? $.fn.steps.contentMode.html : getValidEnumValue($.fn.steps.contentMode,
+                (/^\s*$/.test(modeData) || isNaN(modeData)) ? modeData : parseInt(modeData, 0)),
+            contentUrl = (mode === $.fn.steps.contentMode.html || content.data("url") === undefined) ?
+                "" : content.data("url"),
+            contentLoaded = (mode !== $.fn.steps.contentMode.html && content.data("loaded") === "1"),
+            step = $.extend({}, $.fn.steps.stepModel, {
+                title: item.html(),
+                content: (mode === $.fn.steps.contentMode.html) ? content.html() : "",
+                contentUrl: contentUrl,
+                contentMode: mode,
+                contentLoaded: contentLoaded
+            });
+
+        addStepToCache(wizard, step);
+    });
+}
+
+function decreaseCurrentIndexBy(state, decreaseBy)
+{
+    return state.currentIndex - decreaseBy;
+}
+
+/**
+ * Triggers the onFinishing and onFinished event.
+ *
+ * @static
+ * @private
+ * @method finishStep
+ * @param wizard {Object} The jQuery wizard object
+ * @param state {Object} The state container of the current wizard
+ **/
+function finishStep(wizard, state)
+{
+    var currentStep = wizard.find(".steps li").eq(state.currentIndex);
+
+    if (wizard.triggerHandler("finishing", [state.currentIndex]))
+    {
+        currentStep.addClass("done").removeClass("error");
+        wizard.triggerHandler("finished", [state.currentIndex]);
+    }
+    else
+    {
+        currentStep.addClass("error");
+    }
+}
+
+function format(format)
+{
+    for (var i = 1; i < arguments.length; i++)
+    {
+        var index = (i - 1);
+        var pattern = new RegExp("\\{" + index + "\\}", "gm");
+        format = format.replace(pattern, arguments[i]);
+    }
+
+    return format;
+}
+
+function generateMenuItem(tag, label)
+{
+    return "<li><a href=\"#" + tag + "\" role=\"menuitem\">" + label + "</a></li>";
+}
+
+function getOptions(wizard)
+{
+    return wizard.data("options");
+}
+
+function getState(wizard)
+{
+    return wizard.data("state");
+}
+
+function getSteps(wizard)
+{
+    return wizard.data("steps");
+}
+
+/**
+ * Gets a specific step object by index.
+ *
+ * @static
+ * @private
+ * @method getStep
+ * @param index {Integer} An integer that belongs to the position of a step
+ * @return {Object} A specific step object
+ **/
+function getStep(wizard, index)
+{
+    var steps = getSteps(wizard);
+
+    if (index < 0 || index >= steps.length)
+    {
+        throwError(_indexOutOfRangeErrorMessage);
+    }
+
+    return steps[index];
+}
+
+/**
+ * Gets or creates if not exist an unique id from the given wizard instance.
+ *
+ * @static
+ * @private
+ * @method getUniqueId
+ * @param wizard {Object} A jQuery wizard object
+ * @return {String} Returns the unique id for the given wizard
+ */
+function getUniqueId(wizard)
+{
+    var uniqueId = wizard.data("uid");
+
+    if (uniqueId == null)
+    {
+        uniqueId = "steps-uid-".concat(++_uniqueId);
+        wizard.data("uid", uniqueId);
+    }
+
+    return uniqueId;
+}
+
+/**
+ * Gets a valid enum value by checking a specific enum key or value.
+ * 
+ * @static
+ * @private
+ * @method getValidEnumValue
+ * @param enumType {Object} Type of enum
+ * @param keyOrValue {Object} Key as `String` or value as `Integer` to check for
+ */
+function getValidEnumValue(enumType, keyOrValue)
+{
+    validateArgument("enumType", enumType);
+    validateArgument("keyOrValue", keyOrValue);
+
+    // Is key
+    if (typeof keyOrValue === "string")
+    {
+        var value = enumType[keyOrValue];
+        if (value === undefined)
+        {
+            throwError("The enum key '{0}' does not exist.", keyOrValue);
+        }
+
+        return value;
+    }
+    // Is value
+    else if (typeof keyOrValue === "number")
+    {
+        for (var key in enumType)
+        {
+            if (enumType[key] === keyOrValue)
             {
-                startIndex = savedIndex;
+                return keyOrValue;
             }
         }
 
-        state.currentIndex = startIndex;
-
-        stepTitles.each(function (index)
-        {
-            var item = $(this), // item == header
-                content = stepContents.eq(index),
-                modeData = content.data("mode"),
-                mode = (modeData == null) ? $.fn.steps.contentMode.html : privates.getValidEnumValue($.fn.steps.contentMode,
-                    (/^\s*$/.test(modeData) || isNaN(modeData)) ? modeData : parseInt(modeData, 0)),
-                contentUrl = (mode === $.fn.steps.contentMode.html || content.data("url") === undefined) ?
-                    "" : content.data("url"),
-                contentLoaded = (mode !== $.fn.steps.contentMode.html && content.data("loaded") === "1"),
-                step = $.extend({}, $.fn.steps.stepModel, {
-                    title: item.html(),
-                    content: (mode === $.fn.steps.contentMode.html) ? content.html() : "",
-                    contentUrl: contentUrl,
-                    contentMode: mode,
-                    contentLoaded: contentLoaded
-                });
-
-            privates.addStepToCache(wizard, step);
-        });
-    },
-
-    /**
-     * Triggers the onFinishing and onFinished event.
-     *
-     * @static
-     * @private
-     * @method finishStep
-     * @param wizard {Object} The jQuery wizard object
-     * @param state {Object} The state container of the current wizard
-     **/
-    finishStep: function (wizard, state)
+        throwError("Invalid enum value '{0}'.", keyOrValue);
+    }
+    // Type is not supported
+    else
     {
-        var currentStep = wizard.find(".steps li").eq(state.currentIndex);
+        throwError("Invalid key or value type.");
+    }
+}
 
-        if (wizard.triggerHandler("finishing", [state.currentIndex]))
-        {
-            currentStep.addClass("done").removeClass("error");
-            wizard.triggerHandler("finished", [state.currentIndex]);
-        }
-        else
-        {
-            currentStep.addClass("error");
-        }
-    },
+/**
+ * Routes to the next step.
+ *
+ * @static
+ * @private
+ * @method goToNextStep
+ * @param wizard {Object} The jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @return {Boolean} Indicates whether the action executed
+ **/
+function goToNextStep(wizard, options, state)
+{
+    return paginationClick(wizard, options, state, increaseCurrentIndexBy(state, 1));
+}
 
-    generateMenuItem: function (tag, label)
+/**
+ * Routes to the previous step.
+ *
+ * @static
+ * @private
+ * @method goToPreviousStep
+ * @param wizard {Object} The jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @return {Boolean} Indicates whether the action executed
+ **/
+function goToPreviousStep(wizard, options, state)
+{
+    return paginationClick(wizard, options, state, decreaseCurrentIndexBy(state, 1));
+}
+
+/**
+ * Routes to a specific step by a given index.
+ *
+ * @static
+ * @private
+ * @method goToStep
+ * @param wizard {Object} The jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @param index {Integer} The position (zero-based) to route to
+ * @return {Boolean} Indicates whether the action succeeded or failed
+ **/
+function goToStep(wizard, options, state, index)
+{
+    if (index < 0 || index >= state.stepCount)
     {
-        return "<li><a href=\"#" + tag + "\" role=\"menuitem\">" + label + "</a></li>";
-    },
+        throwError(_indexOutOfRangeErrorMessage);
+    }
 
-    /**
-     * Gets a specific step object by index.
-     *
-     * @static
-     * @private
-     * @method getStep
-     * @param index {Integer} An integer that belongs to the position of a step
-     * @return {Object} A specific step object
-     **/
-    getStep: function (wizard, index)
+    if (options.forceMoveForward && index < state.currentIndex)
     {
-        var steps = wizard.data("steps");
+        return;
+    }
 
-        if (index < 0 || index >= steps.length)
-        {
-            throw new Error("Index out of range.");
-        }
-
-        return steps[index];
-    },
-
-    /**
-     * Gets or creates if not exist an unique id from the given wizard instance.
-     *
-     * @static
-     * @private
-     * @method getUniqueId
-     * @param wizard {Object} A jQuery wizard object
-     * @return {String} Returns the unique id for the given wizard
-     */
-    getUniqueId: function (wizard)
+    var oldIndex = state.currentIndex;
+    if (wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
     {
-        var uniqueId = wizard.data("uid");
+        // Save new state
+        state.currentIndex = index;
+        saveCurrentStateToCookie(wizard, options, state);
 
-        if (uniqueId == null)
+        // Change visualisation
+        refreshStepNavigation(wizard, options, state, oldIndex);
+        refreshPagination(wizard, options, state);
+        loadAsyncContent(wizard, options, state);
+
+        var stepContents = wizard.find(".content > .body");
+        switch (getValidEnumValue($.fn.steps.transitionEffect, options.transitionEffect))
         {
-            uniqueId = "steps-uid-".concat(++_uniqueId);
-            wizard.data("uid", uniqueId);
-        }
-
-        return uniqueId;
-    },
-
-    /**
-     * Gets a valid enum value by checking a specific enum key or value.
-     * 
-     * @static
-     * @private
-     * @method getValidEnumValue
-     * @param enumType {Object} Type of enum
-     * @param keyOrValue {Object} Key as `String` or value as `Integer` to check for
-     */
-    getValidEnumValue: function (enumType, keyOrValue)
-    {
-        privates.validateArgument("enumType", enumType);
-        privates.validateArgument("keyOrValue", keyOrValue);
-
-        // Is key
-        if (typeof keyOrValue === "string")
-        {
-            var value = enumType[keyOrValue];
-            if (value === undefined)
-            {
-                throw new Error("The enum key \"" + keyOrValue + "\" does not exist.");
-            }
-
-            return value;
-        }
-        // Is value
-        else if (typeof keyOrValue === "number")
-        {
-            for (var key in enumType)
-            {
-                if (enumType[key] === keyOrValue)
+            case $.fn.steps.transitionEffect.fade:
+                state.transitionShowElement = stepContents.eq(index);
+                stepContents.eq(oldIndex).fadeOut(options.transitionEffectSpeed, function ()
                 {
-                    return keyOrValue;
-                }
-            }
+                    var wizard = $(this).aria("hidden", "true").parents(":has(.steps)");
+                    var state = getState(wizard);
 
-            throw new Error("Invalid enum value \"" + keyOrValue + "\".");
-        }
-        // Type is not supported
-        else
-        {
-            throw new Error("Invalid key or value type.");
-        }
-    },
-
-    /**
-     * Routes to the next step.
-     *
-     * @static
-     * @private
-     * @method goToNextStep
-     * @param wizard {Object} The jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     * @return {Boolean} Indicates whether the action executed
-     **/
-    goToNextStep: function (wizard, options, state)
-    {
-        return privates.paginationClick(wizard, options, state, $.fn.steps.currentIndex.increase(state, 1));
-    },
-
-    /**
-     * Routes to the previous step.
-     *
-     * @static
-     * @private
-     * @method goToPreviousStep
-     * @param wizard {Object} The jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     * @return {Boolean} Indicates whether the action executed
-     **/
-    goToPreviousStep: function (wizard, options, state)
-    {
-        return privates.paginationClick(wizard, options, state, $.fn.steps.currentIndex.decrease(state, 1));
-    },
-
-    /**
-     * Routes to a specific step by a given index.
-     *
-     * @static
-     * @private
-     * @method goToStep
-     * @param wizard {Object} The jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     * @param index {Integer} The position (zero-based) to route to
-     * @return {Boolean} Indicates whether the action succeeded or failed
-     **/
-    goToStep: function (wizard, options, state, index)
-    {
-        if (index < 0 || index >= state.stepCount)
-        {
-            throw new Error("Index out of range.");
-        }
-
-        if (options.forceMoveForward && index < state.currentIndex)
-        {
-            return;
-        }
-
-        var oldIndex = state.currentIndex;
-        if (wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
-        {
-            // Save new state
-            state.currentIndex = index;
-            privates.saveCurrentStateToCookie(wizard, options, state);
-
-            // Change visualisation
-            privates.refreshStepNavigation(wizard, options, state, oldIndex);
-            privates.refreshPagination(wizard, options, state);
-            privates.loadAsyncContent(wizard, options, state);
-
-            var stepContents = wizard.find(".content > .body");
-            switch (privates.getValidEnumValue($.fn.steps.transitionEffect, options.transitionEffect))
-            {
-                case $.fn.steps.transitionEffect.fade:
-                    state.transitionShowElement = stepContents.eq(index);
-                    stepContents.eq(oldIndex).fadeOut(options.transitionEffectSpeed, function ()
+                    if (state.transitionShowElement)
                     {
-                        var wizard = $(this).aria("hidden", "true").parents(":has(.steps)");
-                        var state = wizard.data("state");
+                        state.transitionShowElement.fadeIn(options.transitionEffectSpeed,
+                            function () { $(this).aria("hidden", "false"); });
+                        state.transitionShowElement = null;
+                    }
+                }).promise();
+                break;
 
-                        if (state.transitionShowElement)
-                        {
-                            state.transitionShowElement.fadeIn(options.transitionEffectSpeed,
-                                function () { $(this).aria("hidden", "false"); });
-                            state.transitionShowElement = null;
-                        }
-                    }).promise();
-                    break;
+            case $.fn.steps.transitionEffect.slide:
+                state.transitionShowElement = stepContents.eq(index);
+                stepContents.eq(oldIndex).slideUp(options.transitionEffectSpeed, function ()
+                {
+                    var wizard = $(this).aria("hidden", "true").parents(":has(.steps)");
+                    var state = getState(wizard);
 
-                case $.fn.steps.transitionEffect.slide:
-                    state.transitionShowElement = stepContents.eq(index);
-                    stepContents.eq(oldIndex).slideUp(options.transitionEffectSpeed, function ()
+                    if (state.transitionShowElement)
                     {
-                        var wizard = $(this).aria("hidden", "true").parents(":has(.steps)");
-                        var state = wizard.data("state");
+                        state.transitionShowElement.slideDown(options.transitionEffectSpeed,
+                            function () { $(this).aria("hidden", "false"); });
+                        state.transitionShowElement = null;
+                    }
+                }).promise();
+                break;
 
-                        if (state.transitionShowElement)
-                        {
-                            state.transitionShowElement.slideDown(options.transitionEffectSpeed,
-                                function () { $(this).aria("hidden", "false"); });
-                            state.transitionShowElement = null;
-                        }
-                    }).promise();
-                    break;
+            case $.fn.steps.transitionEffect.slideLeft:
+                var newStep = stepContents.eq(index),
+                    currentStep = stepContents.eq(oldIndex),
+                    outerWidth = currentStep.outerWidth(true),
+                    posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
+                    posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
-                case $.fn.steps.transitionEffect.slideLeft:
-                    var newStep = stepContents.eq(index),
-                        currentStep = stepContents.eq(oldIndex),
-                        outerWidth = currentStep.outerWidth(true),
-                        posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
-                        posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
+                currentStep.animate({ left: posFadeOut }, options.transitionEffectSpeed, 
+                    function () { $(this).hideAria(); }).promise();
+                newStep.css("left", posFadeIn + "px").showAria();
+                newStep.animate({ left: 0 }, options.transitionEffectSpeed).promise();
+                break;
 
-                    currentStep.animate({ left: posFadeOut }, options.transitionEffectSpeed, 
-                        function () { $(this).hideAria(); }).promise();
-                    newStep.css("left", posFadeIn + "px").showAria();
-                    newStep.animate({ left: 0 }, options.transitionEffectSpeed).promise();
-                    break;
-
-                default:
-                    stepContents.eq(oldIndex).hideAria();
-                    stepContents.eq(index).showAria();
-                    break;
-            }
-
-            wizard.triggerHandler("stepChanged", [index, oldIndex]);
-        }
-        else
-        {
-            wizard.find(".steps li").eq(oldIndex).addClass("error");
+            default:
+                stepContents.eq(oldIndex).hideAria();
+                stepContents.eq(index).showAria();
+                break;
         }
 
-        return true;
-    },
-
-    /**
-     * Initializes the component.
-     *
-     * @static
-     * @private
-     * @method initialize
-     * @param options {Object} The component settings
-     **/
-    initialize: function (options)
+        wizard.triggerHandler("stepChanged", [index, oldIndex]);
+    }
+    else
     {
-        /*jshint -W040 */
-        var opts = $.extend(true, {}, $.fn.steps.defaults, options);
+        wizard.find(".steps li").eq(oldIndex).addClass("error");
+    }
 
-        return this.each(function (i)
-        {
-            var wizard = $(this);
-            var state = {
-                currentIndex: opts.startIndex,
-                currentStep: null,
-                stepCount: 0,
-                transitionShowElement: null
-            };
+    return true;
+}
 
-            // Create data container
-            wizard.data("options", opts);
-            wizard.data("state", state);
-            wizard.data("steps", []);
+function increaseCurrentIndexBy(state, increaseBy)
+{
+    return state.currentIndex + increaseBy;
+}
 
-            privates.analyzeData(wizard, opts, state);
-            privates.render(wizard, opts, state);
-            privates.registerEvents(wizard, opts);
+/**
+ * Initializes the component.
+ *
+ * @static
+ * @private
+ * @method initialize
+ * @param options {Object} The component settings
+ **/
+function initialize(options)
+{
+    /*jshint -W040 */
+    var opts = $.extend(true, {}, $.fn.steps.defaults, options);
 
-            // Trigger focus
-            if (opts.autoFocus && _uniqueId === 0)
-            {
-                wizard.find("#" + privates.getUniqueId(wizard) + _tabSuffix + opts.startIndex).focus();
-            }
-        });
-    },
-
-    /**
-     * Inserts a new step to a specific position.
-     *
-     * @static
-     * @private
-     * @method insertStep
-     * @param wizard {Object} The jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     * @param index {Integer} The position (zero-based) to add
-     * @param step {Object} The step object to add
-     * @example
-     *     $("#wizard").steps().insert(0, {
-     *         title: "Title",
-     *         content: "", // optional
-     *         contentMode: "async", // optional
-     *         contentUrl: "/Content/Step/1" // optional
-     *     });
-     * @chainable
-     **/
-    insertStep: function (wizard, options, state, index, step)
+    return this.each(function (i)
     {
-        var uniqueId = privates.getUniqueId(wizard);
+        var wizard = $(this);
+        var state = {
+            currentIndex: opts.startIndex,
+            currentStep: null,
+            stepCount: 0,
+            transitionShowElement: null
+        };
 
-        if (index < 0 || index > state.stepCount)
+        // Create data container
+        wizard.data("options", opts);
+        wizard.data("state", state);
+        wizard.data("steps", []);
+
+        analyzeData(wizard, opts, state);
+        render(wizard, opts, state);
+        registerEvents(wizard, opts);
+
+        // Trigger focus
+        if (opts.autoFocus && _uniqueId === 0)
         {
-            throw new Error("Index out of range.");
+            wizard.find("#" + getUniqueId(wizard) + _tabSuffix + opts.startIndex).focus();
         }
+    });
+}
 
-        // TODO: Validate step object
+/**
+ * Inserts a new step to a specific position.
+ *
+ * @static
+ * @private
+ * @method insertStep
+ * @param wizard {Object} The jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @param index {Integer} The position (zero-based) to add
+ * @param step {Object} The step object to add
+ * @example
+ *     $("#wizard").steps().insert(0, {
+ *         title: "Title",
+ *         content: "", // optional
+ *         contentMode: "async", // optional
+ *         contentUrl: "/Content/Step/1" // optional
+ *     });
+ * @chainable
+ **/
+function insertStep(wizard, options, state, index, step)
+{
+    var uniqueId = getUniqueId(wizard);
 
-        // Change data
-        step = $.extend({}, $.fn.steps.stepModel, step);
-        privates.insertStepToCache(wizard, index, step);
-        if (state.currentIndex >= index)
-        {
-            state.currentIndex++;
-            privates.saveCurrentStateToCookie(wizard, options, state);
-        }
-        state.stepCount++;
-
-        var contentContainer = wizard.find(".content"),
-            header = $(document.createElement(options.headerTag)).html(step.title),
-            body = $(document.createElement(options.bodyTag));
-
-        if (step.contentMode == null || step.contentMode === $.fn.steps.contentMode.html)
-        {
-            body.html(step.content);
-        }
-
-        if (index === 0)
-        {
-            contentContainer.prepend(body).prepend(header);
-        }
-        else
-        {
-            contentContainer.find("#" + uniqueId + _tabpanelSuffix + (index - 1)).after(body).after(header);
-        }
-
-        privates.renderBody(wizard, body, index);
-        privates.renderTitle(wizard, options, state, header, index);
-        privates.refreshSteps(wizard, options, state, index);
-        privates.refreshPagination(wizard, options, state);
-
-        return wizard;
-    },
-
-    /**
-     * Inserts a step object to the cache at a specific position.
-     *
-     * @static
-     * @private
-     * @method insertStepToCache
-     * @param wizard {Object} A jQuery wizard object
-     * @param index {Integer} The position (zero-based) to add
-     * @param step {Object} The step object to add
-     **/
-    insertStepToCache: function (wizard, index, step)
+    if (index < 0 || index > state.stepCount)
     {
-        wizard.data("steps").splice(index, 0, step);
-    },
+        throwError(_indexOutOfRangeErrorMessage);
+    }
 
-    /**
-     * Handles the keyup DOM event for pagination.
-     *
-     * @static
-     * @private
-     * @event keyup
-     * @param event {Object} An event object
-     */
-    keyUpHandler: function (event)
+    // TODO: Validate step object
+
+    // Change data
+    step = $.extend({}, $.fn.steps.stepModel, step);
+    insertStepToCache(wizard, index, step);
+    if (state.currentIndex >= index)
     {
-        var wizard = $(this),
-            options = wizard.data("options"),
-            state = wizard.data("state");
+        state.currentIndex++;
+        saveCurrentStateToCookie(wizard, options, state);
+    }
+    state.stepCount++;
 
-        if (options.suppressPaginationOnFocus && wizard.find(":focus").is(":input"))
+    var contentContainer = wizard.find(".content"),
+        header = $(document.createElement(options.headerTag)).html(step.title),
+        body = $(document.createElement(options.bodyTag));
+
+    if (step.contentMode == null || step.contentMode === $.fn.steps.contentMode.html)
+    {
+        body.html(step.content);
+    }
+
+    if (index === 0)
+    {
+        contentContainer.prepend(body).prepend(header);
+    }
+    else
+    {
+        contentContainer.find("#" + uniqueId + _tabpanelSuffix + (index - 1)).after(body).after(header);
+    }
+
+    renderBody(wizard, body, index);
+    renderTitle(wizard, options, state, header, index);
+    refreshSteps(wizard, options, state, index);
+    refreshPagination(wizard, options, state);
+
+    return wizard;
+}
+
+/**
+ * Inserts a step object to the cache at a specific position.
+ *
+ * @static
+ * @private
+ * @method insertStepToCache
+ * @param wizard {Object} A jQuery wizard object
+ * @param index {Integer} The position (zero-based) to add
+ * @param step {Object} The step object to add
+ **/
+function insertStepToCache(wizard, index, step)
+{
+    getSteps(wizard).splice(index, 0, step);
+}
+
+/**
+ * Handles the keyup DOM event for pagination.
+ *
+ * @static
+ * @private
+ * @event keyup
+ * @param event {Object} An event object
+ */
+function keyUpHandler(event)
+{
+    var wizard = $(this),
+        options = getOptions(wizard),
+        state = getState(wizard);
+
+    if (options.suppressPaginationOnFocus && wizard.find(":focus").is(":input"))
+    {
+        event.preventDefault();
+        return false;
+    }
+
+    var keyCodes = { left: 37, right: 39 };
+    if (event.keyCode === keyCodes.left)
+    {
+        event.preventDefault();
+        goToPreviousStep(wizard, options, state);
+    }
+    else if (event.keyCode === keyCodes.right)
+    {
+        event.preventDefault();
+        goToNextStep(wizard, options, state);
+    }
+}
+
+/**
+ * Loads and includes async content.
+ *
+ * @static
+ * @private
+ * @method loadAsyncContent
+ * @param wizard {Object} A jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ */
+function loadAsyncContent(wizard, options, state)
+{
+    var currentStep = getStep(wizard, state.currentIndex);
+
+    if (!options.enableContentCache || !currentStep.contentLoaded)
+    {
+        switch (getValidEnumValue($.fn.steps.contentMode, currentStep.contentMode))
         {
-            event.preventDefault();
+            case $.fn.steps.contentMode.iframe:
+                wizard.find(".content > .body").eq(state.currentIndex).empty()
+                    .html($("<iframe src=\"" + currentStep.contentUrl + "\" />"))
+                    .data("loaded", "1");
+                break;
+
+            case $.fn.steps.contentMode.async:
+                var currentStepContent = wizard.find("#" + getUniqueId(wizard) + _tabpanelSuffix + state.currentIndex).aria("busy", "true")
+                    .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
+                $.ajax({ url: currentStep.contentUrl, cache: false })
+                    .done(function (data)
+                    {
+                        currentStepContent.empty().html(data).aria("busy", "false").data("loaded", "1");
+                    });
+                break;
+        }
+    }
+}
+
+/**
+ * Fires the action next or previous click event.
+ *
+ * @static
+ * @private
+ * @method paginationClick
+ * @param wizard {Object} The jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @param index {Integer} The position (zero-based) to route to
+ * @return {Boolean} Indicates whether the event fired successfully or not
+ **/
+function paginationClick(wizard, options, state, index)
+{
+    var oldIndex = state.currentIndex;
+
+    if (index >= 0 && index < state.stepCount && !(options.forceMoveForward && index < state.currentIndex))
+    {
+        var anchor = wizard.find("#" + getUniqueId(wizard) + _tabSuffix + index),
+            parent = anchor.parent(),
+            isDisabled = parent.hasClass("disabled");
+        // Remove the class to make the anchor clickable!
+        parent.enableAria();
+        anchor.click();
+
+        // An error occured
+        if (oldIndex === state.currentIndex && isDisabled)
+        {
+            // Add the class again to disable the anchor; avoid click action.
+            parent.disableAria();
             return false;
         }
 
-        var keyCodes = { left: 37, right: 39 };
-        if (event.keyCode === keyCodes.left)
-        {
-            event.preventDefault();
-            privates.goToPreviousStep(wizard, options, state);
-        }
-        else if (event.keyCode === keyCodes.right)
-        {
-            event.preventDefault();
-            privates.goToNextStep(wizard, options, state);
-        }
-    },
+        return true;
+    }
 
-    /**
-     * Loads and includes async content.
-     *
-     * @static
-     * @private
-     * @method loadAsyncContent
-     * @param wizard {Object} A jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     */
-    loadAsyncContent: function (wizard, options, state)
+    return false;
+}
+
+/**
+ * Fires when a pagination click happens.
+ *
+ * @static
+ * @private
+ * @event click
+ * @param event {Object} An event object
+ */
+function paginationClickHandler(event)
+{
+    event.preventDefault();
+
+    var anchor = $(this),
+        wizard = anchor.parents(":has(.steps)"),
+        options = getOptions(wizard),
+        state = getState(wizard),
+        href = anchor.attr("href");
+
+    switch (href.substring(href.lastIndexOf("#")))
     {
-        var currentStep = wizard.steps("getCurrentStep");
+        case "#finish":
+            finishStep(wizard, options, state);
+            break;
 
-        if (!options.enableContentCache || !currentStep.contentLoaded)
-        {
-            switch (privates.getValidEnumValue($.fn.steps.contentMode, currentStep.contentMode))
-            {
-                case $.fn.steps.contentMode.iframe:
-                    wizard.find(".content > .body").eq(state.currentIndex).empty()
-                        .html($("<iframe src=\"" + currentStep.contentUrl + "\" />"))
-                        .data("loaded", "1");
-                    break;
+        case "#next":
+            goToNextStep(wizard, options, state);
+            break;
 
-                case $.fn.steps.contentMode.async:
-                    var currentStepContent = wizard.find("#" + privates.getUniqueId(wizard) + _tabpanelSuffix + state.currentIndex).aria("busy", "true")
-                        .empty().append(privates.renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
-                    $.ajax({ url: currentStep.contentUrl, cache: false })
-                        .done(function (data)
-                        {
-                            currentStepContent.empty().html(data).aria("busy", "false").data("loaded", "1");
-                        });
-                    break;
-            }
-        }
-    },
+        case "#previous":
+            goToPreviousStep(wizard, options, state)
+            break;
+    }
+}
 
-    /**
-     * Fires the action next or previous click event.
-     *
-     * @static
-     * @private
-     * @method paginationClick
-     * @param wizard {Object} The jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     * @param index {Integer} The position (zero-based) to route to
-     * @return {Boolean} Indicates whether the event fired successfully or not
-     **/
-    paginationClick: function (wizard, options, state, index)
+/**
+ * Refreshs the visualization state for the entire pagination.
+ *
+ * @static
+ * @private
+ * @method refreshPagination
+ * @param wizard {Object} A jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ */
+function refreshPagination(wizard, options, state)
+{
+    if (options.enablePagination)
     {
-        var oldIndex = state.currentIndex;
+        var finish = wizard.find(".actions a[href$='#finish']").parent(),
+            next = wizard.find(".actions a[href$='#next']").parent();
 
-        if (index >= 0 && index < state.stepCount && !(options.forceMoveForward && index < state.currentIndex))
+        if (!options.forceMoveForward)
         {
-            var anchor = wizard.find("#" + privates.getUniqueId(wizard) + _tabSuffix + index),
-                parent = anchor.parent(),
-                isDisabled = parent.hasClass("disabled");
-            // Remove the class to make the anchor clickable!
-            parent.enableAria();
-            anchor.click();
-
-            // An error occured
-            if (oldIndex === state.currentIndex && isDisabled)
+            var previous = wizard.find(".actions a[href$='#previous']").parent();
+            if (state.currentIndex > 0)
             {
-                // Add the class again to disable the anchor; avoid click action.
-                parent.disableAria();
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
-    },
-
-    /**
-     * Fires when a pagination click happens.
-     *
-     * @static
-     * @private
-     * @event click
-     * @param event {Object} An event object
-     */
-    paginationClickHandler: function (event)
-    {
-        event.preventDefault();
-
-        var anchor = $(this),
-            wizard = anchor.parents(":has(.steps)"),
-            options = wizard.data("options"),
-            state = wizard.data("state"),
-            href = anchor.attr("href");
-
-        switch (href.substring(href.lastIndexOf("#")))
-        {
-            case "#finish":
-                privates.finishStep(wizard, options, state);
-                break;
-
-            case "#next":
-                privates.goToNextStep(wizard, options, state);
-                break;
-
-            case "#previous":
-                privates.goToPreviousStep(wizard, options, state)
-                break;
-        }
-    },
-
-    /**
-     * Refreshs the visualization state for the entire pagination.
-     *
-     * @static
-     * @private
-     * @method refreshPagination
-     * @param wizard {Object} A jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     */
-    refreshPagination: function (wizard, options, state)
-    {
-        if (options.enablePagination)
-        {
-            var finish = wizard.find(".actions a[href$='#finish']").parent(),
-                next = wizard.find(".actions a[href$='#next']").parent();
-
-            if (!options.forceMoveForward)
-            {
-                var previous = wizard.find(".actions a[href$='#previous']").parent();
-                if (state.currentIndex > 0)
-                {
-                    previous.enableAria();
-                }
-                else
-                {
-                    previous.disableAria();
-                }
-            }
-
-            if (options.enableFinishButton && options.showFinishButtonAlways)
-            {
-                if (state.stepCount === 0)
-                {
-                    finish.disableAria();
-                    next.disableAria();
-                }
-                else if (state.stepCount > 1 && state.stepCount > (state.currentIndex + 1))
-                {
-                    finish.enableAria();
-                    next.enableAria();
-                }
-                else
-                {
-                    finish.enableAria();
-                    next.disableAria();
-                }
+                previous.enableAria();
             }
             else
             {
-                if (state.stepCount === 0)
-                {
-                    finish.hideAria();
-                    next.showAria().disableAria();
-                }
-                else if (state.stepCount > (state.currentIndex + 1))
-                {
-                    finish.hideAria();
-                    next.showAria().enableAria();
-                }
-                else if (!options.enableFinishButton)
-                {
-                    next.disableAria();
-                }
-                else
-                {
-                    finish.showAria();
-                    next.hideAria();
-                }
+                previous.disableAria();
             }
         }
-    },
 
-    /**
-     * Refreshs the visualization state for the step navigation (tabs).
-     *
-     * @static
-     * @private
-     * @method refreshStepNavigation
-     * @param wizard {Object} A jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     * @param [oldIndex] {Integer} The index of the prior step
-     */
-    refreshStepNavigation: function (wizard, options, state, oldIndex)
-    {
-        var uniqueId = privates.getUniqueId(wizard),
-            currentOrNewStepAnchor = wizard.find("#" + uniqueId + _tabSuffix + state.currentIndex),
-            currentInfo = $("<span class=\"current-info audible\">" + options.labels.current + " </span>"),
-            stepTitles = wizard.find(".content > .title");
-
-        if (oldIndex != null)
+        if (options.enableFinishButton && options.showFinishButtonAlways)
         {
-            var oldStepAnchor = wizard.find("#" + uniqueId + _tabSuffix + oldIndex);
-            oldStepAnchor.parent().addClass("done").removeClass("error").deselectAria();
-            stepTitles.eq(oldIndex).removeClass("current").next(".body").removeClass("current");
-            currentInfo = oldStepAnchor.find(".current-info");
-            currentOrNewStepAnchor.focus();
-        }
-
-        currentOrNewStepAnchor.prepend(currentInfo).parent().selectAria().removeClass("done").enableAria();
-        stepTitles.eq(state.currentIndex).addClass("current").next(".body").addClass("current");
-    },
-
-    /**
-     * Refreshes step buttons and their related titles beyond a certain position.
-     *
-     * @static
-     * @private
-     * @method refreshSteps
-     * @param wizard {Object} A jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     * @param index {Integer} The start point for refreshing ids
-     */
-    refreshSteps: function (wizard, options, state, index)
-    {
-        var uniqueId = privates.getUniqueId(wizard);
-
-        for (var i = index; i < state.stepCount; i++)
-        {
-            var uniqueStepId = uniqueId + _tabSuffix + i,
-                uniqueBodyId = uniqueId + _tabpanelSuffix + i,
-                uniqueHeaderId = uniqueId + _titleSuffix + i,
-                title = wizard.find(".title").eq(i).setId(uniqueHeaderId);
-
-            wizard.find(".steps a").eq(i).setId(uniqueStepId)
-                .aria("controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
-                .html(privates.renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
-            wizard.find(".body").eq(i).setId(uniqueBodyId)
-                .aria("labelledby", uniqueHeaderId);
-        }
-    },
-
-    registerEvents: function (wizard, options)
-    {
-        wizard.bind("finishing.steps", options.onFinishing);
-        wizard.bind("finished.steps", options.onFinished);
-        wizard.bind("stepChanging.steps", options.onStepChanging);
-        wizard.bind("stepChanged.steps", options.onStepChanged);
-
-        if (options.enableKeyNavigation)
-        {
-            wizard.bind("keyup.steps", privates.keyUpHandler);
-        }
-
-        wizard.find(".actions a").bind("click.steps", privates.paginationClickHandler);
-    },
-
-    /**
-     * Removes a specific step by an given index.
-     *
-     * @static
-     * @private
-     * @method removeStep
-     * @param wizard {Object} A jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     * @param index {Integer} The position (zero-based) of the step to remove
-     * @return Indecates whether the item is removed.
-     **/
-    removeStep: function (wizard, options, state, index)
-    {
-        var uniqueId = privates.getUniqueId(wizard);
-
-        // Index out of range and try deleting current item will return false.
-        if (index < 0 || index >= state.stepCount || state.currentIndex === index)
-        {
-            return false;
-        }
-
-        // Change data
-        privates.removeStepToCache(wizard, index);
-        if (state.currentIndex > index)
-        {
-            state.currentIndex--;
-            privates.saveCurrentStateToCookie(wizard, options, state);
-        }
-        state.stepCount--;
-
-        wizard.find("#" + uniqueId + _titleSuffix + index).remove();
-        wizard.find("#" + uniqueId + _tabpanelSuffix + index).remove();
-        wizard.find("#" + uniqueId + _tabSuffix + index).parent().remove();
-
-        // Set the "first" class to the new first step button 
-        if (index === 0)
-        {
-            wizard.find(".steps li").first().addClass("first");
-        }
-
-        // Set the "last" class to the new last step button 
-        if (index === state.stepCount)
-        {
-            wizard.find(".steps li").eq(index).addClass("last");
-        }
-
-        privates.refreshSteps(wizard, options, state, index);
-        privates.refreshPagination(wizard, options, state);
-
-        return true;
-    },
-
-    removeStepToCache: function (wizard, index)
-    {
-        wizard.data("steps").splice(index, 1);
-    },
-
-    /**
-     * Transforms the base html structure to a more sensible html structure.
-     *
-     * @static
-     * @private
-     * @method render
-     * @param wizard {Object} A jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     **/
-    render: function (wizard, options, state)
-    {
-        // Create a content wrapper and copy HTML from the intial wizard structure
-        var contentWrapper = $(document.createElement(options.contentContainerTag))
-                .addClass("content").html(wizard.html()),
-            stepsWrapper = $(document.createElement(options.stepsContainerTag))
-                .addClass("steps").append($("<ul role=\"tablist\"></ul>")),
-            stepTitles = contentWrapper.children(options.headerTag),
-            stepContents = contentWrapper.children(options.bodyTag);
-
-        // Transform the wizard wrapper and remove the inner HTML
-        wizard.attr("role", "application").addClass(options.cssClass).empty()
-            .append(stepsWrapper).append(contentWrapper);
-
-        // Add WIA-ARIA support
-        stepContents.each(function (index)
-        {
-            privates.renderBody(wizard, $(this), index);
-        });
-
-        // Make the start step visible
-        stepContents.eq(state.currentIndex).showAria();
-
-        stepTitles.each(function (index)
-        {
-            privates.renderTitle(wizard, options, state, $(this), index);
-        });
-
-        privates.refreshStepNavigation(wizard, options, state);
-        privates.renderPagination(wizard, options, state);
-    },
-
-    /**
-     * Transforms the body to a proper tabpanel.
-     *
-     * @static
-     * @private
-     * @method renderBody
-     * @param wizard {Object} A jQuery wizard object
-     * @param body {Object} A jQuery body object
-     * @param index {Integer} The position of the body
-     */
-    renderBody: function (wizard, body, index)
-    {
-        var uniqueId = privates.getUniqueId(wizard),
-            uniqueBodyId = uniqueId + _tabpanelSuffix + index,
-            uniqueHeaderId = uniqueId + _titleSuffix + index;
-
-        body.setId(uniqueBodyId).attr("role", "tabpanel").aria("labelledby", uniqueHeaderId)
-            .addClass("body").hideAria();
-    },
-
-    /**
-     * Renders a pagination if enabled.
-     *
-     * @static
-     * @private
-     * @method renderPagination
-     * @param wizard {Object} A jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     */
-    renderPagination: function (wizard, options, state)
-    {
-        if (options.enablePagination)
-        {
-            var actionCollection = $("<ul role=\"menu\" aria-label=\"" + options.labels.pagination + "\"></ul>"),
-                actionWrapper = $(document.createElement(options.actionContainerTag))
-                    .addClass("actions").append(actionCollection);
-            wizard.append(actionWrapper);
-
-            if (!options.forceMoveForward)
+            if (state.stepCount === 0)
             {
-                actionCollection.append(privates.generateMenuItem("previous", options.labels.previous));
+                finish.disableAria();
+                next.disableAria();
             }
-
-            actionCollection.append(privates.generateMenuItem("next", options.labels.next));
-
-            if (options.enableFinishButton)
+            else if (state.stepCount > 1 && state.stepCount > (state.currentIndex + 1))
             {
-                actionCollection.append(privates.generateMenuItem("finish", options.labels.finish));
+                finish.enableAria();
+                next.enableAria();
             }
-
-            privates.refreshPagination(wizard, options, state);
-            privates.loadAsyncContent(wizard, options, state);
-        }
-    },
-
-    /**
-     * Renders a template and replaces all placeholder.
-     *
-     * @static
-     * @private
-     * @method renderTemplate
-     * @param template {String} A template
-     * @param substitutes {Object} A list of substitute
-     * @return {String} The rendered template
-     */
-    renderTemplate: function (template, substitutes)
-    {
-        var matches = template.match(/#([a-z]*)#/gi);
-
-        for (var i = 0; i < matches.length; i++)
-        {
-            var match = matches[i], 
-                key = match.substring(1, match.length - 1);
-
-            if (substitutes[key] === undefined)
+            else
             {
-                throw new Error("The key \"" + key + "\" does not exist in the substitute collection!");
+                finish.enableAria();
+                next.disableAria();
             }
-
-            template = template.replace(match, substitutes[key]);
-        }
-
-        return template;
-    },
-
-    /**
-     * Transforms the title to a step item button.
-     *
-     * @static
-     * @private
-     * @method renderTitle
-     * @param wizard {Object} A jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     * @param header {Object} A jQuery header object
-     * @param index {Integer} The position of the header
-     */
-    renderTitle: function (wizard, options, state, header, index)
-    {
-        var uniqueId = privates.getUniqueId(wizard),
-            uniqueStepId = uniqueId + _tabSuffix + index,
-            uniqueBodyId = uniqueId + _tabpanelSuffix + index,
-            uniqueHeaderId = uniqueId + _titleSuffix + index,
-            stepCollection = wizard.find(".steps > ul"),
-            title = privates.renderTemplate(options.titleTemplate, {
-                index: index + 1,
-                title: header.html()
-            }),
-            stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId + 
-                "\" aria-controls=\"" + uniqueBodyId + "\">" + title + "</a></li>");
-        
-        if (!options.enableAllSteps)
-        {
-            stepItem.disableAria();
-        }
-
-        if (state.currentIndex > index)
-        {
-            stepItem.enableAria().addClass("done");
-        }
-
-        header.setId(uniqueHeaderId).attr("tabindex", "-1").addClass("title");
-
-        if (index === 0)
-        {
-            stepCollection.prepend(stepItem);
         }
         else
         {
-            stepCollection.find("li").eq(index - 1).after(stepItem);
-        }
-
-        // Set the "first" class to the new first step button
-        if (index === 0)
-        {
-            stepCollection.find("li").removeClass("first").eq(index).addClass("first");
-        }
-
-        // Set the "last" class to the new last step button
-        if (index === (state.stepCount - 1))
-        {
-            stepCollection.find("li").removeClass("last").eq(index).addClass("last");
-        }
-
-        // Register click event
-        stepItem.children("a").bind("click.steps", privates.stepClickHandler);
-    },
-
-    /**
-     * Saves the current state to a cookie.
-     *
-     * @static
-     * @private
-     * @method saveCurrentStateToCookie
-     * @param wizard {Object} A jQuery wizard object
-     * @param options {Object} Settings of the current wizard
-     * @param state {Object} The state container of the current wizard
-     */
-    saveCurrentStateToCookie: function (wizard, options, state)
-    {
-        if (options.saveState && $.cookie)
-        {
-            $.cookie(_cookiePrefix + privates.getUniqueId(wizard), state.currentIndex);
-        }
-    },
-
-    /**
-     * Fires when a step click happens.
-     *
-     * @static
-     * @private
-     * @event click
-     * @param event {Object} An event object
-     */
-    stepClickHandler: function (event)
-    {
-        event.preventDefault();
-
-        var anchor = $(this),
-            wizard = anchor.parents(":has(.steps)"),
-            options = wizard.data("options"),
-            state = wizard.data("state"),
-            oldIndex = state.currentIndex;
-
-        if (anchor.parent().is(":not(.disabled):not(.current)"))
-        {
-            var href = anchor.attr("href"),
-                position = parseInt(href.substring(href.lastIndexOf("-") + 1), 0);
-
-            privates.goToStep(wizard, options, state, position);
-        }
-
-        // If nothing has changed
-        if (oldIndex === state.currentIndex)
-        {
-            wizard.find("#" + privates.getUniqueId(wizard) + _tabSuffix + oldIndex).focus();
-            return false;
-        }
-    },
-
-    /**
-     * Checks an argument for null or undefined and throws an error if one check applies.
-     *
-     * @static
-     * @private
-     * @method validateArgument
-     * @param argumentName {String} The name of the given argument
-     * @param argumentValue {Object} The argument itself
-     */
-    validateArgument: function (argumentName, argumentValue)
-    {
-        if (argumentValue == null)
-        {
-            throw new Error("The argument \"" + argumentName + "\" is null or undefined.");
+            if (state.stepCount === 0)
+            {
+                finish.hideAria();
+                next.showAria().disableAria();
+            }
+            else if (state.stepCount > (state.currentIndex + 1))
+            {
+                finish.hideAria();
+                next.showAria().enableAria();
+            }
+            else if (!options.enableFinishButton)
+            {
+                next.disableAria();
+            }
+            else
+            {
+                finish.showAria();
+                next.hideAria();
+            }
         }
     }
-};
+}
+
+/**
+ * Refreshs the visualization state for the step navigation (tabs).
+ *
+ * @static
+ * @private
+ * @method refreshStepNavigation
+ * @param wizard {Object} A jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @param [oldIndex] {Integer} The index of the prior step
+ */
+function refreshStepNavigation(wizard, options, state, oldIndex)
+{
+    var uniqueId = getUniqueId(wizard),
+        currentOrNewStepAnchor = wizard.find("#" + uniqueId + _tabSuffix + state.currentIndex),
+        currentInfo = $("<span class=\"current-info audible\">" + options.labels.current + " </span>"),
+        stepTitles = wizard.find(".content > .title");
+
+    if (oldIndex != null)
+    {
+        var oldStepAnchor = wizard.find("#" + uniqueId + _tabSuffix + oldIndex);
+        oldStepAnchor.parent().addClass("done").removeClass("error").deselectAria();
+        stepTitles.eq(oldIndex).removeClass("current").next(".body").removeClass("current");
+        currentInfo = oldStepAnchor.find(".current-info");
+        currentOrNewStepAnchor.focus();
+    }
+
+    currentOrNewStepAnchor.prepend(currentInfo).parent().selectAria().removeClass("done").enableAria();
+    stepTitles.eq(state.currentIndex).addClass("current").next(".body").addClass("current");
+}
+
+/**
+ * Refreshes step buttons and their related titles beyond a certain position.
+ *
+ * @static
+ * @private
+ * @method refreshSteps
+ * @param wizard {Object} A jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @param index {Integer} The start point for refreshing ids
+ */
+function refreshSteps(wizard, options, state, index)
+{
+    var uniqueId = getUniqueId(wizard);
+
+    for (var i = index; i < state.stepCount; i++)
+    {
+        var uniqueStepId = uniqueId + _tabSuffix + i,
+            uniqueBodyId = uniqueId + _tabpanelSuffix + i,
+            uniqueHeaderId = uniqueId + _titleSuffix + i,
+            title = wizard.find(".title").eq(i).setId(uniqueHeaderId);
+
+        wizard.find(".steps a").eq(i).setId(uniqueStepId)
+            .aria("controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
+            .html(renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
+        wizard.find(".body").eq(i).setId(uniqueBodyId)
+            .aria("labelledby", uniqueHeaderId);
+    }
+}
+
+function registerEvents(wizard, options)
+{
+    wizard.bind("finishing.steps", options.onFinishing);
+    wizard.bind("finished.steps", options.onFinished);
+    wizard.bind("stepChanging.steps", options.onStepChanging);
+    wizard.bind("stepChanged.steps", options.onStepChanged);
+
+    if (options.enableKeyNavigation)
+    {
+        wizard.bind("keyup.steps", keyUpHandler);
+    }
+
+    wizard.find(".actions a").bind("click.steps", paginationClickHandler);
+}
+
+/**
+ * Removes a specific step by an given index.
+ *
+ * @static
+ * @private
+ * @method removeStep
+ * @param wizard {Object} A jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @param index {Integer} The position (zero-based) of the step to remove
+ * @return Indecates whether the item is removed.
+ **/
+function removeStep(wizard, options, state, index)
+{
+    var uniqueId = getUniqueId(wizard);
+
+    // Index out of range and try deleting current item will return false.
+    if (index < 0 || index >= state.stepCount || state.currentIndex === index)
+    {
+        return false;
+    }
+
+    // Change data
+    removeStepToCache(wizard, index);
+    if (state.currentIndex > index)
+    {
+        state.currentIndex--;
+        saveCurrentStateToCookie(wizard, options, state);
+    }
+    state.stepCount--;
+
+    wizard.find("#" + uniqueId + _titleSuffix + index).remove();
+    wizard.find("#" + uniqueId + _tabpanelSuffix + index).remove();
+    wizard.find("#" + uniqueId + _tabSuffix + index).parent().remove();
+
+    // Set the "first" class to the new first step button 
+    if (index === 0)
+    {
+        wizard.find(".steps li").first().addClass("first");
+    }
+
+    // Set the "last" class to the new last step button 
+    if (index === state.stepCount)
+    {
+        wizard.find(".steps li").eq(index).addClass("last");
+    }
+
+    refreshSteps(wizard, options, state, index);
+    refreshPagination(wizard, options, state);
+
+    return true;
+}
+
+function removeStepToCache(wizard, index)
+{
+    getSteps(wizard).splice(index, 1);
+}
+
+/**
+ * Transforms the base html structure to a more sensible html structure.
+ *
+ * @static
+ * @private
+ * @method render
+ * @param wizard {Object} A jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ **/
+function render(wizard, options, state)
+{
+    // Create a content wrapper and copy HTML from the intial wizard structure
+    var contentWrapper = $(document.createElement(options.contentContainerTag))
+            .addClass("content").html(wizard.html()),
+        stepsWrapper = $(document.createElement(options.stepsContainerTag))
+            .addClass("steps").append($("<ul role=\"tablist\"></ul>")),
+        stepTitles = contentWrapper.children(options.headerTag),
+        stepContents = contentWrapper.children(options.bodyTag);
+
+    // Transform the wizard wrapper and remove the inner HTML
+    wizard.attr("role", "application").addClass(options.cssClass).empty()
+        .append(stepsWrapper).append(contentWrapper);
+
+    // Add WIA-ARIA support
+    stepContents.each(function (index)
+    {
+        renderBody(wizard, $(this), index);
+    });
+
+    // Make the start step visible
+    stepContents.eq(state.currentIndex).showAria();
+
+    stepTitles.each(function (index)
+    {
+        renderTitle(wizard, options, state, $(this), index);
+    });
+
+    refreshStepNavigation(wizard, options, state);
+    renderPagination(wizard, options, state);
+}
+
+/**
+ * Transforms the body to a proper tabpanel.
+ *
+ * @static
+ * @private
+ * @method renderBody
+ * @param wizard {Object} A jQuery wizard object
+ * @param body {Object} A jQuery body object
+ * @param index {Integer} The position of the body
+ */
+function renderBody(wizard, body, index)
+{
+    var uniqueId = getUniqueId(wizard),
+        uniqueBodyId = uniqueId + _tabpanelSuffix + index,
+        uniqueHeaderId = uniqueId + _titleSuffix + index;
+
+    body.setId(uniqueBodyId).attr("role", "tabpanel").aria("labelledby", uniqueHeaderId)
+        .addClass("body").hideAria();
+}
+
+/**
+ * Renders a pagination if enabled.
+ *
+ * @static
+ * @private
+ * @method renderPagination
+ * @param wizard {Object} A jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ */
+function renderPagination(wizard, options, state)
+{
+    if (options.enablePagination)
+    {
+        var actionCollection = $("<ul role=\"menu\" aria-label=\"" + options.labels.pagination + "\"></ul>"),
+            actionWrapper = $(document.createElement(options.actionContainerTag))
+                .addClass("actions").append(actionCollection);
+        wizard.append(actionWrapper);
+
+        if (!options.forceMoveForward)
+        {
+            actionCollection.append(generateMenuItem("previous", options.labels.previous));
+        }
+
+        actionCollection.append(generateMenuItem("next", options.labels.next));
+
+        if (options.enableFinishButton)
+        {
+            actionCollection.append(generateMenuItem("finish", options.labels.finish));
+        }
+
+        refreshPagination(wizard, options, state);
+        loadAsyncContent(wizard, options, state);
+    }
+}
+
+/**
+ * Renders a template and replaces all placeholder.
+ *
+ * @static
+ * @private
+ * @method renderTemplate
+ * @param template {String} A template
+ * @param substitutes {Object} A list of substitute
+ * @return {String} The rendered template
+ */
+function renderTemplate(template, substitutes)
+{
+    var matches = template.match(/#([a-z]*)#/gi);
+
+    for (var i = 0; i < matches.length; i++)
+    {
+        var match = matches[i], 
+            key = match.substring(1, match.length - 1);
+
+        if (substitutes[key] === undefined)
+        {
+            throwError("The key '{0}' does not exist in the substitute collection!", key);
+        }
+
+        template = template.replace(match, substitutes[key]);
+    }
+
+    return template;
+}
+
+/**
+ * Transforms the title to a step item button.
+ *
+ * @static
+ * @private
+ * @method renderTitle
+ * @param wizard {Object} A jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @param header {Object} A jQuery header object
+ * @param index {Integer} The position of the header
+ */
+function renderTitle(wizard, options, state, header, index)
+{
+    var uniqueId = getUniqueId(wizard),
+        uniqueStepId = uniqueId + _tabSuffix + index,
+        uniqueBodyId = uniqueId + _tabpanelSuffix + index,
+        uniqueHeaderId = uniqueId + _titleSuffix + index,
+        stepCollection = wizard.find(".steps > ul"),
+        title = renderTemplate(options.titleTemplate, {
+            index: index + 1,
+            title: header.html()
+        }),
+        stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId + 
+            "\" aria-controls=\"" + uniqueBodyId + "\">" + title + "</a></li>");
+        
+    if (!options.enableAllSteps)
+    {
+        stepItem.disableAria();
+    }
+
+    if (state.currentIndex > index)
+    {
+        stepItem.enableAria().addClass("done");
+    }
+
+    header.setId(uniqueHeaderId).attr("tabindex", "-1").addClass("title");
+
+    if (index === 0)
+    {
+        stepCollection.prepend(stepItem);
+    }
+    else
+    {
+        stepCollection.find("li").eq(index - 1).after(stepItem);
+    }
+
+    // Set the "first" class to the new first step button
+    if (index === 0)
+    {
+        stepCollection.find("li").removeClass("first").eq(index).addClass("first");
+    }
+
+    // Set the "last" class to the new last step button
+    if (index === (state.stepCount - 1))
+    {
+        stepCollection.find("li").removeClass("last").eq(index).addClass("last");
+    }
+
+    // Register click event
+    stepItem.children("a").bind("click.steps", stepClickHandler);
+}
+
+/**
+ * Saves the current state to a cookie.
+ *
+ * @static
+ * @private
+ * @method saveCurrentStateToCookie
+ * @param wizard {Object} A jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ */
+function saveCurrentStateToCookie(wizard, options, state)
+{
+    if (options.saveState && $.cookie)
+    {
+        $.cookie(_cookiePrefix + getUniqueId(wizard), state.currentIndex);
+    }
+}
+
+/**
+ * Fires when a step click happens.
+ *
+ * @static
+ * @private
+ * @event click
+ * @param event {Object} An event object
+ */
+function stepClickHandler(event)
+{
+    event.preventDefault();
+
+    var anchor = $(this),
+        wizard = anchor.parents(":has(.steps)"),
+        options = getOptions(wizard),
+        state = getState(wizard),
+        oldIndex = state.currentIndex;
+
+    if (anchor.parent().is(":not(.disabled):not(.current)"))
+    {
+        var href = anchor.attr("href"),
+            position = parseInt(href.substring(href.lastIndexOf("-") + 1), 0);
+
+        goToStep(wizard, options, state, position);
+    }
+
+    // If nothing has changed
+    if (oldIndex === state.currentIndex)
+    {
+        wizard.find("#" + getUniqueId(wizard) + _tabSuffix + oldIndex).focus();
+        return false;
+    }
+}
+
+function throwError(message)
+{
+    if (arguments.length > 1)
+    {
+        message = format.apply(this, arguments);
+    }
+
+    throw new Error(message);
+}
+
+/**
+ * Checks an argument for null or undefined and throws an error if one check applies.
+ *
+ * @static
+ * @private
+ * @method validateArgument
+ * @param argumentName {String} The name of the given argument
+ * @param argumentValue {Object} The argument itself
+ */
+function validateArgument(argumentName, argumentValue)
+{
+    if (argumentValue == null)
+    {
+        throwError("The argument '{0}' is null or undefined.", argumentName);
+    }
+}
