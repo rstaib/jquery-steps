@@ -71,6 +71,8 @@ var _indexOutOfRangeErrorMessage = "Index out of range.";
  **/
 var _missingCorrespondingElementErrorMessage = "One or more corresponding step {0} are missing.";
 
+var _javascriptVoid = "javascript:void(0);";
+
 /**
  * Adds a step to the cache.
  *
@@ -181,25 +183,11 @@ function format(format)
     return format;
 }
 
-function getStepAnchor(wizard, index)
+function getNextHref(wizard, options, state)
 {
-    var uniqueId = getUniqueId(wizard);
+    var currentIndex = state.currentIndex;
 
-    return wizard.find("#" + uniqueId + _tabSuffix + index);
-}
-
-function getStepPanel(wizard, index)
-{
-    var uniqueId = getUniqueId(wizard);
-
-    return wizard.find("#" + uniqueId + _tabpanelSuffix + index);
-}
-
-function getStepTitle(wizard, index)
-{
-    var uniqueId = getUniqueId(wizard);
-
-    return wizard.find("#" + uniqueId + _titleSuffix + index);
+    return (currentIndex < (state.stepCount - 1)) ? "#" + getStepTitleId(wizard, currentIndex + 1) : _javascriptVoid;
 }
 
 function getOptions(wizard)
@@ -207,14 +195,51 @@ function getOptions(wizard)
     return wizard.data("options");
 }
 
+function getPreviousHref(wizard, options, state)
+{
+    var currentIndex = state.currentIndex;
+
+    return (currentIndex > 0 && state.stepCount > 1) ? "#" + getStepTitleId(wizard, currentIndex - 1) : _javascriptVoid;
+}
+
 function getState(wizard)
 {
     return wizard.data("state");
 }
 
+function getStepAnchor(wizard, index)
+{
+    return wizard.find("#" + getStepAnchorId(wizard, index));
+}
+
+function getStepAnchorId(wizard, index)
+{
+    return getUniqueId(wizard) + _tabSuffix + index;
+}
+
+function getStepPanel(wizard, index)
+{
+    return wizard.find("#" + getStepPanelId(wizard, index));
+}
+
+function getStepPanelId(wizard, index)
+{
+    return getUniqueId(wizard) + _tabpanelSuffix + index;
+}
+
 function getSteps(wizard)
 {
     return wizard.data("steps");
+}
+
+function getStepTitle(wizard, index)
+{
+    return wizard.find("#" + getStepTitleId(wizard, index));
+}
+
+function getStepTitleId(wizard, index)
+{
+    return getUniqueId(wizard) + _titleSuffix + index;
 }
 
 /**
@@ -632,27 +657,23 @@ function paginationClick(wizard, options, state, index)
  */
 function paginationClickHandler(event)
 {
-    event.preventDefault();
-
     var anchor = $(this),
         wizard = anchor.parents(":has(.steps)"),
         options = getOptions(wizard),
         state = getState(wizard),
-        href = anchor.attr("href");
-
-    switch (href.substring(href.lastIndexOf("#")))
+        href = anchor.attr("href"),
+        hashtag = href.substring(href.lastIndexOf("#"));
+    
+    if (hashtag === "#finish")
     {
-        case "#finish":
-            finishStep(wizard, options, state);
-            break;
+        event.preventDefault();
+        finishStep(wizard, options, state);
+    }
+    else
+    {
+        var position = parseInt(hashtag.substring(hashtag.lastIndexOf("-") + 1), 0);
 
-        case "#next":
-            goToNextStep(wizard, options, state);
-            break;
-
-        case "#previous":
-            goToPreviousStep(wizard, options, state)
-            break;
+        goToStep(wizard, options, state, position);
     }
 }
 
@@ -670,12 +691,15 @@ function refreshPagination(wizard, options, state)
 {
     if (options.enablePagination)
     {
-        var finish = wizard.find(".actions a[href$='#finish']").parent(),
-            next = wizard.find(".actions a[href$='#next']").parent();
+        var uniqueId = getUniqueId(wizard),
+            finish = wizard.find("#" + uniqueId + "-p-f").parent(),
+            next = wizard.find("#" + uniqueId + "-p-n")
+                .attr("href", getNextHref(wizard, options, state)).parent();
 
         if (!options.forceMoveForward)
         {
-            var previous = wizard.find(".actions a[href$='#previous']").parent();
+            var previous = wizard.find("#" + uniqueId + "-p-p")
+                .attr("href", getPreviousHref(wizard, options, state)).parent();
             if (state.currentIndex > 0)
             {
                 previous.enableAria();
@@ -772,13 +796,11 @@ function refreshStepNavigation(wizard, options, state, oldIndex)
  */
 function refreshSteps(wizard, options, state, index)
 {
-    var uniqueId = getUniqueId(wizard);
-
     for (var i = index; i < state.stepCount; i++)
     {
-        var uniqueStepId = uniqueId + _tabSuffix + i,
-            uniqueBodyId = uniqueId + _tabpanelSuffix + i,
-            uniqueHeaderId = uniqueId + _titleSuffix + i,
+        var uniqueStepId = getStepAnchorId(wizard, i),
+            uniqueBodyId = getStepPanelId(wizard, i),
+            uniqueHeaderId = getStepTitleId(wizard, i),
             title = wizard.find(".title").eq(i).setId(uniqueHeaderId);
 
         wizard.find(".steps a").eq(i).setId(uniqueStepId)
@@ -915,9 +937,8 @@ function render(wizard, options, state)
  */
 function renderBody(wizard, body, index)
 {
-    var uniqueId = getUniqueId(wizard),
-        uniqueBodyId = uniqueId + _tabpanelSuffix + index,
-        uniqueHeaderId = uniqueId + _titleSuffix + index;
+    var uniqueBodyId = getStepPanelId(wizard, index),
+        uniqueHeaderId = getStepTitleId(wizard, index);
 
     body.setId(uniqueBodyId).attr("role", "tabpanel").aria("labelledby", uniqueHeaderId)
         .addClass("body").hideAria();
@@ -937,20 +958,23 @@ function renderPagination(wizard, options, state)
 {
     if (options.enablePagination)
     {
-        var pagination = "<{0} class=\"actions\"><ul role=\"menu\" aria-label=\"{1}\">{2}</ul></{0}>",
-            buttonTemplate = "<li><a href=\"#{0}\" role=\"menuitem\">{1}</a></li>",
+        var uniqueId = getUniqueId(wizard),
+            pagination = "<{0} class=\"actions\"><ul role=\"menu\" aria-label=\"{1}\">{2}</ul></{0}>",
+            buttonTemplate = "<li><a id=\"{0}-{1}\" href=\"{2}\" role=\"menuitem\">{3}</a></li>",
             buttons = "";
 
         if (!options.forceMoveForward)
         {
-            buttons += format(buttonTemplate, "previous", options.labels.previous);
+            buttons += format(buttonTemplate, uniqueId, "p-p",
+                getPreviousHref(wizard, options, state), options.labels.previous);
         }
 
-        buttons += format(buttonTemplate, "next", options.labels.next);
+        buttons += format(buttonTemplate, uniqueId, "p-n",
+            getNextHref(wizard, options, state), options.labels.next);
 
         if (options.enableFinishButton)
         {
-            buttons += format(buttonTemplate, "finish", options.labels.finish);
+            buttons += format(buttonTemplate, uniqueId, "p-f", "#finish", options.labels.finish);
         }
 
         wizard.append(format(pagination, options.actionContainerTag, options.labels.pagination, buttons));
@@ -1004,17 +1028,16 @@ function renderTemplate(template, substitutes)
  */
 function renderTitle(wizard, options, state, header, index)
 {
-    var uniqueId = getUniqueId(wizard),
-        uniqueStepId = uniqueId + _tabSuffix + index,
-        uniqueBodyId = uniqueId + _tabpanelSuffix + index,
-        uniqueHeaderId = uniqueId + _titleSuffix + index,
+    var uniqueStepId = getStepAnchorId(wizard, index),
+        uniqueBodyId = getStepPanelId(wizard, index),
+        uniqueHeaderId = getStepTitleId(wizard, index),
         stepCollection = wizard.find(".steps > ul"),
         title = renderTemplate(options.titleTemplate, {
             index: index + 1,
             title: header.html()
         }),
-        stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId + 
-            "\" aria-controls=\"" + uniqueBodyId + "\">" + title + "</a></li>");
+        stepItem = $(format("<li role=\"tab\"><a id=\"{0}\" href=\"#{1}\" aria-controls=\"{2}\">{3}</a></li>", 
+            uniqueStepId, uniqueHeaderId, uniqueBodyId, title));
         
     if (!options.enableAllSteps)
     {
@@ -1132,9 +1155,6 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
  */
 function stepClickHandler(event)
 {
-    // Uncoment this line in order to allow hashtag in the url for plugins like jquery-hashchange (#5)
-    //event.preventDefault();
-
     var anchor = $(this),
         wizard = anchor.parents(":has(.steps)"),
         options = getOptions(wizard),
@@ -1152,6 +1172,7 @@ function stepClickHandler(event)
     // If nothing has changed
     if (oldIndex === state.currentIndex)
     {
+        event.preventDefault();
         getStepAnchor(wizard, oldIndex).focus();
         return false;
     }
