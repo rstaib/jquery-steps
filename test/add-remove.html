@@ -12,11 +12,9 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/jquery.steps.css">
-        <script src="../lib/modernizr-2.6.2.min.js"></script>
-        <script src="../lib/jquery-1.9.1.min.js"></script>
-        <script src="../lib/jquery.cookie-1.3.1.js"></script>
-        <script src="../lib/jquery.hashchange-1.3.min.js"></script>
-        <script src="../build/jquery.steps.js"></script>
+        <script src="lib/modernizr-2.6.2.min.js"></script>
+        <script src="lib/jquery-1.9.1.min.js"></script>
+        <script src="lib/jquery.steps.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -45,10 +43,17 @@
                 {
                     $("#wizard").steps({
                         headerTag: "h2",
-                        bodyTag: "section",
-                        transitionEffect: "slideLeft"
+                        bodyTag: "section"
                     });
-                    $(window).hashchange();
+                    $("#wizard").steps("add", { 
+                        title: "Fifth Step", 
+                        content: "New!" 
+                    });
+                    $("#wizard").steps("insert", 1, { 
+                        title: "Second Step", 
+                        content: "New!" 
+                    });
+                    $("#wizard").steps("remove", 2);
                 });
             </script>
 
