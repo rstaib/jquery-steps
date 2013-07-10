@@ -1,0 +1,142 @@
+﻿.wizard
+{
+    width: 600px;
+}
+
+
+
+/* Common */
+.wizard a
+{
+    outline: 0;
+}
+
+.wizard ol,
+.wizard ul
+{
+    list-style: none;
+}
+
+
+
+/* Accessibility */
+.wizard .audible
+{
+    position: absolute;
+    left: -999em;
+}
+
+
+.wizard > .steps
+{
+    background: #fff;
+    width: 600px;
+    height: 30px;
+}
+
+.wizard.vertical > .steps
+{
+    float: left;
+    width: 200px;
+    height: 330px;
+}
+
+.wizard > .steps .number
+{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.wizard li[role="tab"],
+.wizard > .actions li
+{
+    float: left;
+}
+
+.wizard li[role="tab"] a
+{
+    background: #999;
+}
+
+.wizard li[role="tab"].disabled a
+{
+    background: #ccc;
+    cursor: default;
+}
+
+.wizard li[role="tab"].current a
+{
+    background: rgb(241, 101, 41);
+    cursor: default;
+}
+
+.wizard li[role="tab"].done a
+{
+    background: #4cff00;
+}
+
+.wizard li[role="tab"].error a
+{
+    background: #f00;
+}
+
+.wizard > .content
+{
+    width: 600px;
+    height: 300px;
+    overflow: hidden;
+}
+
+.wizard.vertical > .content
+{
+    float: left;
+    width: 400px;
+    height: 330px;
+}
+
+.wizard > .content > .title
+{
+    position: absolute;
+    left: -999em;
+}
+
+.wizard > .content > .body
+{
+    border: 1px solid #CCC;
+    float: left;
+    position: absolute;
+    width: 600px;
+    height: 300px;
+    z-index: -1;
+}
+
+.wizard.vertical > .content > .body
+{
+    width: 400px;
+}
+
+.wizard > .content > .body > iframe
+{
+    border: 0 none;
+    width: 100%;
+    height: 200px;
+}
+
+.wizard > .actions
+{
+    width: 600px;
+    height: 30px;
+}
+
+.wizard > .actions [aria-disabled="true"] a
+{
+    color: #aaa;
+}
+
+.wizard > .loading
+{
+}
+
+.wizard > .loading .spinner
+{
+}
