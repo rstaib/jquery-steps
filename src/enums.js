@@ -37,6 +37,34 @@ var contentMode = $.fn.steps.contentMode = {
 };
 
 /**
+ * An enum represents the orientation of the steps navigation.
+ *
+ * @class stepsOrientation
+ * @for steps
+ **/
+var stepsOrientation = $.fn.steps.stepsOrientation = {
+    /**
+     * Horizontal orientation
+     *
+     * @readOnly
+     * @property horizontal
+     * @type Integer
+     * @for stepsOrientation
+     **/
+    horizontal: 0,
+
+    /**
+     * Vertical orientation
+     *
+     * @readOnly
+     * @property vertical
+     * @type Integer
+     * @for stepsOrientation
+     **/
+    vertical: 1
+};
+
+/**
  * An enum that represents the various transition animations.
  *
  * @class transitionEffect

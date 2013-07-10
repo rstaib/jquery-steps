@@ -857,14 +857,16 @@ function render(wizard, options, state)
 {
     // Create a content wrapper and copy HTML from the intial wizard structure
     var wrapperTemplate = "<{0} class=\"{1}\">{2}</{0}>",
+        orientation = getValidEnumValue(stepsOrientation, options.stepsOrientation),
+        verticalCssClass = (orientation === stepsOrientation.vertical) ? " vertical" : "",
         contentWrapper = $(format(wrapperTemplate, options.contentContainerTag, "content", wizard.html())),
         stepsWrapper = $(format(wrapperTemplate, options.stepsContainerTag, "steps", "<ul role=\"tablist\"></ul>")),
         stepTitles = contentWrapper.children(options.headerTag),
         stepContents = contentWrapper.children(options.bodyTag);
 
     // Transform the wizard wrapper and remove the inner HTML
-    wizard.attr("role", "application").addClass(options.cssClass).empty()
-        .append(stepsWrapper).append(contentWrapper);
+    wizard.attr("role", "application").empty().append(stepsWrapper).append(contentWrapper)
+        .addClass(options.cssClass + " " + options.clearFixCssClass + verticalCssClass);
 
     // Add WIA-ARIA support
     stepContents.each(function (index)
@@ -1089,10 +1091,12 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
                 posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
                 posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
+            var currentPos = currentStep.position().left;
+
             currentStep.animate({ left: posFadeOut }, effectSpeed, 
                 function () { $(this).hideAria(); }).promise();
             newStep.css("left", posFadeIn + "px").showAria()
-                .animate({ left: 0 }, effectSpeed).promise();
+                .animate({ left: currentPos }, effectSpeed).promise();
             break;
 
         default:

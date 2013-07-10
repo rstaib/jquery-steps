@@ -78,6 +78,26 @@ var defaults = $.fn.steps.defaults = {
      **/
     cssClass: "wizard",
 
+    /**
+     * The css class which will be used for floating scenarios.
+     *
+     * @property clearFixCssClass
+     * @type String
+     * @default "clearfix"
+     * @for defaults
+     **/
+    clearFixCssClass: "clearfix",
+
+    /**
+     * The css class which will be used for floating scenarios.
+     *
+     * @property clearFixCssClass
+     * @type String
+     * @default "clearfix"
+     * @for defaults
+     **/
+    stepsOrientation: stepsOrientation.horizontal,
+
     /*
      * Tempplates
      */
