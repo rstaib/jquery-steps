@@ -194,3 +194,31 @@ test("stepClassDisabledAndDone", 12, function ()
     $("#vis").steps("next");
     ok(checkOnlyItemBeforePositionHasClass(3), "Valid after 3 * next (done)!");
 });
+
+module("internal", {
+    setup: function ()
+    {
+        $("#qunit-fixture").append($("<div id=\"internal\"></div>"));
+        $("#internal").steps();
+    },
+    teardown: function ()
+    {
+        $("#internal").remove();
+    }
+});
+
+test("stepCache", 4, function ()
+{
+    var wizard = $("#internal"),
+        steps = getSteps(wizard);
+
+    addStepToCache(wizard, $.extend({}, stepModel, { title: "add" }));
+    equal(steps.length, 1, "Valid count after add step to cache!");
+
+    insertStepToCache(wizard, 0, $.extend({}, stepModel, { title: "insert" }));
+    equal(getStep(wizard, 0).title, "insert", "Valid position after insert step to cache!");
+    equal(steps.length, 2, "Valid count after insert step to cache!");
+
+    removeStepFromCache(wizard, 0);
+    equal(steps.length, 1, "Valid count after remove step to cache!");
+});

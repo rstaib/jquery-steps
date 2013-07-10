@@ -351,60 +351,7 @@ function goToStep(wizard, options, state, index)
         refreshStepNavigation(wizard, options, state, oldIndex);
         refreshPagination(wizard, options, state);
         loadAsyncContent(wizard, options, state);
-
-        var stepContents = wizard.find(".content > .body");
-        switch (getValidEnumValue(transitionEffect, options.transitionEffect))
-        {
-            case transitionEffect.fade:
-                state.transitionShowElement = stepContents.eq(index);
-                stepContents.eq(oldIndex).fadeOut(options.transitionEffectSpeed, function ()
-                {
-                    var wizard = $(this).aria("hidden", "true").parents(":has(.steps)");
-                    var state = getState(wizard);
-
-                    if (state.transitionShowElement)
-                    {
-                        state.transitionShowElement.fadeIn(options.transitionEffectSpeed,
-                            function () { $(this).aria("hidden", "false"); });
-                        state.transitionShowElement = null;
-                    }
-                }).promise();
-                break;
-
-            case transitionEffect.slide:
-                state.transitionShowElement = stepContents.eq(index);
-                stepContents.eq(oldIndex).slideUp(options.transitionEffectSpeed, function ()
-                {
-                    var wizard = $(this).aria("hidden", "true").parents(":has(.steps)");
-                    var state = getState(wizard);
-
-                    if (state.transitionShowElement)
-                    {
-                        state.transitionShowElement.slideDown(options.transitionEffectSpeed,
-                            function () { $(this).aria("hidden", "false"); });
-                        state.transitionShowElement = null;
-                    }
-                }).promise();
-                break;
-
-            case transitionEffect.slideLeft:
-                var newStep = stepContents.eq(index),
-                    currentStep = stepContents.eq(oldIndex),
-                    outerWidth = currentStep.outerWidth(true),
-                    posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
-                    posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
-
-                currentStep.animate({ left: posFadeOut }, options.transitionEffectSpeed, 
-                    function () { $(this).hideAria(); }).promise();
-                newStep.css("left", posFadeIn + "px").showAria();
-                newStep.animate({ left: 0 }, options.transitionEffectSpeed).promise();
-                break;
-
-            default:
-                stepContents.eq(oldIndex).hideAria();
-                stepContents.eq(index).showAria();
-                break;
-        }
+        startTransitionEffect(wizard, options, state, index, oldIndex);
 
         wizard.triggerHandler("stepChanged", [index, oldIndex]);
     }
@@ -434,14 +381,14 @@ function initialize(options)
     /*jshint -W040 */
     var opts = $.extend(true, {}, defaults, options);
 
-    return this.each(function (i)
+    return this.each(function ()
     {
         var wizard = $(this);
         var state = {
             currentIndex: opts.startIndex,
             currentStep: null,
             stepCount: 0,
-            transitionShowElement: null
+            transitionElement: null
         };
 
         // Create data container
@@ -588,27 +535,30 @@ function keyUpHandler(event)
  */
 function loadAsyncContent(wizard, options, state)
 {
-    var currentStep = getStep(wizard, state.currentIndex);
-
-    if (!options.enableContentCache || !currentStep.contentLoaded)
+    if (state.stepCount > 0)
     {
-        switch (getValidEnumValue(contentMode, currentStep.contentMode))
-        {
-            case contentMode.iframe:
-                wizard.find(".content > .body").eq(state.currentIndex).empty()
-                    .html("<iframe src=\"" + currentStep.contentUrl + "\" />")
-                    .data("loaded", "1");
-                break;
+        var currentStep = getStep(wizard, state.currentIndex);
 
-            case contentMode.async:
-                var currentStepContent = wizard.find("#" + getUniqueId(wizard) + _tabpanelSuffix + state.currentIndex).aria("busy", "true")
-                    .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
-                $.ajax({ url: currentStep.contentUrl, cache: false })
-                    .done(function (data)
-                    {
-                        currentStepContent.empty().html(data).aria("busy", "false").data("loaded", "1");
-                    });
-                break;
+        if (!options.enableContentCache || !currentStep.contentLoaded)
+        {
+            switch (getValidEnumValue(contentMode, currentStep.contentMode))
+            {
+                case contentMode.iframe:
+                    wizard.find(".content > .body").eq(state.currentIndex).empty()
+                        .html("<iframe src=\"" + currentStep.contentUrl + "\" />")
+                        .data("loaded", "1");
+                    break;
+
+                case contentMode.async:
+                    var currentStepContent = wizard.find("#" + getUniqueId(wizard) + _tabpanelSuffix + state.currentIndex).aria("busy", "true")
+                        .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
+                    $.ajax({ url: currentStep.contentUrl, cache: false })
+                        .done(function (data)
+                        {
+                            currentStepContent.empty().html(data).aria("busy", "false").data("loaded", "1");
+                        });
+                    break;
+            }
         }
     }
 }
@@ -1099,6 +1049,56 @@ function saveCurrentStateToCookie(wizard, options, state)
     if (options.saveState && $.cookie)
     {
         $.cookie(_cookiePrefix + getUniqueId(wizard), state.currentIndex);
+    }
+}
+
+function startTransitionEffect(wizard, options, state, index, oldIndex)
+{
+    var stepContents = wizard.find(".content > .body"),
+        effect = getValidEnumValue(transitionEffect, options.transitionEffect),
+        effectSpeed = options.transitionEffectSpeed,
+        newStep = stepContents.eq(index),
+        currentStep = stepContents.eq(oldIndex);
+
+    switch (effect)
+    {
+        case transitionEffect.fade:
+        case transitionEffect.slide:
+            var hide = (effect === transitionEffect.fade) ? "fadeOut" : "slideUp",
+                show = (effect === transitionEffect.fade) ? "fadeIn" : "slideDown";
+
+            state.transitionElement = newStep;
+            currentStep[hide](effectSpeed, function ()
+            {
+                var wizard = $(this).hideAria().parents(":has(.steps)"),
+                    state = getState(wizard);
+
+                if (state.transitionElement)
+                {
+                    state.transitionElement[show](effectSpeed, function ()
+                    {
+                        $(this).showAria();
+                    });
+                    state.transitionElement = null;
+                }
+            }).promise();
+            break;
+
+        case transitionEffect.slideLeft:
+            var outerWidth = currentStep.outerWidth(true),
+                posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
+                posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
+
+            currentStep.animate({ left: posFadeOut }, effectSpeed, 
+                function () { $(this).hideAria(); }).promise();
+            newStep.css("left", posFadeIn + "px").showAria()
+                .animate({ left: 0 }, effectSpeed).promise();
+            break;
+
+        default:
+            currentStep.hideAria();
+            newStep.showAria();
+            break;
     }
 }
 
