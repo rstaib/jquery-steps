@@ -7,6 +7,8 @@
 - Improved code for better minification
 - Configurable clearfix css class
 - Vertical step navigation (default: horizontal)
+- Removed `event.preventDefault();` to allow hashtags appearing in the url (support for jquery-hashchange) [#5](https://github.com/rstaib/jquery-steps/issues/5)
+- Removed `"use strict";` because of an ASP.Net tracing issue related to FF (see jQuery ticket: #13335)
 
 ## 0.9.7
 
