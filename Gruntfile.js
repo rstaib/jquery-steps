@@ -35,35 +35,11 @@ module.exports = function (grunt)
                 }
             }
         },
-        compress: {
-            main: {
-                options: {
-                    archive: '<%= pkg.folders.dist %>/<%= pkg.name %>-<%= pkg.version %>.zip'
-                },
-                files: [
-                    {
-                        src: [
-                            'README.md',
-                            /*'changelog.txt',*/
-                            '<%= pkg.folders.src %>/**/*.*',
-                            '<%= pkg.folders.docs %>/**/*.*',
-                            'demo/**/*.*',
-                            'lib/*.*',
-                            'test/**/*.*'
-                        ]
-                    },
-                    {
-                        flatten: true,
-                        src: ['<%= pkg.folders.dist %>/*.js'],
-                        filter: 'isFile'
-                    }
-                ]
-            }
-        },
         qunit: {
             files: ['test/index.html']
         },
         jshint: {
+            files: ['<%= pkg.folders.dist %>/jquery.steps.js'],
             options: {
                 curly: true,
                 eqeqeq: true,
@@ -79,11 +55,8 @@ module.exports = function (grunt)
                     jQuery: true,
                     $: true,
                     console: true
-                }
+                },
             },
-            files: [
-                '<%= pkg.folders.dist %>/jquery-steps.js'
-            ],
             test: {
                 options: {
                     globals: {
@@ -139,11 +112,10 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
-    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('default', ['build']);
     grunt.registerTask('api', ['clean:api', 'yuidoc']);
     grunt.registerTask('build', ['clean:build', 'concat', 'jshint', 'qunit']);
-    grunt.registerTask('release', ['build', 'api', 'uglify', 'compress']);
+    grunt.registerTask('release', ['build', 'api', 'uglify']);
 };

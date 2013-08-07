@@ -18,16 +18,16 @@
     "author": {
         "name": "Rafael J. Staib",
         "email": "rstaib@derklang.com",
-        "url": ""
+        "url": "http://www.rafaelstaib.com"
     },
     "licenses": [
         { "type": "MIT", "url": "http://www.opensource.org/licenses/MIT" }
     ],
     "bugs": "https://github.com/rstaib/jquery-steps/issues",
-    "homepage": "http://rstaib.github.io/jquery-steps",
+    "homepage": "http://www.jquery-steps.com",
     "docs": "https://github.com/rstaib/jquery-steps/wiki",
-    "download": "http://rstaib.github.io/jquery-steps",
-    "demo": "http://rstaib.github.io/jquery-steps/basic.html",
+    "download": "http://www.jquery-steps.com",
+    "demo": "http://www.rafaelstaib.com/jquery-steps/basic.html",
     "dependencies": {
         "jquery": ">=1.4.4"
     }

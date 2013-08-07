@@ -4,7 +4,7 @@
 
 - Nested tags which have the same node name as the body tag cause an exception. Closes issue [#4](https://github.com/rstaib/jquery-steps/issues/4)
 - Improved architecture under the hood (data and UI changes are separated into layer)
-- Improved code for better minification
+- Optimized code for better minification
 - Configurable clearfix css class
 - Vertical step navigation (default: horizontal)
 - Removed `"use strict";` because of an ASP.Net tracing issue related to FF (see jQuery ticket: #13335)

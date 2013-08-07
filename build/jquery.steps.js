@@ -1,3 +1,40 @@
+/*!
+ * jQuery Steps Plugin v1.0.0pre - A powerful jQuery wizard plugin that supports accessibility and HTML5
+ * https://github.com/rstaib/jquery-steps
+ *
+ * Copyright (c) 2013 Rafael J. Staib
+ * Released under the MIT license
+ *
+ * Follow me on twitter: https://twitter.com/@RafaelStaib
+ *
+ * Requires jQuery version 1.4.4 or higher
+ * Please report issues at: https://github.com/rstaib/jquery-steps/issues
+ */
+
+/* 
+ * TODOs:
+ * - Add tests and styles for loading animation (Spinner)
+ * - Add tests for add, insert and remove
+ * - Add tests in general
+ *
+ * Planed Features:
+ * - Progress bar
+ * - Implement preloadContent for async and iframe content types.
+ * - Implement functionality to skip a certain amount of steps 
+ * - Dynamic settings change (setOptions({ enablePagination: false }))
+ * - Dynamic step update (setStepContent(0, { title: "", content: "" }))
+ * - Jump from any page to a specific step (via uri hash tag test.html#steps-uid-1-3)
+ * - Add Swipe gesture for devices that support touch
+ * - Allow clicking on the next step even if it is disabled (so that people can decide whether they use prev button or the step button next to the current step)
+ *
+ */
+
+/**
+ * @module jQuery.steps
+ * @requires jQuery (always required), jQuery.cookie (only required if saveState is `true`)
+ */
+;(function ($, undefined)
+{
 /**
  * A global unique id count.
  *
@@ -1182,3 +1219,738 @@ function validateArgument(argumentName, argumentValue)
         throwError("The argument '{0}' is null or undefined.", argumentName);
     }
 }
+/**
+ * Represents a jQuery wizard plugin.
+ *
+ * @class steps
+ * @constructor
+ * @param [method={}] The name of the method as `String` or an JSON object for initialization
+ * @param [params=]* {Array} Additional arguments for a method call
+ * @chainable
+ **/
+$.fn.steps = function (method)
+{
+    if ($.fn.steps[method])
+    {
+        return $.fn.steps[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    }
+    else if (typeof method === "object" || !method)
+    {
+        return initialize.apply(this, arguments);
+    }
+    else
+    {
+        $.error("Method " + method + " does not exist on jQuery.steps");
+    }
+};
+
+/**
+ * Adds a new step.
+ *
+ * @method add
+ * @param step {Object} The step object to add
+ * @chainable
+ **/
+$.fn.steps.add = function (step)
+{
+    var options = getOptions(this),
+        state = getState(this);
+
+    return insertStep(this, options, state, state.stepCount, step);
+};
+
+/**
+ * Triggers the onFinishing and onFinished event.
+ *
+ * @method finish
+ **/
+$.fn.steps.finish = function ()
+{
+    var state = getState(this);
+
+    finishStep(this, state);
+};
+
+/**
+ * Gets the current step index.
+ *
+ * @method getCurrentIndex
+ * @return {Integer} The actual step index (zero-based)
+ * @for steps
+ **/
+$.fn.steps.getCurrentIndex = function ()
+{
+    return getState(this).currentIndex;
+};
+
+/**
+ * Gets the current step object.
+ *
+ * @method getCurrentStep
+ * @return {Object} The actual step object
+ **/
+$.fn.steps.getCurrentStep = function ()
+{
+    return getStep(this, getState(this).currentIndex);
+};
+
+/**
+ * Gets a specific step object by index.
+ *
+ * @method getStep
+ * @param index {Integer} An integer that belongs to the position of a step
+ * @return {Object} A specific step object
+ **/
+$.fn.steps.getStep = function (index)
+{
+    return getStep(this, index);
+};
+
+/**
+ * Inserts a new step to a specific position.
+ *
+ * @method insert
+ * @param index {Integer} The position (zero-based) to add
+ * @param step {Object} The step object to add
+ * @example
+ *     $("#wizard").steps().insert(0, {
+ *         title: "Title",
+ *         content: "", // optional
+ *         contentMode: "async", // optional
+ *         contentUrl: "/Content/Step/1" // optional
+ *     });
+ * @chainable
+ **/
+$.fn.steps.insert = function (index, step)
+{
+    var options = getOptions(this),
+        state = getState(this);
+
+    return insertStep(this, options, state, index, step);
+};
+
+/**
+ * Routes to the next step.
+ *
+ * @method next
+ * @return {Boolean} Indicates whether the action executed
+ **/
+$.fn.steps.next = function ()
+{
+    var options = getOptions(this),
+        state = getState(this);
+
+    return goToNextStep(this, options, state);
+};
+
+/**
+ * Routes to the previous step.
+ *
+ * @method previous
+ * @return {Boolean} Indicates whether the action executed
+ **/
+$.fn.steps.previous = function ()
+{
+    var options = getOptions(this),
+        state = getState(this);
+
+    return goToPreviousStep(this, options, state);
+};
+
+/**
+ * Removes a specific step by an given index.
+ *
+ * @method remove
+ * @param index {Integer} The position (zero-based) of the step to remove
+ * @return Indecates whether the item is removed.
+ **/
+$.fn.steps.remove = function (index)
+{
+    var options = getOptions(this),
+        state = getState(this);
+
+    return removeStep(this, options, state, index);
+};
+
+/**
+ * Sets a specific step object by index.
+ *
+ * @method setStep
+ * @param index {Integer} An integer that belongs to the position of a step
+ * @param step {Object} The step object to change
+ **/
+$.fn.steps.setStep = function (index, step)
+{
+    throw new Error("Not yet implemented!");
+};
+
+/**
+ * Skips an certain amount of steps.
+ *
+ * @method skip
+ * @param count {Integer} The amount of steps that should be skipped
+ * @return {Boolean} Indicates whether the action executed
+ **/
+$.fn.steps.skip = function (count)
+{
+    throw new Error("Not yet implemented!");
+};
+/**
+ * An enum represents the different content types of a step and their loading mechanisms.
+ *
+ * @class contentMode
+ * @for steps
+ **/
+var contentMode = $.fn.steps.contentMode = {
+    /**
+     * HTML embedded content
+     *
+     * @readOnly
+     * @property html
+     * @type Integer
+     * @for contentMode
+     **/
+    html: 0,
+
+    /**
+     * IFrame embedded content
+     *
+     * @readOnly
+     * @property iframe
+     * @type Integer
+     * @for contentMode
+     **/
+    iframe: 1,
+
+    /**
+     * Async embedded content
+     *
+     * @readOnly
+     * @property async
+     * @type Integer
+     * @for contentMode
+     **/
+    async: 2
+};
+
+/**
+ * An enum represents the orientation of the steps navigation.
+ *
+ * @class stepsOrientation
+ * @for steps
+ **/
+var stepsOrientation = $.fn.steps.stepsOrientation = {
+    /**
+     * Horizontal orientation
+     *
+     * @readOnly
+     * @property horizontal
+     * @type Integer
+     * @for stepsOrientation
+     **/
+    horizontal: 0,
+
+    /**
+     * Vertical orientation
+     *
+     * @readOnly
+     * @property vertical
+     * @type Integer
+     * @for stepsOrientation
+     **/
+    vertical: 1
+};
+
+/**
+ * An enum that represents the various transition animations.
+ *
+ * @class transitionEffect
+ * @for steps
+ **/
+var transitionEffect = $.fn.steps.transitionEffect = {
+    /**
+     * No transition animation
+     *
+     * @readOnly
+     * @property none
+     * @type Integer
+     * @for transitionEffect
+     **/
+    none: 0,
+
+    /**
+     * Fade in transition
+     *
+     * @readOnly
+     * @property fade
+     * @type Integer
+     * @for transitionEffect
+     **/
+    fade: 1,
+
+    /**
+     * Slide up transition
+     *
+     * @readOnly
+     * @property slide
+     * @type Integer
+     * @for transitionEffect
+     **/
+    slide: 2,
+
+    /**
+     * Slide left transition
+     *
+     * @readOnly
+     * @property slideLeft
+     * @type Integer
+     * @for transitionEffect
+     **/
+    slideLeft: 3
+};
+var stepModel = $.fn.steps.stepModel = {
+    title: "",
+    content: "",
+    contentUrl: "",
+    contentMode: contentMode.html,
+    contentLoaded: false
+};
+/**
+ * An object that represents the default settings.
+ * There are two possibities to override the sub-properties.
+ * Either by doing it generally (global) or on initialization.
+ *
+ * @static
+ * @class defaults
+ * @for steps
+ * @example
+ *   // Global approach
+ *   $.steps.defaults.headerTag = "h3";
+ * @example
+ *   // Initialization approach
+ *   $("#wizard").steps({ headerTag: "h3" });
+ **/
+var defaults = $.fn.steps.defaults = {
+    /**
+     * The header tag is used to find the step button text within the declared wizard area.
+     *
+     * @property headerTag
+     * @type String
+     * @default "h1"
+     * @for defaults
+     **/
+    headerTag: "h1",
+
+    /**
+     * The body tag is used to find the step content within the declared wizard area.
+     *
+     * @property bodyTag
+     * @type String
+     * @default "div"
+     * @for defaults
+     **/
+    bodyTag: "div",
+
+    /**
+     * The content container tag which will be used to wrap all step contents.
+     *
+     * @property contentContainerTag
+     * @type String
+     * @default "div"
+     * @for defaults
+     **/
+    contentContainerTag: "div",
+
+    /**
+     * The action container tag which will be used to wrap the pagination navigation.
+     *
+     * @property actionContainerTag
+     * @type String
+     * @default "div"
+     * @for defaults
+     **/
+    actionContainerTag: "div",
+
+    /**
+     * The steps container tag which will be used to wrap the steps navigation.
+     *
+     * @property stepsContainerTag
+     * @type String
+     * @default "div"
+     * @for defaults
+     **/
+    stepsContainerTag: "div",
+
+    /**
+     * The css class which will be added to the outer component wrapper.
+     *
+     * @property cssClass
+     * @type String
+     * @default "wizard"
+     * @for defaults
+     * @example
+     *     <div class="wizard">
+     *         ...
+     *     </div>
+     **/
+    cssClass: "wizard",
+
+    /**
+     * The css class which will be used for floating scenarios.
+     *
+     * @property clearFixCssClass
+     * @type String
+     * @default "clearfix"
+     * @for defaults
+     **/
+    clearFixCssClass: "clearfix",
+
+    /**
+     * The css class which will be used for floating scenarios.
+     *
+     * @property clearFixCssClass
+     * @type String
+     * @default "clearfix"
+     * @for defaults
+     **/
+    stepsOrientation: stepsOrientation.horizontal,
+
+    /*
+     * Tempplates
+     */
+
+    /**
+     * The title template which will be used to create a step button.
+     *
+     * @property titleTemplate
+     * @type String
+     * @default "<span class=\"number\">#index#.</span> #title#"
+     * @for defaults
+     **/
+    titleTemplate: "<span class=\"number\">#index#.</span> #title#",
+
+    /**
+     * The loading template which will be used to create the loading animation.
+     *
+     * @property loadingTemplate
+     * @type String
+     * @default "<span class=\"spinner\"></span> #text#"
+     * @for defaults
+     **/
+    loadingTemplate: "<span class=\"spinner\"></span> #text#",
+
+    /*
+     * Behaviour
+     */
+
+    /**
+     * Sets the focus to the first wizard instance in order to enable the key navigation from the begining if `true`. 
+     *
+     * @property autoFocus
+     * @type Boolean
+     * @default false
+     * @for defaults
+     * @since 0.9.4
+     **/
+    autoFocus: false,
+
+    /**
+     * Enables all steps from the begining if `true` (all steps are clickable).
+     *
+     * @property enableAllSteps
+     * @type Boolean
+     * @default false
+     * @for defaults
+     **/
+    enableAllSteps: false,
+
+    /**
+     * Enables keyboard navigation if `true` (arrow left and arrow right).
+     *
+     * @property enableKeyNavigation
+     * @type Boolean
+     * @default true
+     * @for defaults
+     **/
+    enableKeyNavigation: true,
+
+    /**
+     * Enables pagination if `true`.
+     *
+     * @property enablePagination
+     * @type Boolean
+     * @default true
+     * @for defaults
+     **/
+    enablePagination: true,
+
+    /**
+     * Suppresses pagination if a form field is focused.
+     *
+     * @property suppressPaginationOnFocus
+     * @type Boolean
+     * @default true
+     * @for defaults
+     **/
+    suppressPaginationOnFocus: true,
+
+    /**
+     * Enables cache for async loaded or iframe embedded content.
+     *
+     * @property enableContentCache
+     * @type Boolean
+     * @default true
+     * @for defaults
+     **/
+    enableContentCache: true,
+
+    /**
+     * Shows the finish button if enabled.
+     *
+     * @property enableFinishButton
+     * @type Boolean
+     * @default true
+     * @for defaults
+     **/
+    enableFinishButton: true,
+
+    /**
+     * Not yet implemented.
+     *
+     * @property preloadContent
+     * @type Boolean
+     * @default false
+     * @for defaults
+     **/
+    preloadContent: false,
+
+    /**
+     * Shows the finish button always (on each step; right beside the next button) if `true`. 
+     * Otherwise the next button will be replaced by the finish button if the last step becomes active.
+     *
+     * @property showFinishButtonAlways
+     * @type Boolean
+     * @default false
+     * @for defaults
+     **/
+    showFinishButtonAlways: false,
+
+    /**
+     * Prevents jumping to a previous step.
+     *
+     * @property forceMoveForward
+     * @type Boolean
+     * @default false
+     * @for defaults
+     **/
+    forceMoveForward: false,
+
+    /**
+     * Saves the current state (step position) to a cookie.
+     * By coming next time the last active step becomes activated.
+     *
+     * @property saveState
+     * @type Boolean
+     * @default false
+     * @for defaults
+     **/
+    saveState: false,
+
+    /**
+     * The position to start on (zero-based).
+     *
+     * @property startIndex
+     * @type Integer
+     * @default 0
+     * @for defaults
+     **/
+    startIndex: 0,
+
+    /*
+     * Animation Effect Configuration
+     */
+
+    /**
+     * The animation effect which will be used for step transitions.
+     *
+     * @property transitionEffect
+     * @type transitionEffect
+     * @default none
+     * @for defaults
+     **/
+    transitionEffect: transitionEffect.none,
+
+    /**
+     * Animation speed for step transitions (in milliseconds).
+     *
+     * @property transitionEffectSpeed
+     * @type Integer
+     * @default 200
+     * @for defaults
+     **/
+    transitionEffectSpeed: 200,
+
+    /*
+     * Events
+     */
+
+    /**
+     * Fires before the step changes and can be used to prevent step changing by returning `false`. 
+     * Very useful for form validation. 
+     *
+     * @property onStepChanging
+     * @type Event
+     * @default function (event, currentIndex, newIndex) { return true; }
+     * @for defaults
+     **/
+    onStepChanging: function (event, currentIndex, newIndex) { return true; },
+
+    /**
+     * Fires after the step has change. 
+     *
+     * @property onStepChanged
+     * @type Event
+     * @default function (event, currentIndex, priorIndex) { }
+     * @for defaults
+     **/
+    onStepChanged: function (event, currentIndex, priorIndex) { },
+
+    /**
+     * Fires before finishing and can be used to prevent completion by returning `false`. 
+     * Very useful for form validation. 
+     *
+     * @property onFinishing
+     * @type Event
+     * @default function (event, currentIndex) { return true; }
+     * @for defaults
+     **/
+    onFinishing: function (event, currentIndex) { return true; },
+
+    /**
+     * Fires after completion. 
+     *
+     * @property onFinished
+     * @type Event
+     * @default function (event, currentIndex) { }
+     * @for defaults
+     **/
+    onFinished: function (event, currentIndex) { },
+
+    /**
+     * Contains all labels. 
+     *
+     * @property labels
+     * @type Object
+     * @for defaults
+     **/
+    labels: {
+        /**
+         * This label is important for accessability reasons.
+         * Indicates which step is activated.
+         *
+         * @property current
+         * @type String
+         * @default "current step:"
+         * @for defaults
+         **/
+        current: "current step:",
+
+        /**
+         * This label is important for accessability reasons and describes the kind of navigation.
+         *
+         * @property pagination
+         * @type String
+         * @default "Pagination"
+         * @for defaults
+         * @since 0.9.7
+         **/
+        pagination: "Pagination",
+
+        /**
+         * Label for the finish button.
+         *
+         * @property finish
+         * @type String
+         * @default "Finish"
+         * @for defaults
+         **/
+        finish: "Finish",
+
+        /**
+         * Label for the next button.
+         *
+         * @property next
+         * @type String
+         * @default "Next"
+         * @for defaults
+         **/
+        next: "Next",
+
+        /**
+         * Label for the previous button.
+         *
+         * @property previous
+         * @type String
+         * @default "Previous"
+         * @for defaults
+         **/
+        previous: "Previous",
+
+        /**
+         * Label for the loading animation.
+         *
+         * @property loading
+         * @type String
+         * @default "Loading ..."
+         * @for defaults
+         **/
+        loading: "Loading ..."
+    }
+};
+$.fn.extend({
+    aria: function (name, value)
+    {
+        return this.attr("aria-" + name, value);
+    },
+
+    removeAria: function (name)
+    {
+        return this.removeAttr("aria-" + name);
+    },
+
+    enableAria: function()
+    {
+        return this.removeClass("disabled").aria("disabled", "false");
+    },
+
+    disableAria: function ()
+    {
+        return this.addClass("disabled").aria("disabled", "true");
+    },
+
+    hideAria: function ()
+    {
+        return this.hide().aria("hidden", "true");
+    },
+
+    showAria: function ()
+    {
+        return this.show().aria("hidden", "false");
+    },
+
+    selectAria: function ()
+    {
+        return this.addClass("current").aria("selected", "true");
+    },
+
+    deselectAria: function ()
+    {
+        return this.removeClass("current").aria("selected", "false");
+    },
+
+    setId: function (id)
+    {
+        return this.attr("id", id);
+    }
+});
+})(jQuery);

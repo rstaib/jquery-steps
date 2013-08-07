@@ -1,13 +1,15 @@
 {
-  "name": "jQuery-steps",
+  "name": "jquery-steps",
   "title": "jQuery Wizard Plugin",
   "version": "1.0.0pre",
   "description": "A powerful jQuery wizard plugin that supports accessibility and HTML5",
-  "homepage": "https://github.com/rstaib/jquery-steps",
+  "homepage": "http://www.jquery-steps.com",
   "author": {
     "name": "Rafael J. Staib",
-    "email": "rstaib@derklang.com"
+    "email": "rstaib@derklang.com", 
+	"url" : "http://www.rafaelstaib.com"
   },
+  "bugs": "https://github.com/rstaib/jquery-steps/issues",
   "scripts": {
     "test": "grunt"
   },
@@ -18,6 +20,7 @@
   "keywords": [
     "jQuery",
     "Wizard",
+	"Tabs",
     "Steps",
     "Plugin"
   ],
@@ -29,20 +32,19 @@
   ],
   "devDependencies": {
     "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.9",
     "grunt-contrib-qunit": "~0.2.1",
     "grunt-contrib-jshint": "~0.4.3",
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-yuidoc": "~0.4.0",
-    "grunt-contrib-compress": "~0.5.0",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-cli": "~0.1.9"
+    "grunt-contrib-clean": "~0.4.1"
   },
   "readmeFilename": "README.md",
   "gitHead": "0d9f4f8b6a0c3d3b8a73eabf6a4b8cececd52f7a",
-  "folders": { 
-	"dist": "build",
-	"src": "src",
-	"docs": "docs"
+  "folders": {
+    "dist": "build",
+    "src": "src",
+    "docs": "docs"
   }
 }
