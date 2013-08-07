@@ -7,6 +7,7 @@
 - Improved code for better minification
 - Configurable clearfix css class
 - Vertical step navigation (default: horizontal)
+- Removed `"use strict";` because of an ASP.Net tracing issue related to FF (see jQuery ticket: #13335)
 
 ## 0.9.7
 

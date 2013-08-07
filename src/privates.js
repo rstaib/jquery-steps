@@ -181,6 +181,27 @@ function format(format)
     return format;
 }
 
+function getStepAnchor(wizard, index)
+{
+    var uniqueId = getUniqueId(wizard);
+
+    return wizard.find("#" + uniqueId + _tabSuffix + index);
+}
+
+function getStepPanel(wizard, index)
+{
+    var uniqueId = getUniqueId(wizard);
+
+    return wizard.find("#" + uniqueId + _tabpanelSuffix + index);
+}
+
+function getStepTitle(wizard, index)
+{
+    var uniqueId = getUniqueId(wizard);
+
+    return wizard.find("#" + uniqueId + _titleSuffix + index);
+}
+
 function getOptions(wizard)
 {
     return wizard.data("options");
@@ -403,7 +424,7 @@ function initialize(options)
         // Trigger focus
         if (opts.autoFocus && _uniqueId === 0)
         {
-            wizard.find("#" + getUniqueId(wizard) + _tabSuffix + opts.startIndex).focus();
+            getStepAnchor(wizard, opts.startIndex).focus();
         }
     });
 }
@@ -430,8 +451,6 @@ function initialize(options)
  **/
 function insertStep(wizard, options, state, index, step)
 {
-    var uniqueId = getUniqueId(wizard);
-
     if (index < 0 || index > state.stepCount)
     {
         throwError(_indexOutOfRangeErrorMessage);
@@ -464,7 +483,7 @@ function insertStep(wizard, options, state, index, step)
     }
     else
     {
-        contentContainer.find("#" + uniqueId + _tabpanelSuffix + (index - 1)).after(body).after(header);
+        getStepPanel(wizard, (index - 1)).after(body).after(header);
     }
 
     renderBody(wizard, body, index);
@@ -550,13 +569,13 @@ function loadAsyncContent(wizard, options, state)
                     break;
 
                 case contentMode.async:
-                    var currentStepContent = wizard.find("#" + getUniqueId(wizard) + _tabpanelSuffix + state.currentIndex).aria("busy", "true")
+                    var currentStepContent = getStepPanel(wizard, state.currentIndex).aria("busy", "true")
                         .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
-                    $.ajax({ url: currentStep.contentUrl, cache: false })
-                        .done(function (data)
-                        {
-                            currentStepContent.empty().html(data).aria("busy", "false").data("loaded", "1");
-                        });
+
+                    $.ajax({ url: currentStep.contentUrl, cache: false }).done(function (data)
+                    {
+                        currentStepContent.empty().html(data).aria("busy", "false").data("loaded", "1");
+                    });
                     break;
             }
         }
@@ -581,17 +600,18 @@ function paginationClick(wizard, options, state, index)
 
     if (index >= 0 && index < state.stepCount && !(options.forceMoveForward && index < state.currentIndex))
     {
-        var anchor = wizard.find("#" + getUniqueId(wizard) + _tabSuffix + index),
+        var anchor = getStepAnchor(wizard, index),
             parent = anchor.parent(),
             isDisabled = parent.hasClass("disabled");
-        // Remove the class to make the anchor clickable!
+
+        // Enable the step to make the anchor clickable!
         parent.enableAria();
         anchor.click();
 
         // An error occured
         if (oldIndex === state.currentIndex && isDisabled)
         {
-            // Add the class again to disable the anchor; avoid click action.
+            // Disable the step again if current index has not changed; prevents click action.
             parent.disableAria();
             return false;
         }
@@ -722,14 +742,13 @@ function refreshPagination(wizard, options, state)
  */
 function refreshStepNavigation(wizard, options, state, oldIndex)
 {
-    var uniqueId = getUniqueId(wizard),
-        currentOrNewStepAnchor = wizard.find("#" + uniqueId + _tabSuffix + state.currentIndex),
+    var currentOrNewStepAnchor = getStepAnchor(wizard, state.currentIndex),
         currentInfo = $("<span class=\"current-info audible\">" + options.labels.current + " </span>"),
         stepTitles = wizard.find(".content > .title");
 
     if (oldIndex != null)
     {
-        var oldStepAnchor = wizard.find("#" + uniqueId + _tabSuffix + oldIndex);
+        var oldStepAnchor = getStepAnchor(wizard, oldIndex);
         oldStepAnchor.parent().addClass("done").removeClass("error").deselectAria();
         stepTitles.eq(oldIndex).removeClass("current").next(".body").removeClass("current");
         currentInfo = oldStepAnchor.find(".current-info");
@@ -799,8 +818,6 @@ function registerEvents(wizard, options)
  **/
 function removeStep(wizard, options, state, index)
 {
-    var uniqueId = getUniqueId(wizard);
-
     // Index out of range and try deleting current item will return false.
     if (index < 0 || index >= state.stepCount || state.currentIndex === index)
     {
@@ -816,9 +833,9 @@ function removeStep(wizard, options, state, index)
     }
     state.stepCount--;
 
-    wizard.find("#" + uniqueId + _titleSuffix + index).remove();
-    wizard.find("#" + uniqueId + _tabpanelSuffix + index).remove();
-    wizard.find("#" + uniqueId + _tabSuffix + index).parent().remove();
+    getStepTitle(wizard, index).remove();
+    getStepPanel(wizard, index).remove();
+    getStepAnchor(wizard, index).parent().remove();
 
     // Set the "first" class to the new first step button 
     if (index === 0)
@@ -1089,14 +1106,13 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
         case transitionEffect.slideLeft:
             var outerWidth = currentStep.outerWidth(true),
                 posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
-                posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
-
-            var currentPos = currentStep.position().left;
+                posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth),
+                posLeft = currentStep.parent().position().left;
 
             currentStep.animate({ left: posFadeOut }, effectSpeed, 
                 function () { $(this).hideAria(); }).promise();
             newStep.css("left", posFadeIn + "px").showAria()
-                .animate({ left: currentPos }, effectSpeed).promise();
+                .animate({ left: posLeft }, effectSpeed).promise();
             break;
 
         default:
@@ -1135,7 +1151,7 @@ function stepClickHandler(event)
     // If nothing has changed
     if (oldIndex === state.currentIndex)
     {
-        wizard.find("#" + getUniqueId(wizard) + _tabSuffix + oldIndex).focus();
+        getStepAnchor(wizard, oldIndex).focus();
         return false;
     }
 }
