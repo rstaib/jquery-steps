@@ -39,7 +39,6 @@ module.exports = function (grunt)
             files: ['test/index.html']
         },
         jshint: {
-            files: ['<%= pkg.folders.dist %>/jquery.steps.js'],
             options: {
                 curly: true,
                 eqeqeq: true,
@@ -55,8 +54,9 @@ module.exports = function (grunt)
                     jQuery: true,
                     $: true,
                     console: true
-                },
+                }
             },
+            files: ['<%= pkg.folders.dist %>/jquery.steps.js'],
             test: {
                 options: {
                     globals: {
