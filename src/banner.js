@@ -1,6 +1,6 @@
 /*!
  * jQuery Steps Plugin v1.0.0pre - A powerful jQuery wizard plugin that supports accessibility and HTML5
- * https://github.com/rstaib/jquery-steps
+ * http://www.jquery-steps.com
  *
  * Copyright (c) 2013 Rafael J. Staib
  * Released under the MIT license
