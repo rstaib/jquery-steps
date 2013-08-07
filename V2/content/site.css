@@ -1,0 +1,299 @@
+﻿/*.linearGradient (@angle, @colorA, @colorB)
+{
+    background-color: @colorA;
+    background-image: -moz-linear-gradient(@angle, @colorA, @colorB);
+    background-image: -ms-linear-gradient(@angle, @colorA, @colorB);
+    background-image: -o-linear-gradient(@angle, @colorA, @colorB);
+    background-image: -webkit-linear-gradient(@angle, @colorA, @colorB);
+    background-image: linear-gradient(@angle, @colorA, @colorB);
+}*/
+
+/*.noBoxShadow()
+{
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.noTextShadow()
+{
+    -webkit-text-shadow: none;
+    text-shadow: none;
+}
+
+.boxShadow(@hShadow, @vShadow, @blur, @spread, @color)
+{
+    -webkit-box-shadow: @hShadow @vShadow @blur @spread @color;
+    -moz-box-shadow: @hShadow @vShadow @blur @spread @color;
+    box-shadow: @hShadow @vShadow @blur @spread @color;
+}*/
+
+body
+{
+    background: url("images/bg.jpg") repeat;
+    font-size: 0.875em;
+    line-height: 1.429em;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.sitewrapper
+{
+    background: #fff;
+    padding-top: 4.286em;
+    margin-bottom: 4.286em;
+}
+
+    .sitewrapper > header
+    {
+        color: #2184be;
+        position: relative;
+        text-align: center;
+        min-height: 22.857em;
+        padding-top: 2.857em;
+        margin: 0;
+
+        background-color: #f9f9f9;
+        background-image: -moz-linear-gradient(deg45, #f9f9f9, #f3f3f3);
+        background-image: -ms-linear-gradient(deg45, #f9f9f9, #f3f3f3);
+        background-image: -o-linear-gradient(deg45, #f9f9f9, #f3f3f3);
+        background-image: -webkit-linear-gradient(deg45, #f9f9f9, #f3f3f3);
+        background-image: linear-gradient(deg45, #f9f9f9, #f3f3f3);
+    }
+
+        .sitewrapper > header > h1
+        {
+            font-size: 4.286em;
+            font-weight: normal;
+            line-height: 1.167em;
+            margin-bottom: 0.4em;
+        }
+
+        .sitewrapper > header > p.lead
+        {
+            font-size: 2.429em;
+            line-height: 1.235em;
+            margin-bottom: 0.882em;
+        }
+
+        .sitewrapper > header > .btn
+        {
+            border-color: #69c;
+            color: #fff;
+            font-size: 2em;
+            line-height: 1em;
+            padding: 0.25em 1em;
+
+            background-color: #39c;
+            background-image: -moz-linear-gradient(#39c, #69c);
+            background-image: -ms-linear-gradient(#39c, #69c);
+            background-image: -o-linear-gradient(#39c, #69c);
+            background-image: -webkit-linear-gradient(#39c, #69c);
+            background-image: linear-gradient(#39c, #69c);
+        }
+
+        .sitewrapper > header > .btn:hover,
+        .sitewrapper > header > .btn:active
+        {
+            background-image: none;
+        }
+
+    .sitewrapper > .socialbar
+    {
+        padding: 1.071em 1.429em;
+        text-align: center;
+    }
+
+        .sitewrapper > .socialbar > .fb-like > span,
+        .sitewrapper > .socialbar iframe
+        {
+            width: 110px !important;
+        }
+
+    .sitewrapper > .content
+    {
+        padding: 40px 0 100px;
+    }
+
+    .sitewrapper > footer
+    {
+        padding: 20px 30px;
+    }
+
+.navbar > .navbar-inner
+{
+    background: none #2184be;
+    border: 0 none;
+    min-height: 4.286em;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+    .navbar > .navbar-inner h1
+    {
+        display: block;
+        float: left;
+        font-size: 1.429em;
+        line-height: 1em;
+        font-weight: 700;
+        margin: 0 0.5em;
+    }
+
+        .navbar > .navbar-inner h1 > a
+        {
+            display: inline-block;
+            color: #fff;
+            padding: 1em;
+            text-decoration: none;
+        }
+
+        .navbar > .navbar-inner h1 > a:hover
+        {
+            color: #ff7f00;
+        }
+
+    .navbar > .navbar-inner nav
+    {
+        float: right;
+        margin: 0 0.714em;
+    }
+
+        .navbar > .navbar-inner nav ul
+        {
+            margin: 0 0.357em;
+        }
+
+            .navbar > .navbar-inner nav li
+            {
+                display: inline-block;
+            }
+
+                .navbar > .navbar-inner nav a
+                {
+                    color: #fff;
+                    display: block;
+                    padding: 1.429em 1.071em;
+                    text-decoration: none;
+                }
+
+                .navbar > .navbar-inner nav a:hover,
+                .navbar > .navbar-inner nav a:active,
+                .navbar > .navbar-inner nav li.active a,
+                .navbar > .navbar-inner nav li.active a:hover,
+                .navbar > .navbar-inner nav li.active a:active
+                {
+                    color: #ff7f00;
+
+                    /* Overrides the behavior of bootstrap core */
+                    background: none;
+                    /*.noBoxShadow();
+                    .noTextShadow();*/
+                }
+
+                .navbar > .navbar-inner nav li.active a
+                {
+                    font-weight: 700;
+                }
+
+.container.startpage
+{
+    text-align: center;
+}
+
+    .container.startpage > h1
+    {
+        font-size: 46px;
+        font-weight: normal;
+        line-height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .container.startpage > p
+    {
+        font-size: 20px;
+        font-weight: normal;
+        line-height: 26px;
+        color: #999;
+        margin-bottom: 40px;
+    }
+
+    .container.startpage h2
+    {
+        font-size: 28px;
+        font-weight: normal;
+    }
+
+@media (max-width: 1199px)
+{
+}
+
+@media (max-width: 979px)
+{
+    .sitewrapper > header
+    {
+        padding: 0;
+    }
+
+    .container.startpage h2
+    {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 767px)
+{
+    .sitewrapper > header
+    {
+        margin: -20px -20px 0;
+    }
+
+    .sitewrapper > .content
+    {
+        padding: 40px 20px 100px;
+    }
+
+    .sitewrapper > .content,
+    .sitewrapper > footer
+    {
+        margin: 0 -20px;
+    }
+
+    .container.startpage h2
+    {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 479px)
+{
+    .navbar > .navbar-inner h1
+    {
+        float: none;
+        margin-top: 0.5em;
+        text-align: center;
+        width: 100%;
+    }
+
+        .navbar > .navbar-inner h1 > a
+        {
+            padding: 0.5em 1em;
+        }
+
+    .navbar > .navbar-inner nav
+    {
+        float: none;
+        margin-bottom: 0.714em;
+        text-align: center;
+        width: 100%;
+    }
+
+        .navbar > .navbar-inner nav a
+        {
+            padding: 0.714em 1.071em;
+        }
+}
