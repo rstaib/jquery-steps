@@ -30,7 +30,8 @@
 
 body
 {
-    background: url("images/bg.jpg") repeat;
+    background: url("images/bg.jpg") fixed repeat;
+    color: #193954;
     font-size: 0.875em;
     line-height: 1.429em;
 }
@@ -38,13 +39,22 @@ body
 h1, h2, h3, h4, h5, h6
 {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+}
+
+.nowrap
+{
+    white-space: nowrap;
 }
 
 .sitewrapper
 {
     background: #fff;
     padding-top: 4.286em;
-    margin-bottom: 4.286em;
+
+    -webkit-box-shadow: 0 0 12px 5px #e7e7e7;
+    -moz-box-shadow: 0 0 12px 5px #e7e7e7;
+    box-shadow: 0 0 12px 5px #e7e7e7;
 }
 
     .sitewrapper > header
@@ -52,16 +62,16 @@ h1, h2, h3, h4, h5, h6
         color: #2184be;
         position: relative;
         text-align: center;
-        min-height: 22.857em;
-        padding-top: 2.857em;
+        /*min-height: 22.857em;*/
+        padding: 2.857em 1.429em 4.286em;
         margin: 0;
 
-        background-color: #f9f9f9;
-        background-image: -moz-linear-gradient(deg45, #f9f9f9, #f3f3f3);
-        background-image: -ms-linear-gradient(deg45, #f9f9f9, #f3f3f3);
-        background-image: -o-linear-gradient(deg45, #f9f9f9, #f3f3f3);
-        background-image: -webkit-linear-gradient(deg45, #f9f9f9, #f3f3f3);
-        background-image: linear-gradient(deg45, #f9f9f9, #f3f3f3);
+        background-color: #eee;
+        background-image: -moz-linear-gradient(0deg, #eee 0%, #f3f3f3 70%);
+        background-image: -ms-linear-gradient(0deg, #eee 0%, #f3f3f3 70%);
+        background-image: -o-linear-gradient(0deg, #eee 0%, #f3f3f3 70%);
+        background-image: -webkit-linear-gradient(0deg, #eee 0%, #f3f3f3 70%);
+        background-image: linear-gradient(0deg, #eee 0%, #f3f3f3 70%);
     }
 
         .sitewrapper > header > h1
@@ -70,13 +80,20 @@ h1, h2, h3, h4, h5, h6
             font-weight: normal;
             line-height: 1.167em;
             margin-bottom: 0.4em;
+
+            -webkit-text-shadow: 2px 2px 3px rgba(100, 100, 115, 0.45);
+            text-shadow: 2px 2px 3px rgba(100, 100, 115, 0.45);
         }
 
-        .sitewrapper > header > p.lead
+        .sitewrapper > header > p
         {
             font-size: 2.429em;
             line-height: 1.235em;
-            margin-bottom: 0.882em;
+            margin: 0 auto 0.882em;
+            width: 60%;
+
+            -webkit-text-shadow: 2px 2px 3px rgba(100, 100, 115, 0.45);
+            text-shadow: 2px 2px 3px rgba(100, 100, 115, 0.45);
         }
 
         .sitewrapper > header > .btn
@@ -93,6 +110,9 @@ h1, h2, h3, h4, h5, h6
             background-image: -o-linear-gradient(#39c, #69c);
             background-image: -webkit-linear-gradient(#39c, #69c);
             background-image: linear-gradient(#39c, #69c);
+
+            -webkit-text-shadow: 1px 1px 2px rgba(244, 244, 244, 0.65);
+            text-shadow: 1px 1px 2px rgba(244, 244, 244, 0.65);
         }
 
         .sitewrapper > header > .btn:hover,
@@ -103,6 +123,7 @@ h1, h2, h3, h4, h5, h6
 
     .sitewrapper > .socialbar
     {
+        background: #eee;
         padding: 1.071em 1.429em;
         text-align: center;
     }
@@ -115,13 +136,43 @@ h1, h2, h3, h4, h5, h6
 
     .sitewrapper > .content
     {
-        padding: 40px 0 100px;
+        padding: 2.857em 0 4.286em;
     }
 
-    .sitewrapper > footer
+    .sitewrapper > .content.startpage
     {
-        padding: 20px 30px;
+        text-align: center;
     }
+
+        .sitewrapper > .content.startpage h2
+        {
+            font-size: 1.714em;
+            line-height: 1.208em;
+            margin: 0.833em 0 0.667em;
+        }
+
+        .sitewrapper > .content.startpage p
+        {
+            font-size: 1.143em;
+            line-height: 1.250em;
+        }
+
+body > footer
+{
+    padding: 3.571em 1.429em;
+    text-align: center;
+}
+
+    body > footer > .links
+    {
+        margin: 0;
+        padding: 0;
+    }
+
+        body > footer > .links > li
+        {
+            display: inline;
+        }
 
 .navbar > .navbar-inner
 {
@@ -146,8 +197,8 @@ h1, h2, h3, h4, h5, h6
 
         .navbar > .navbar-inner h1 > a
         {
-            display: inline-block;
             color: #fff;
+            display: inline-block;
             padding: 1em;
             text-decoration: none;
         }
@@ -177,6 +228,7 @@ h1, h2, h3, h4, h5, h6
                 {
                     color: #fff;
                     display: block;
+                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                     padding: 1.429em 1.071em;
                     text-decoration: none;
                 }
@@ -230,51 +282,53 @@ h1, h2, h3, h4, h5, h6
 
 @media (max-width: 1199px)
 {
+    .sitewrapper > header > p
+    {
+        width: 80%;
+    }
 }
 
 @media (max-width: 979px)
 {
-    .sitewrapper > header
+    .sitewrapper
     {
-        padding: 0;
+        padding-top: 0;
+        margin: 0 -1.429em;
+        width: auto;
+
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
     }
 
-    .container.startpage h2
+        .sitewrapper > .content.startpage h2
+        {
+            font-size: 20px;
+        }
+
+    .navbar 
     {
-        font-size: 20px;
+        margin-bottom: 0;
     }
 }
 
 @media (max-width: 767px)
 {
-    .sitewrapper > header
-    {
-        margin: -20px -20px 0;
-    }
-
     .sitewrapper > .content
     {
-        padding: 40px 20px 100px;
+        padding-left: 1.429em;
+        padding-right: 1.429em;
     }
 
-    .sitewrapper > .content,
-    .sitewrapper > footer
-    {
-        margin: 0 -20px;
-    }
-
-    .container.startpage h2
+    .sitewrapper > .content.startpage h2
     {
         font-size: 28px;
     }
-}
 
-@media (max-width: 479px)
-{
     .navbar > .navbar-inner h1
     {
         float: none;
-        margin-top: 0.5em;
+        margin: 0.5em 0 0;
         text-align: center;
         width: 100%;
     }
@@ -287,7 +341,7 @@ h1, h2, h3, h4, h5, h6
     .navbar > .navbar-inner nav
     {
         float: none;
-        margin-bottom: 0.714em;
+        margin: 0 0 0.714em;
         text-align: center;
         width: 100%;
     }
@@ -296,4 +350,9 @@ h1, h2, h3, h4, h5, h6
         {
             padding: 0.714em 1.071em;
         }
+}
+
+@media (max-width: 479px)
+{
+
 }
