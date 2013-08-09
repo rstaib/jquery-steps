@@ -70,6 +70,7 @@
     <Content Include="content\images\glyphicons-halflings.png" />
     <Content Include="content\images\html5.png" />
     <Content Include="content\images\lightweight.png" />
+    <Content Include="content\viewport-fix-mobile-ie10.css" />
     <Content Include="index.html" />
     <Content Include="scripts\base.js">
       <DependentUpon>base.js.bundle</DependentUpon>
@@ -82,6 +83,7 @@
     <Content Include="scripts\html5shiv.js" />
     <Content Include="scripts\jquery-1.9.1.min.js" />
     <Content Include="scripts\social.js" />
+    <Content Include="scripts\viewport-fix-mobile-ie10.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

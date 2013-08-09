@@ -136,7 +136,7 @@ h1, h2, h3, h4, h5, h6
 
     .sitewrapper > .content
     {
-        padding: 2.857em 0 4.286em;
+        padding: 2.857em 0 1.429em;
     }
 
     .sitewrapper > .content.startpage
@@ -144,18 +144,23 @@ h1, h2, h3, h4, h5, h6
         text-align: center;
     }
 
-        .sitewrapper > .content.startpage h2
+        .sitewrapper > .content.startpage .box
         {
-            font-size: 1.714em;
-            line-height: 1.208em;
-            margin: 0.833em 0 0.667em;
+            margin-bottom: 2.857em;
         }
 
-        .sitewrapper > .content.startpage p
-        {
-            font-size: 1.143em;
-            line-height: 1.250em;
-        }
+            .sitewrapper > .content.startpage .box > h2
+            {
+                font-size: 1.714em;
+                line-height: 1.208em;
+                margin: 0.833em 0 0.667em;
+            }
+
+            .sitewrapper > .content.startpage .box > p
+            {
+                font-size: 1.143em;
+                line-height: 1.250em;
+            }
 
 body > footer
 {
@@ -280,7 +285,7 @@ body > footer
         font-weight: normal;
     }
 
-@media (max-width: 1199px)
+@media only screen and (max-width: 1199px)
 {
     .sitewrapper > header > p
     {
@@ -288,7 +293,7 @@ body > footer
     }
 }
 
-@media (max-width: 979px)
+@media only screen and (max-width: 979px)
 {
     .sitewrapper
     {
@@ -301,9 +306,9 @@ body > footer
         box-shadow: none;
     }
 
-        .sitewrapper > .content.startpage h2
+        .sitewrapper > .content.startpage .box > h2
         {
-            font-size: 20px;
+            font-size: 1.429em;
         }
 
     .navbar 
@@ -312,7 +317,7 @@ body > footer
     }
 }
 
-@media (max-width: 767px)
+@media only screen and (max-width: 767px)
 {
     .sitewrapper > .content
     {
@@ -320,9 +325,9 @@ body > footer
         padding-right: 1.429em;
     }
 
-    .sitewrapper > .content.startpage h2
+    .sitewrapper > .content.startpage .box > h2
     {
-        font-size: 28px;
+        font-size: 2em;
     }
 
     .navbar > .navbar-inner h1
@@ -352,7 +357,7 @@ body > footer
         }
 }
 
-@media (max-width: 479px)
+@media only screen and (max-width: 479px)
 {
 
 }
