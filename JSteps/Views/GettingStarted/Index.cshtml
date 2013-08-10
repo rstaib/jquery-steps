@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@section Header
+{
+    <header id="banner" role="banner">
+        <h1>Getting Started</h1>
+    </header>
+}
+
+<div class="content">
+    <div class="row">
+        <nav id="lefthand" class="span3">
+            <ul id="lefthand-nav" class="nav nav-list">
+                <li><a href="#download">Download</a></li>
+                <li><a href="#basic">Basic Example</a></li>
+                <li><a href="#browser">Browser Support</a></li>
+                <li><a href="#docs">Documentation</a></li>
+            </ul>
+        </nav>
+        <div class="span9">
+            <section>
+                <h2 id="download">Download</h2>
+            </section>
+            <section>
+                <h2 id="basic">Basic Example</h2>
+                <p></p>
+            </section>
+            <section>
+                <h2 id="browser">Browser Support</h2>
+            </section>
+            <section>
+                <h2 id="docs">Documentation</h2>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(function ()
+        {
+            $("#lefthand-nav").affix({
+                offset: {
+                    top: function ()
+                    {
+                        return $("#topbar").outerHeight() + $("#banner").outerHeight();
+                    }
+                }
+            });
+            $('#lefthand').scrollspy();
+        });
+    </script>
+}

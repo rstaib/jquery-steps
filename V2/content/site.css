@@ -28,6 +28,11 @@
     box-shadow: @hShadow @vShadow @blur @spread @color;
 }*/
 
+html
+{
+    font-size: 100%;
+}
+
 body
 {
     background: url("images/bg.jpg") fixed repeat;
@@ -179,83 +184,88 @@ body > footer
             display: inline;
         }
 
-.navbar > .navbar-inner
+.navbar
 {
-    background: none #2184be;
-    border: 0 none;
-    min-height: 4.286em;
-
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+    background: none;
 }
 
-    .navbar > .navbar-inner h1
+    .navbar > .navbar-inner
     {
-        display: block;
-        float: left;
-        font-size: 1.429em;
-        line-height: 1em;
-        font-weight: 700;
-        margin: 0 0.5em;
+        background: none #2184be;
+        border: 0 none;
+        min-height: 4.286em;
+
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
     }
 
-        .navbar > .navbar-inner h1 > a
+        .navbar > .navbar-inner h1
         {
-            color: #fff;
-            display: inline-block;
-            padding: 1em;
-            text-decoration: none;
+            display: block;
+            float: left;
+            font-size: 1.429em;
+            line-height: 1em;
+            font-weight: 700;
+            margin: 0 0.5em;
         }
 
-        .navbar > .navbar-inner h1 > a:hover
-        {
-            color: #ff7f00;
-        }
-
-    .navbar > .navbar-inner nav
-    {
-        float: right;
-        margin: 0 0.714em;
-    }
-
-        .navbar > .navbar-inner nav ul
-        {
-            margin: 0 0.357em;
-        }
-
-            .navbar > .navbar-inner nav li
+            .navbar > .navbar-inner h1 > a
             {
+                color: #fff;
                 display: inline-block;
+                padding: 1em;
+                text-decoration: none;
             }
 
-                .navbar > .navbar-inner nav a
+            .navbar > .navbar-inner h1 > a:hover
+            {
+                color: #ff7f00;
+            }
+
+        .navbar > .navbar-inner nav
+        {
+            float: right;
+            margin: 0 0.714em;
+        }
+
+            .navbar > .navbar-inner nav ul
+            {
+                margin: 0 0.357em;
+            }
+
+                .navbar > .navbar-inner nav li
                 {
-                    color: #fff;
-                    display: block;
-                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                    padding: 1.429em 1.071em;
-                    text-decoration: none;
+                    display: inline-block;
                 }
 
-                .navbar > .navbar-inner nav a:hover,
-                .navbar > .navbar-inner nav a:active,
-                .navbar > .navbar-inner nav li.active a,
-                .navbar > .navbar-inner nav li.active a:hover,
-                .navbar > .navbar-inner nav li.active a:active
-                {
-                    color: #ff7f00;
+                    .navbar > .navbar-inner nav a
+                    {
+                        color: #fff;
+                        display: block;
+                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                        padding: 1.429em 1.071em;
+                        text-decoration: none;
+                    }
 
-                    /* Overrides the behavior of bootstrap core */
-                    background: none;
-                    /*.noBoxShadow();
-                    .noTextShadow();*/
-                }
+                    .navbar > .navbar-inner nav a:hover,
+                    .navbar > .navbar-inner nav a:active,
+                    .navbar > .navbar-inner nav li.active a,
+                    .navbar > .navbar-inner nav li.active a:hover,
+                    .navbar > .navbar-inner nav li.active a:active
+                    {
+                        color: #ff7f00;
 
-                .navbar > .navbar-inner nav li.active a
-                {
-                    font-weight: 700;
-                }
+                        /* Overrides the behavior of bootstrap core */
+                        background: none;
+                        /*.noBoxShadow();
+                        .noTextShadow();*/
+                    }
+
+                    .navbar > .navbar-inner nav li.active a
+                    {
+                        font-weight: 700;
+                    }
 
 .container.startpage
 {
@@ -293,7 +303,7 @@ body > footer
     }
 }
 
-@media only screen and (max-width: 979px)
+@media (max-width: 979px)
 {
     .sitewrapper
     {
@@ -317,7 +327,7 @@ body > footer
     }
 }
 
-@media only screen and (max-width: 767px)
+@media (max-width: 767px)
 {
     .sitewrapper > .content
     {
@@ -357,7 +367,7 @@ body > footer
         }
 }
 
-@media only screen and (max-width: 479px)
+@media (max-width: 479px)
 {
 
 }

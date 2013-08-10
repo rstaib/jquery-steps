@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>jQuery Steps - @ViewBag.Title</title>
+
+        <meta charset="utf-8">
+        <meta name="robots" content="index, follow">
+        <meta name="author" content="Rafael Staib">
+        <meta name="description" content="A powerful jQuery wizard plugin that supports accessibility and HTML5.">
+        <meta name="keywords" content="jQuery, jQuery Plugin, jQuery UI Component, jQuery Wizard, jQuery Tabs, 
+            jQuery Steps, HTML5, JavaScript, Accessibility, jQuery Form Wizard, jQuery Form Validation, jQuery Step by Step">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Required for Open Graph -->
+        <meta property="og:title" content="jQuery Steps">
+        <meta property="og:description" content="jQuery Steps - A powerful jQuery wizard plugin that supports accessibility and HTML5.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://www.jquery-steps.com">
+        <meta property="og:image" content="http://www.jquery-steps.com/Content/images/social.png">
+
+        <!-- Required for Twitter -->
+        <meta property="twitter:card" content="summary">
+        <meta name="twitter:creator" content="@("@RafaelStaib")">
+        <meta property="twitter:title" content="jQuery Steps">
+        <meta name="twitter:description" content="A powerful jQuery wizard plugin that supports accessibility and HTML5.">
+        <meta name="twitter:image" content="http://www.jquery-steps.com/Content/images/social.png">
+
+        <meta name="application-name" content="jQuery Steps" />
+	    <meta name="msapplication-tooltip" content="jQuery Steps" />
+
+        <!--link rel="shortcut icon" href="~/favicon.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png"-->
+        
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        @Scripts.Render("~/Scripts/html5shiv")
+        <![endif]-->
+        
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+        @Styles.Render("~/Content/Base")
+    </head>
+    <body>
+        <a name="top"></a>
+
+        <div id="topbar" class="navbar navbar-fixed-top">
+            <div class="navbar-inner container">
+                <h1>
+                    @Html.ActionLink("jQuery Steps", "Index", "Home")
+                </h1>
+                
+                <nav>
+                    <ul>
+                        <li class="@if(ViewContext.RouteData.GetRequiredString("controller") == "GettingStarted") { <text>active</text> }">@Html.ActionLink("Getting Started", "Index", "GettingStarted")</li>
+                        <li class="@if(ViewContext.RouteData.GetRequiredString("controller") == "Examples") { <text>active</text> }">@Html.ActionLink("Examples", "Index", "Examples")</li>
+                        <li><a href="https://github.com/rstaib/jquery-steps/wiki">Documentation</a></li>
+                        <li><a href="https://github.com/rstaib/jquery-steps">GitHub</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        
+        <div class="sitewrapper container">
+            @RenderSection("Header", true)
+
+            <div class="socialbar">
+                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rstaib.github.io/jquery-steps" data-text="jQuery Steps" data-via="RafaelStaib" data-hashtags="jquerysteps">Tweet</a>
+                <div class="fb-like" data-href="http://www.jquery-steps.com/" data-send="false" data-layout="button_count" data-width="110" data-show-faces="false" data-font="arial"></div>
+                <iframe src="http://ghbtns.com/github-btn.html?user=rstaib&repo=jquery-steps&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+                <iframe src="http://ghbtns.com/github-btn.html?user=rstaib&repo=jquery-steps&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+            </div>
+            
+            @RenderBody()
+        </div>
+
+        <footer id="footer">
+            <p>&copy; Copyright @DateTime.Now.Year, Rafael Staib</p>
+            <ul class="links">
+                <li><a href="https://github.com/rstaib/jquery-steps/issues">Issues</a></li>
+                <li class="muted">·</li>
+                <li><a href="https://github.com/rstaib/jquery-steps/releases">Releases</a></li>
+            </ul>
+        </footer>
+        
+        @Scripts.Render("~/Scripts/Base")
+        @RenderSection("Scripts", false)
+    </body>
+</html>
