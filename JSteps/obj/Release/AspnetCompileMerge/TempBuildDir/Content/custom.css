@@ -38,13 +38,29 @@ body
     background: url("images/bg.jpg") fixed repeat;
     color: #193954;
     font-size: 0.875em;
-    line-height: 1.429em;
+    line-height: 1.5em;
 }
 
 h1, h2, h3, h4, h5, h6
 {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: normal;
+}
+
+p, p.lead
+{
+    line-height: 1.75em;
+    margin: 0 0 1em;
+}
+
+ol, ul
+{
+    margin: 0 0 1em 2em;
+}
+
+ol > li, ul > li
+{
+    line-height: 1.75em;
 }
 
 .nowrap
@@ -223,13 +239,20 @@ h1, h2, h3, h4, h5, h6
                 .sitewrapper > .content .main > section > h2.page-header
                 {
                     font-size: 2.857em;
+                    font-weight: 700;
                     line-height: 1.5em;
                 }
 
                 .sitewrapper > .content .main > section > p.lead
                 {
                     font-size: 1.429em;
-                    line-height: 1.75em;
+                }
+
+                .sitewrapper > .content .main > section h3
+                {
+                    font-size: 2em;
+                    font-weight: 700;
+                    line-height: 1.5em;
                 }
             
 
@@ -253,7 +276,6 @@ h1, h2, h3, h4, h5, h6
             .sitewrapper > .content.startpage .box > p
             {
                 font-size: 1.143em;
-                line-height: 1.250em;
             }
 
 body > footer

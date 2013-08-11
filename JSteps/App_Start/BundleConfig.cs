@@ -13,7 +13,8 @@ namespace JSteps
                 .Include("~/Scripts/bootstrap.js")
                 .Include("~/Scripts/viewport-fix-mobile-ie10.js")
                 .Include("~/Scripts/social.js")
-                .Include("~/Scripts/tracking.js"));
+                .Include("~/Scripts/tracking.js")
+                .Include("~/Scripts/prettify.js"));
 
             bundles.Add(new ScriptBundle("~/Scripts/html5shiv")
                 .Include("~/Scripts/html5shiv.js"));
@@ -21,7 +22,8 @@ namespace JSteps
             bundles.Add(new StyleBundle("~/Content/Base")
                 .Include("~/Content/bootstrap.css")
                 .Include("~/Content/viewport-fix-mobile-ie10.css")
-                .Include("~/Content/custom.css"));
+                .Include("~/Content/custom.css")
+                .Include("~/Content/prettify.css"));
         }
     }
 }

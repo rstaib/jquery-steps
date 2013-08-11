@@ -149,6 +149,7 @@
     <Content Include="Content\images\lightweight.png" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\social.png" />
+    <Content Include="Content\prettify.css" />
     <Content Include="Content\viewport-fix-mobile-ie10.css" />
     <Content Include="github-btn.html" />
     <Content Include="Global.asax" />
@@ -158,6 +159,7 @@
     <Content Include="Scripts\html5shiv.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\prettify.js" />
     <Content Include="Scripts\social.js" />
     <Content Include="Scripts\tracking.js" />
     <Content Include="Scripts\viewport-fix-mobile-ie10.js" />
@@ -176,7 +178,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Examples\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -189,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\FTP Cloud.pubxml" />
+    <Content Include="Views\Examples\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

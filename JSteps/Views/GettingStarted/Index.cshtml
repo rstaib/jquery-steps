@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Getting Started";
 }
 
 @section Header
@@ -24,59 +24,91 @@
             <section id="download">
                 <h2 class="page-header">Download</h2>
                 <p class="lead">jQuery Steps is an open-source project hosted on GitHub and can be therefore downloaded in many different ways. 
-                    The easiest and fastest way to get started is to press the download button. 
-                    Subsequently a zip file opens which contains the lastest complied & minified release version of jQuery Steps.</p>
-                <p class="alert alert-warning"><strong>Heads Up!</strong> The zip file does not contain any documentation.</p>
-                <p><a href="#" class="btn btn-primary btn-large">Download</a></p>
+                    The easiest and fastest way to get started is to download the compiled & minified version. 
+                    <!--Subsequently a zip file opens which contains the lastest complied & minified release version of jQuery Steps.--></p>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <h3>Compiled & Minified</h3>
+                        <p>No documentation included; merely the bare <abbr title="JavaScript">JS</abbr> files.</p>
+                        <p><a href="#" class="btn btn-primary btn-large">Download</a></p>
+                    </div>
+                    <div class="span6">
+                        <h3>Source Code</h3>
+                        <p>Contains the original source files. By using the <code>grunt api</code> command the <abbr title="Application Programming Interface">API</abbr> 
+                            documentation will be automatically built.</p>
+                        <p><a href="#" class="btn btn-large">Download source</a></p>
+                    </div>
+                </div>
             </section>
             <section id="basic">
-                <h2>Basic Example</h2>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
+                <h2 class="page-header">Basic Example</h2>
+                <p class="lead">The simplest template to get started is the following.</p>
+                <p>Everything you need to start is:</p>
+                <ol>
+                    <li>Include <strong>jQuery</strong> and <strong>jQuery Steps</strong> in your <abbr title="Hypertext Markup Language">HTML</abbr> code.</li>
+                    <li>Then select an element represents the wizard and call the <code>steps</code> method.</li>
+                </ol>
+<pre class="prettyprint linenums">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Demo&lt;/title&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;script src="jquery.js"&gt;&lt;/script&gt; 
+        &lt;script src="jquery.steps.js"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script&gt;
+            $("#wizard").steps();
+        &lt;/script&gt;
+        &lt;div id="wizard"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                <h3>How to add initial steps?</h3>
+                <p>There are two ways to add steps and their corresponding content.</p>
+                <p>1. Add <abbr title="Hypertext Markup Language">HTML</abbr> code into the representing wizard element.</p>
+<pre class="prettyprint linenums">
+
+</pre>
+                <p>2. Or use the <abbr title="Application Programming Interface">API</abbr> to add steps dynamically.</p>
+<pre class="prettyprint linenums">
+
+</pre>
             </section>
             <section id="browser">
-                <h2>Browser Support</h2>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
+                <h2 class="page-header">Browser Support</h2>
+                <p class="lead">Lead</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
             </section>
             <section id="docs">
-                <h2>Documentation</h2>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
-                <p>jnkjnkjn</p>
+                <h2 class="page-header">Documentation</h2>
+                <p class="lead">Lead</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
+                <p>Text</p>
             </section>
         </div>
     </div>
