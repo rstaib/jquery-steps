@@ -52,6 +52,54 @@ h1, h2, h3, h4, h5, h6
     white-space: nowrap;
 }
 
+.btn
+{
+    line-height: 1em;
+    padding: 0.5em 1em;
+}
+
+.btn:hover,
+.btn:active
+{
+    background-image: none;
+}
+
+.btn-primary
+{
+    border-color: #2184be #69c #69c #2184be;
+
+    background-color: #69c;
+    *background-color: #69c;
+    background-image: -moz-linear-gradient(top, #69c, #2184be);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#69c), to(#2184be));
+    background-image: -webkit-linear-gradient(top, #69c, #2184be);
+    background-image: -o-linear-gradient(top, #69c, #2184be);
+    background-image: linear-gradient(to bottom, #69c, #2184be);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6699cc", endColorstr="#ff2184be", GradientType=0);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled]
+{
+    background-color: #2184be;
+    *background-color: #2184be;
+}
+.btn-primary:active,
+.btn-primary.active
+{
+    background-color: #2184be \9;
+}
+
+.btn-large
+{
+    font-size: 1.429em;
+}
+
 .sitewrapper
 {
     background: #fff;
@@ -101,29 +149,9 @@ h1, h2, h3, h4, h5, h6
             text-shadow: 2px 2px 3px rgba(100, 100, 115, 0.45);
         }
 
-        .sitewrapper > header > .btn
+        .sitewrapper > header > .btn-large
         {
-            border-color: #69c;
-            color: #fff;
             font-size: 2em;
-            line-height: 1em;
-            padding: 0.25em 1em;
-
-            background-color: #39c;
-            background-image: -moz-linear-gradient(#39c, #69c);
-            background-image: -ms-linear-gradient(#39c, #69c);
-            background-image: -o-linear-gradient(#39c, #69c);
-            background-image: -webkit-linear-gradient(#39c, #69c);
-            background-image: linear-gradient(#39c, #69c);
-
-            -webkit-text-shadow: 1px 1px 2px rgba(244, 244, 244, 0.65);
-            text-shadow: 1px 1px 2px rgba(244, 244, 244, 0.65);
-        }
-
-        .sitewrapper > header > .btn:hover,
-        .sitewrapper > header > .btn:active
-        {
-            background-image: none;
         }
 
     .sitewrapper > .socialbar
@@ -182,10 +210,28 @@ h1, h2, h3, h4, h5, h6
                 font-weight: 700;
             }
 
-        .sitewrapper > .content section
+        .sitewrapper > .content .main
         {
-            padding-bottom: 2.857em;
+            padding-right: 2.857em;
         }
+
+            .sitewrapper > .content .main > section
+            {
+                padding-bottom: 2.857em;
+            }
+
+                .sitewrapper > .content .main > section > h2.page-header
+                {
+                    font-size: 2.857em;
+                    line-height: 1.5em;
+                }
+
+                .sitewrapper > .content .main > section > p.lead
+                {
+                    font-size: 1.429em;
+                    line-height: 1.75em;
+                }
+            
 
     .sitewrapper > .content.startpage
     {
