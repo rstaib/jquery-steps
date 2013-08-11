@@ -3,20 +3,28 @@ module.exports = function (grunt)
 {
     "use strict";
 
+    /* Hint: Using grunt-strip-code to remove comments from the release file */
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
+            options: {
+                separator: '\r\n\r\n',
+                banner: '/*! <%= "\\r\\n * " + pkg.name %> v<%= pkg.version %> - <%= grunt.template.today("mm/dd/yyyy") + "\\r\\n" %>' +
+                    ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> <%= (pkg.homepage ? "(" + pkg.homepage + ")" : "") + "\\r\\n" %>' +
+                    ' * Licensed under <%= pkg.licenses[0].type + " " + pkg.licenses[0].url + "\\r\\n */\\r\\n" %>' + 
+                    ';(function ($, undefined)\r\n{\r\n',
+                footer: '\r\n})(jQuery);'
+            },
             dist: {
                 files: {
                     '<%= pkg.folders.dist %>/jquery.steps.js': [
-                        '<%= pkg.folders.src %>/banner.js',
                         '<%= pkg.folders.src %>/privates.js',
                         '<%= pkg.folders.src %>/publics.js',
                         '<%= pkg.folders.src %>/enums.js',
                         '<%= pkg.folders.src %>/model.js',
                         '<%= pkg.folders.src %>/defaults.js',
-                        '<%= pkg.folders.src %>/helper.js',
-                        '<%= pkg.folders.src %>/footer.js'
+                        '<%= pkg.folders.src %>/helper.js'
                     ]
                 }
             }
