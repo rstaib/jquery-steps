@@ -1,45 +1,45 @@
 $.fn.extend({
-    aria: function (name, value)
+    _aria: function (name, value)
     {
         return this.attr("aria-" + name, value);
     },
 
-    removeAria: function (name)
+    _removeAria: function (name)
     {
         return this.removeAttr("aria-" + name);
     },
 
-    enableAria: function()
+    _enableAria: function ()
     {
-        return this.removeClass("disabled").aria("disabled", "false");
+        return this.removeClass("disabled")._aria("disabled", "false");
     },
 
-    disableAria: function ()
+    _disableAria: function ()
     {
-        return this.addClass("disabled").aria("disabled", "true");
+        return this.addClass("disabled")._aria("disabled", "true");
     },
 
-    hideAria: function ()
+    _hideAria: function ()
     {
-        return this.hide().aria("hidden", "true");
+        return this.hide()._aria("hidden", "true");
     },
 
-    showAria: function ()
+    _showAria: function ()
     {
-        return this.show().aria("hidden", "false");
+        return this.show()._aria("hidden", "false");
     },
 
-    selectAria: function ()
+    _selectAria: function ()
     {
-        return this.addClass("current").aria("selected", "true");
+        return this.addClass("current")._aria("selected", "true");
     },
 
-    deselectAria: function ()
+    _deselectAria: function ()
     {
-        return this.removeClass("current").aria("selected", "false");
+        return this.removeClass("current")._aria("selected", "false");
     },
 
-    setId: function (id)
+    _setId: function (id)
     {
         return this.attr("id", id);
     }

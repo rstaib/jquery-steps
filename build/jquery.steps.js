@@ -1,5 +1,5 @@
 /*! 
- * jquery-steps v1.0.0pre - 08/11/2013
+ * jquery-steps v1.0.0pre - 08/13/2013
  * Copyright (c) 2013 Rafael J. Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -576,12 +576,12 @@ function loadAsyncContent(wizard, options, state)
                     break;
 
                 case contentMode.async:
-                    var currentStepContent = getStepPanel(wizard, state.currentIndex).aria("busy", "true")
+                    var currentStepContent = getStepPanel(wizard, state.currentIndex)._aria("busy", "true")
                         .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
 
                     $.ajax({ url: currentStep.contentUrl, cache: false }).done(function (data)
                     {
-                        currentStepContent.empty().html(data).aria("busy", "false").data("loaded", "1");
+                        currentStepContent.empty().html(data)._aria("busy", "false").data("loaded", "1");
                     });
                     break;
             }
@@ -612,14 +612,14 @@ function paginationClick(wizard, options, state, index)
             isDisabled = parent.hasClass("disabled");
 
         // Enable the step to make the anchor clickable!
-        parent.enableAria();
+        parent._enableAria();
         anchor.click();
 
         // An error occured
         if (oldIndex === state.currentIndex && isDisabled)
         {
             // Disable the step again if current index has not changed; prevents click action.
-            parent.disableAria();
+            parent._disableAria();
             return false;
         }
 
@@ -685,11 +685,11 @@ function refreshPagination(wizard, options, state)
             var previous = wizard.find(".actions a[href$='#previous']").parent();
             if (state.currentIndex > 0)
             {
-                previous.enableAria();
+                previous._enableAria();
             }
             else
             {
-                previous.disableAria();
+                previous._disableAria();
             }
         }
 
@@ -697,40 +697,40 @@ function refreshPagination(wizard, options, state)
         {
             if (state.stepCount === 0)
             {
-                finish.disableAria();
-                next.disableAria();
+                finish._disableAria();
+                next._disableAria();
             }
             else if (state.stepCount > 1 && state.stepCount > (state.currentIndex + 1))
             {
-                finish.enableAria();
-                next.enableAria();
+                finish._enableAria();
+                next._enableAria();
             }
             else
             {
-                finish.enableAria();
-                next.disableAria();
+                finish._enableAria();
+                next._disableAria();
             }
         }
         else
         {
             if (state.stepCount === 0)
             {
-                finish.hideAria();
-                next.showAria().disableAria();
+                finish._hideAria();
+                next._showAria()._disableAria();
             }
             else if (state.stepCount > (state.currentIndex + 1))
             {
-                finish.hideAria();
-                next.showAria().enableAria();
+                finish._hideAria();
+                next._showAria()._enableAria();
             }
             else if (!options.enableFinishButton)
             {
-                next.disableAria();
+                next._disableAria();
             }
             else
             {
-                finish.showAria();
-                next.hideAria();
+                finish._showAria();
+                next._hideAria();
             }
         }
     }
@@ -756,13 +756,13 @@ function refreshStepNavigation(wizard, options, state, oldIndex)
     if (oldIndex != null)
     {
         var oldStepAnchor = getStepAnchor(wizard, oldIndex);
-        oldStepAnchor.parent().addClass("done").removeClass("error").deselectAria();
+        oldStepAnchor.parent().addClass("done").removeClass("error")._deselectAria();
         stepTitles.eq(oldIndex).removeClass("current").next(".body").removeClass("current");
         currentInfo = oldStepAnchor.find(".current-info");
         currentOrNewStepAnchor.focus();
     }
 
-    currentOrNewStepAnchor.prepend(currentInfo).parent().selectAria().removeClass("done").enableAria();
+    currentOrNewStepAnchor.prepend(currentInfo).parent()._selectAria().removeClass("done")._enableAria();
     stepTitles.eq(state.currentIndex).addClass("current").next(".body").addClass("current");
 }
 
@@ -786,13 +786,13 @@ function refreshSteps(wizard, options, state, index)
         var uniqueStepId = uniqueId + _tabSuffix + i,
             uniqueBodyId = uniqueId + _tabpanelSuffix + i,
             uniqueHeaderId = uniqueId + _titleSuffix + i,
-            title = wizard.find(".title").eq(i).setId(uniqueHeaderId);
+            title = wizard.find(".title").eq(i)._setId(uniqueHeaderId);
 
-        wizard.find(".steps a").eq(i).setId(uniqueStepId)
-            .aria("controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
+        wizard.find(".steps a").eq(i)._setId(uniqueStepId)
+            ._aria("controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
             .html(renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
-        wizard.find(".body").eq(i).setId(uniqueBodyId)
-            .aria("labelledby", uniqueHeaderId);
+        wizard.find(".body").eq(i)._setId(uniqueBodyId)
+            ._aria("labelledby", uniqueHeaderId);
     }
 }
 
@@ -899,7 +899,7 @@ function render(wizard, options, state)
     });
 
     // Make the start step visible
-    stepContents.eq(state.currentIndex).showAria();
+    stepContents.eq(state.currentIndex)._showAria();
 
     stepTitles.each(function (index)
     {
@@ -926,8 +926,8 @@ function renderBody(wizard, body, index)
         uniqueBodyId = uniqueId + _tabpanelSuffix + index,
         uniqueHeaderId = uniqueId + _titleSuffix + index;
 
-    body.setId(uniqueBodyId).attr("role", "tabpanel").aria("labelledby", uniqueHeaderId)
-        .addClass("body").hideAria();
+    body._setId(uniqueBodyId).attr("role", "tabpanel")._aria("labelledby", uniqueHeaderId)
+        .addClass("body")._hideAria();
 }
 
 /**
@@ -1025,15 +1025,15 @@ function renderTitle(wizard, options, state, header, index)
         
     if (!options.enableAllSteps)
     {
-        stepItem.disableAria();
+        stepItem._disableAria();
     }
 
     if (state.currentIndex > index)
     {
-        stepItem.enableAria().addClass("done");
+        stepItem._enableAria().addClass("done");
     }
 
-    header.setId(uniqueHeaderId).attr("tabindex", "-1").addClass("title");
+    header._setId(uniqueHeaderId).attr("tabindex", "-1").addClass("title");
 
     if (index === 0)
     {
@@ -1096,14 +1096,14 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
             state.transitionElement = newStep;
             currentStep[hide](effectSpeed, function ()
             {
-                var wizard = $(this).hideAria().parents(":has(.steps)"),
+                var wizard = $(this)._hideAria().parents(":has(.steps)"),
                     state = getState(wizard);
 
                 if (state.transitionElement)
                 {
                     state.transitionElement[show](effectSpeed, function ()
                     {
-                        $(this).showAria();
+                        $(this)._showAria();
                     });
                     state.transitionElement = null;
                 }
@@ -1117,14 +1117,14 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
                 posLeft = currentStep.parent().position().left;
 
             currentStep.animate({ left: posFadeOut }, effectSpeed, 
-                function () { $(this).hideAria(); }).promise();
-            newStep.css("left", posFadeIn + "px").showAria()
+                function () { $(this)._hideAria(); }).promise();
+            newStep.css("left", posFadeIn + "px")._showAria()
                 .animate({ left: posLeft }, effectSpeed).promise();
             break;
 
         default:
-            currentStep.hideAria();
-            newStep.showAria();
+            currentStep._hideAria();
+            newStep._showAria();
             break;
     }
 }
@@ -1883,47 +1883,47 @@ var defaults = $.fn.steps.defaults = {
 };
 
 $.fn.extend({
-    aria: function (name, value)
+    _aria: function (name, value)
     {
         return this.attr("aria-" + name, value);
     },
 
-    removeAria: function (name)
+    _removeAria: function (name)
     {
         return this.removeAttr("aria-" + name);
     },
 
-    enableAria: function()
+    _enableAria: function ()
     {
-        return this.removeClass("disabled").aria("disabled", "false");
+        return this.removeClass("disabled")._aria("disabled", "false");
     },
 
-    disableAria: function ()
+    _disableAria: function ()
     {
-        return this.addClass("disabled").aria("disabled", "true");
+        return this.addClass("disabled")._aria("disabled", "true");
     },
 
-    hideAria: function ()
+    _hideAria: function ()
     {
-        return this.hide().aria("hidden", "true");
+        return this.hide()._aria("hidden", "true");
     },
 
-    showAria: function ()
+    _showAria: function ()
     {
-        return this.show().aria("hidden", "false");
+        return this.show()._aria("hidden", "false");
     },
 
-    selectAria: function ()
+    _selectAria: function ()
     {
-        return this.addClass("current").aria("selected", "true");
+        return this.addClass("current")._aria("selected", "true");
     },
 
-    deselectAria: function ()
+    _deselectAria: function ()
     {
-        return this.removeClass("current").aria("selected", "false");
+        return this.removeClass("current")._aria("selected", "false");
     },
 
-    setId: function (id)
+    _setId: function (id)
     {
         return this.attr("id", id);
     }
