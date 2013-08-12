@@ -449,7 +449,7 @@ body > footer
         .sitewrapper > .content #lefthand-nav
         {
             width: auto;
-            margin-bottom: 20px;
+            margin: 0 20% 1.429em;
         }
 
         .sitewrapper > .content #lefthand-nav.affix
@@ -493,5 +493,8 @@ body > footer
 
 @media (max-width: 479px)
 {
-
+    .sitewrapper > .content #lefthand-nav
+    {
+        margin: 0 10% 1.429em;
+    }
 }
