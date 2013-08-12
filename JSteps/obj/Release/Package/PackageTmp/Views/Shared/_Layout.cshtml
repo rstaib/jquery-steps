@@ -12,9 +12,9 @@
     
     public string GetActiveClass(string controllerName)
     {
-        if (ViewContext.RouteData.GetRequiredString("controller") == "GettingStarted")
+        if (ViewContext.RouteData.GetRequiredString("controller") == controllerName)
         {
-            return "class=\"active\"";
+            return "active";
         }
         
         return string.Empty;
@@ -83,11 +83,11 @@
                 
                 <nav>
                     <ul>
-                        <li @GetActiveClass("GettingStarted")>@Html.ActionLink("Getting Started", "Index", "GettingStarted")</li>
-                        <li @GetActiveClass("Examples")>@Html.ActionLink("Examples", "Index", "Examples")</li>
+                        <li class="@GetActiveClass("GettingStarted")">@Html.ActionLink("Getting Started", "Index", "GettingStarted")</li>
+                        <li class="@GetActiveClass("Examples")">@Html.ActionLink("Examples", "Index", "Examples")</li>
                         <li><a href="https://github.com/rstaib/jquery-steps/wiki">Documentation</a></li>
                         <li><a href="https://github.com/rstaib/jquery-steps">GitHub</a></li>
-                        <li @GetActiveClass("About")>@Html.ActionLink("About", "Index", "About")</li>
+                        <li class="@GetActiveClass("About")">@Html.ActionLink("About", "Index", "About")</li>
                     </ul>
                 </nav>
             </div>
