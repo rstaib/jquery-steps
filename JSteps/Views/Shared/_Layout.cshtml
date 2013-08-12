@@ -1,7 +1,20 @@
-﻿<!DOCTYPE html>
+﻿@functions
+{
+    public string GetTitle()
+    {
+        var title = "jQuery Steps";
+        if (!string.IsNullOrWhiteSpace(@ViewBag.Title))
+        {
+            title = string.Concat(ViewBag.Title, " - ", title);
+        }
+        return title;
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>jQuery Steps - @ViewBag.Title</title>
+        <title>@GetTitle()</title>
 
         <meta charset="utf-8">
         <meta name="robots" content="index, follow">
@@ -40,9 +53,16 @@
         <![endif]-->
         
         <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
-        @Styles.Render("~/Content/Base")
+        @if (ViewBag.Prettify == true)
+        {
+            @Styles.Render("~/Content/Extended")
+        }
+        else
+        {
+            @Styles.Render("~/Content/Base")
+        }
     </head>
-    <body data-spy="scroll" data-target="#lefthand" data-offset="100">
+    <body data-spy="scroll" data-target="#lefthand" data-offset="60">
         <a name="top"></a>
 
         <div id="topbar" class="navbar navbar-fixed-top">
@@ -84,7 +104,14 @@
             </ul>
         </footer>
         
-        @Scripts.Render("~/Scripts/Base")
+        @if (ViewBag.Prettify == true)
+        {
+            @Scripts.Render("~/Scripts/Extended")
+        }
+        else
+        {
+            @Scripts.Render("~/Scripts/Base")
+        }
         @RenderSection("Scripts", false)
     </body>
 </html>

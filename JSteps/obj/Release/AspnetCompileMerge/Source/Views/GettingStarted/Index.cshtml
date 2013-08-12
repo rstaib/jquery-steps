@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Getting Started";
+    ViewBag.Prettify = true;
 }
 
 @section Header
@@ -16,7 +17,6 @@
             <ul id="lefthand-nav" class="nav nav-list">
                 <li><a href="#download">Download</a></li>
                 <li><a href="#basic">Basic Example</a></li>
-                <li><a href="#browser">Browser Support</a></li>
                 <li><a href="#docs">Documentation</a></li>
             </ul>
         </nav>
@@ -69,46 +69,34 @@
                 <p>There are two ways to add steps and their corresponding content.</p>
                 <p>1. Add <abbr title="Hypertext Markup Language">HTML</abbr> code into the representing wizard element.</p>
 <pre class="prettyprint linenums">
+&lt;div id="wizard"&gt;
+    &lt;h1&gt;First Step&lt;/h1&gt;
+    &lt;div&gt;First Content&lt;/div&gt;
 
+    &lt;h1&gt;Second Step&lt;/h1&gt;
+    &lt;div&gt;Second Content&lt;/div&gt;
+&lt;/div&gt;
 </pre>
                 <p>2. Or use the <abbr title="Application Programming Interface">API</abbr> to add steps dynamically.</p>
 <pre class="prettyprint linenums">
+// Initialize wizard
+var wizard = $("#wizard").steps();
 
+// Add step
+wizard.steps("add", {
+    title: "HTML code", 
+    content: "&lt;strong&gt;HTML code&lt;/strong&gt;"
+});
 </pre>
-            </section>
-            <section id="browser">
-                <h2 class="page-header">Browser Support</h2>
-                <p class="lead">Lead</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
             </section>
             <section id="docs">
                 <h2 class="page-header">Documentation</h2>
-                <p class="lead">Lead</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
-                <p>Text</p>
+                <p class="lead">There are two ways to get the documentation but the recommended way is to use the wiki site.</p>
+                <ol>
+                    <li>Visit the project specific <a href="https://github.com/rstaib/jquery-steps/wiki" target="_blank">GitHub wiki</a> or</li>
+                    <li>download the source code and use the <code>grunt api</code> command.</li>
+                </ol>
+                <p><blockquote>The documentation is currently maintained on the project specific GitHub wiki but will be moved to <a href="http://www.jquery-steps.com">jquery-steps.com</a> later this year.</blockquote></p>
             </section>
         </div>
     </div>
@@ -127,6 +115,8 @@
                     }
                 }
             });
+            
+            prettyPrint();
         });
     </script>
 }

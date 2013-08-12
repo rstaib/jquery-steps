@@ -14,16 +14,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/12/2013 09:58:21</publishTime>
     </File>
     <File Include="bin/App_global.asax.compiled">
-      <publishTime>08/12/2013 10:06:29</publishTime>
+      <publishTime>08/12/2013 15:50:25</publishTime>
     </File>
     <File Include="bin/App_global.asax.dll">
-      <publishTime>08/12/2013 10:06:29</publishTime>
+      <publishTime>08/12/2013 15:50:25</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/JSteps.dll">
-      <publishTime>08/12/2013 10:05:38</publishTime>
+      <publishTime>08/12/2013 15:23:53</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>08/12/2013 09:58:20</publishTime>
@@ -80,7 +80,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/custom.css">
-      <publishTime>08/12/2013 10:04:56</publishTime>
+      <publishTime>08/12/2013 15:47:55</publishTime>
     </File>
     <File Include="Content/images/bg.jpg">
       <publishTime>08/12/2013 09:58:17</publishTime>
@@ -107,7 +107,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/prettify.css">
-      <publishTime>08/12/2013 09:58:17</publishTime>
+      <publishTime>08/12/2013 13:19:17</publishTime>
     </File>
     <File Include="Content/viewport-fix-mobile-ie10.css">
       <publishTime>08/12/2013 09:58:17</publishTime>
@@ -119,7 +119,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
-      <publishTime>08/12/2013 10:06:27</publishTime>
+      <publishTime>08/12/2013 15:50:22</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>08/12/2013 09:58:17</publishTime>
@@ -137,7 +137,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Scripts/prettify.js">
-      <publishTime>08/12/2013 09:58:17</publishTime>
+      <publishTime>08/12/2013 13:19:33</publishTime>
     </File>
     <File Include="Scripts/social.js">
       <publishTime>08/12/2013 09:58:17</publishTime>
@@ -152,7 +152,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Views/GettingStarted/Index.cshtml">
-      <publishTime>08/12/2013 10:01:52</publishTime>
+      <publishTime>08/12/2013 15:19:21</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
       <publishTime>08/12/2013 09:58:17</publishTime>
@@ -161,7 +161,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>08/12/2013 09:58:17</publishTime>
+      <publishTime>08/12/2013 14:39:49</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>08/12/2013 09:58:17</publishTime>
