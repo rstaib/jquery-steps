@@ -53,16 +53,32 @@ a:active
     text-decoration: none;
 }
 
+dl > dt
+{
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.429em;
+    font-weight: 700;
+    line-height: 1.5em;
+    margin-bottom: 0.25em;
+}
+
+dl > dd
+{
+    line-height: 1.5em;
+    margin: 0 0 0.75em 1em;
+}
+
 h1, h2, h3, h4, h5, h6
 {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: normal;
+    font-weight: 700;
+    line-height: 1.5em;
 }
 
 p, p.lead
 {
-    line-height: 1.75em;
-    margin: 0 0 1em;
+    line-height: 1.5em;
+    margin: 0 0 1.5em;
 }
 
 ol, ul
@@ -72,7 +88,7 @@ ol, ul
 
 ol > li, ul > li
 {
-    line-height: 1.75em;
+    line-height: 1.5em;
 }
 
 .nowrap
@@ -189,8 +205,9 @@ ol > li, ul > li
         text-align: center;
     }
 
-        .sitewrapper > .socialbar > .fb-like > span,
-        .sitewrapper > .socialbar iframe
+        .sitewrapper > .socialbar div,
+        .sitewrapper > .socialbar iframe,
+        .sitewrapper > .socialbar span
         {
             width: 110px !important;
         }
@@ -256,8 +273,6 @@ ol > li, ul > li
                 .sitewrapper > .content .main > section > h2.page-header
                 {
                     font-size: 2.857em;
-                    font-weight: 700;
-                    line-height: 1.5em;
                     margin: 0.5em 0 0.75em;
                     padding: 0 0 0.25em;
                 }
@@ -270,17 +285,18 @@ ol > li, ul > li
                 .sitewrapper > .content .main > section h3
                 {
                     font-size: 2em;
-                    font-weight: 700;
-                    line-height: 1.5em;
                 }
 
                 .sitewrapper > .content .main > section h4
                 {
                     font-size: 1.429em;
-                    font-weight: 700;
-                    line-height: 1.5em;
                 }
-            
+
+        .sitewrapper > .content .me
+        {
+            padding-top: 2.857em;
+            text-align: center;
+        }
 
     .sitewrapper > .content.startpage
     {
@@ -296,6 +312,7 @@ ol > li, ul > li
             .sitewrapper > .content.startpage .box > h2
             {
                 font-size: 1.714em;
+                font-weight: normal;
                 line-height: 1.208em;
                 margin: 0.833em 0 0.667em;
             }
@@ -344,7 +361,6 @@ body > footer
             float: left;
             font-size: 1.429em;
             line-height: 1em;
-            font-weight: 700;
             margin: 0 0.5em;
         }
 

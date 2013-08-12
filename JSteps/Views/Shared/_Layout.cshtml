@@ -9,6 +9,16 @@
         }
         return title;
     }
+    
+    public string GetActiveClass(string controllerName)
+    {
+        if (ViewContext.RouteData.GetRequiredString("controller") == "GettingStarted")
+        {
+            return "class=\"active\"";
+        }
+        
+        return string.Empty;
+    }
 }
 
 <!DOCTYPE html>
@@ -73,10 +83,11 @@
                 
                 <nav>
                     <ul>
-                        <li class="@if(ViewContext.RouteData.GetRequiredString("controller") == "GettingStarted") { <text>active</text> }">@Html.ActionLink("Getting Started", "Index", "GettingStarted")</li>
-                        <li class="@if(ViewContext.RouteData.GetRequiredString("controller") == "Examples") { <text>active</text> }">@Html.ActionLink("Examples", "Index", "Examples")</li>
+                        <li @GetActiveClass("GettingStarted")>@Html.ActionLink("Getting Started", "Index", "GettingStarted")</li>
+                        <li @GetActiveClass("Examples")>@Html.ActionLink("Examples", "Index", "Examples")</li>
                         <li><a href="https://github.com/rstaib/jquery-steps/wiki">Documentation</a></li>
                         <li><a href="https://github.com/rstaib/jquery-steps">GitHub</a></li>
+                        <li @GetActiveClass("About")>@Html.ActionLink("About", "Index", "About")</li>
                     </ul>
                 </nav>
             </div>
@@ -86,8 +97,9 @@
             @RenderSection("Header", true)
 
             <div class="socialbar">
-                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rstaib.github.io/jquery-steps" data-text="jQuery Steps" data-via="RafaelStaib" data-hashtags="jquerysteps">Tweet</a>
-                <div class="fb-like" data-href="http://www.jquery-steps.com/" data-send="false" data-layout="button_count" data-width="110" data-show-faces="false" data-font="arial"></div>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.jquery-steps.com"" data-text="jQuery Steps" data-via="RafaelStaib" data-hashtags="jquerysteps">Tweet</a>
+                <div class="fb-like" data-href="http://www.jquery-steps.com" data-send="false" data-layout="button_count" data-width="110" data-show-faces="false" data-font="arial"></div>
+                <div class="g-plusone" data-size="medium" data-href="http://www.jquery-steps.com"></div>
                 <iframe src="/github-btn.html?user=rstaib&repo=jquery-steps&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
                 <iframe src="/github-btn.html?user=rstaib&repo=jquery-steps&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
             </div>

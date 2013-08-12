@@ -15,17 +15,61 @@
     <div class="row-fluid">
         <nav id="lefthand" class="span3">
             <ul id="lefthand-nav" class="nav nav-list">
+                <li><a href="#intro">Quick Introduction</a></li>
                 <li><a href="#download">Download</a></li>
                 <li><a href="#basic">Basic Example</a></li>
                 <li><a href="#docs">Documentation</a></li>
             </ul>
         </nav>
         <div class="span9 main">
+            <section id="intro">
+                <h2 class="page-header">Quick Introduction</h2>
+                <p class="lead">jQuery Steps is a smart UI component which allows you to easily create wizard-like interfaces. 
+                    This plugin groups content into sections for a more structured and orderly page view. 
+                    Furthermore, it is as simple as 1-2-3 to add plugins such as jQuery Validation which can prevent step changing or submission. 
+                    Check out the <a href="@Url.Action("Index", "Examples")">demos</a> and get a first-hand impression!</p>
+                <h3>Features</h3>
+                <div class="row-fluid">
+                    <dl class="span6">
+                        <dt>Accessability support</dt>
+                        <dd>Make it visible for everyone without extra work - just use it.</dd>
+                        <dt>Async content loading</dt>
+                        <dd>Load your content asynchrone via <abbr title="Asynchronous JavaScript and XML">AJAX</abbr> by calling for example a <abbr title="Representational State Transfer">REST</abbr> service.</dd>
+                        <dt>Cool transition effects</dt>
+                        <dd>Beautiful & sleek transition effects complete the offer.</dd>
+                        <dt>Dynamic Manipulation</dt>
+                        <dd>Add or remove steps via <abbr title="Application Programming Interface">API</abbr>.</dd>
+                        <dt>Easy Navigation</dt>
+                        <dd>Navigate in various different way using the keyboard, steps or pager - it is up to you.</dd>
+                        <dt>State Persistence</dt>
+                        <dd>Enable the <code>saveState</code> option - this will save your current step position of each individual wizard *.</dd>
+                    </dl>
+                    <dl class="span6">
+                        <dt>Form validation made easy</dt>
+                        <dd>Embed a validation plugin of your choice and customized like you want - it is just that simple.</dd>
+                        <dt>Embedded iframe content</dt>
+                        <dd>Embed your content via an <code>iframe</code> - it feels like it would be a part of your site.</dd>
+                        <dt>Keyboard navigation</dt>
+                        <dd>Use your keyboard to navigate through your content.</dd>
+                        <dt>Multiple wizards</dt>
+                        <dd>Have multiple wizards on one page or even have nested wizards like you want.</dd>
+                        <dt>Vertical Navigation</dt>
+                        <dd>Switch to vertical navigation if you need.</dd>
+                        <dt>And much more ...</dt>
+                        <dd>Take a look to the examples and learn more about it.</dd>
+                    </dl>
+                </div>
+                <p class="muted"><small>* The step position will be saved into a cookie after a step change, add or remove. 
+                    After a refresh the latest active step become active again - after initialization.</small></p>
+                <h3>Buy me a beer</h3>
+                <p>Hi guys, I invested tons of time and still investing to offer you a great feeling and nice looking component. 
+                    So if you like it spend me a beer! Would be very appreciated ;-) Thanks.</p>
+                <p>DONATE!!!!!!!</p>
+            </section>
             <section id="download">
                 <h2 class="page-header">Download</h2>
                 <p class="lead">jQuery Steps is an open-source project hosted on GitHub and can be therefore downloaded in many different ways. 
-                    The easiest and fastest way to get started is to download the compiled & minified version. 
-                    <!--Subsequently a zip file opens which contains the lastest complied & minified release version of jQuery Steps.--></p>
+                    The easiest and fastest way to get started is to download the compiled & minified version.</p>
                 <div class="row-fluid">
                     <div class="span6">
                         <h3>Compiled & Minified</h3>
@@ -48,7 +92,7 @@
                     <li>Include <strong>jQuery</strong> and <strong>jQuery Steps</strong> in your <abbr title="Hypertext Markup Language">HTML</abbr> code.</li>
                     <li>Then select an element represents the wizard and call the <code>steps</code> method.</li>
                 </ol>
-<pre class="prettyprint linenums">
+                <pre class="prettyprint linenums">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
@@ -68,7 +112,7 @@
                 <h3>How to add initial steps?</h3>
                 <p>There are two ways to add steps and their corresponding content.</p>
                 <p>1. Add <abbr title="Hypertext Markup Language">HTML</abbr> code into the representing wizard element.</p>
-<pre class="prettyprint linenums">
+                <pre class="prettyprint linenums">
 &lt;div id="wizard"&gt;
     &lt;h1&gt;First Step&lt;/h1&gt;
     &lt;div&gt;First Content&lt;/div&gt;
@@ -78,7 +122,7 @@
 &lt;/div&gt;
 </pre>
                 <p>2. Or use the <abbr title="Application Programming Interface">API</abbr> to add steps dynamically.</p>
-<pre class="prettyprint linenums">
+                <pre class="prettyprint linenums">
 // Initialize wizard
 var wizard = $("#wizard").steps();
 
@@ -96,7 +140,7 @@ wizard.steps("add", {
                     <li>Visit the project specific <a href="https://github.com/rstaib/jquery-steps/wiki" target="_blank">GitHub wiki</a> or</li>
                     <li>download the source code and use the <code>grunt api</code> command.</li>
                 </ol>
-                <p><blockquote>The documentation is currently maintained on the project specific GitHub wiki but will be moved to <a href="http://www.jquery-steps.com">jquery-steps.com</a> later this year.</blockquote></p>
+                <p class="alert alert-info"><strong>Info:</strong> The documentation is currently maintained via the GitHub wiki but will be moved to <a href="http://www.jquery-steps.com">jquery-steps.com</a> later this year.</p>
             </section>
         </div>
     </div>

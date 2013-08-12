@@ -130,6 +130,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\ExamplesController.cs" />
     <Compile Include="Controllers\GettingStartedController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -148,6 +149,7 @@
     <Content Include="Content\images\html5.png" />
     <Content Include="Content\images\lightweight.png" />
     <Content Include="Content\images\loading.gif" />
+    <Content Include="Content\images\me.png" />
     <Content Include="Content\images\social.png" />
     <Content Include="Content\prettify.css" />
     <Content Include="Content\viewport-fix-mobile-ie10.css" />
@@ -191,6 +193,7 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\FTP Cloud.pubxml" />
     <Content Include="Views\Examples\Index.cshtml" />
+    <Content Include="Views\About\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
