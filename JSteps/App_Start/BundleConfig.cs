@@ -14,9 +14,15 @@ namespace JSteps
             bundles.Add(GetBaseScripts("~/Scripts/Base"));
             bundles.Add(GetBaseScripts("~/Scripts/Extended")
                 .Include("~/Scripts/prettify.js"));
+            bundles.Add(GetBaseScripts("~/Scripts/Examples")
+                .Include("~/Scripts/jquery.steps.js")
+                .Include("~/Scripts/prettify.js"));
 
             bundles.Add(GetBaseStyles("~/Content/Base"));
             bundles.Add(GetBaseStyles("~/Content/Extended")
+                .Include("~/Content/prettify.css"));
+            bundles.Add(GetBaseStyles("~/Content/Examples")
+                .Include("~/Content/examples.css")
                 .Include("~/Content/prettify.css"));
         }
 

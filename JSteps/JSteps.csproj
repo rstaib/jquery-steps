@@ -143,6 +143,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\examples.css" />
     <Content Include="Content\images\bg.jpg" />
     <Content Include="Content\images\crossbrowser.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
@@ -162,6 +163,8 @@
     <Content Include="Scripts\html5shiv.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.steps.js" />
+    <Content Include="Scripts\jquery.steps.min.js" />
     <Content Include="Scripts\prettify.js" />
     <Content Include="Scripts\social.js" />
     <Content Include="Scripts\tracking.js" />
