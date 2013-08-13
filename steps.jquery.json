@@ -14,10 +14,10 @@
         "tabs",
         "steps"
     ],
-    "version": "0.9.7",
+    "version": "1.0.0",
     "author": {
-        "name": "Rafael J. Staib",
-        "email": "rstaib@derklang.com",
+        "name": "Rafael Staib",
+        "email": "me@rafaelstaib.com",
         "url": "http://www.rafaelstaib.com"
     },
     "licenses": [

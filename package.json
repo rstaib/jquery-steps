@@ -1,13 +1,13 @@
 {
   "name": "jquery-steps",
-  "title": "jQuery Wizard Plugin",
+  "title": "jQuery Steps",
   "version": "1.0.0pre",
   "description": "A powerful jQuery wizard plugin that supports accessibility and HTML5",
   "homepage": "http://www.jquery-steps.com",
   "author": {
-    "name": "Rafael J. Staib",
-    "email": "rstaib@derklang.com", 
-	"url" : "http://www.rafaelstaib.com"
+    "name": "Rafael Staib",
+    "email": "me@rafaelstaib.com",
+    "url": "http://www.rafaelstaib.com"
   },
   "bugs": "https://github.com/rstaib/jquery-steps/issues",
   "scripts": {
@@ -20,7 +20,7 @@
   "keywords": [
     "jQuery",
     "Wizard",
-	"Tabs",
+    "Tabs",
     "Steps",
     "Plugin"
   ],
@@ -38,7 +38,8 @@
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-yuidoc": "~0.4.0",
-    "grunt-contrib-clean": "~0.4.1"
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-regex-replace": "~0.2.5"
   },
   "readmeFilename": "README.md",
   "gitHead": "0d9f4f8b6a0c3d3b8a73eabf6a4b8cececd52f7a",

@@ -10,7 +10,7 @@ module.exports = function (grunt)
         concat: {
             options: {
                 separator: '\r\n\r\n',
-                banner: '/*! <%= "\\r\\n * " + pkg.name %> v<%= pkg.version %> - <%= grunt.template.today("mm/dd/yyyy") + "\\r\\n" %>' +
+                banner: '/*! <%= "\\r\\n * " + pkg.title %> v<%= pkg.version %> - <%= grunt.template.today("mm/dd/yyyy") + "\\r\\n" %>' +
                     ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> <%= (pkg.homepage ? "(" + pkg.homepage + ")" : "") + "\\r\\n" %>' +
                     ' * Licensed under <%= pkg.licenses[0].type + " " + pkg.licenses[0].url + "\\r\\n */\\r\\n" %>' + 
                     ';(function ($, undefined)\r\n{\r\n',
@@ -29,12 +29,31 @@ module.exports = function (grunt)
                 }
             }
         },
+        "regex-replace": {
+            all: {
+                src: ['<%= pkg.folders.dist %>/jquery.steps.js'],
+                actions: [
+                    {
+                        name: 'multiLineComments',
+                        search: /\/\*[^!](.|\r|\n)*?\*\/\r\n?/gim,
+                        replace: ''
+                    },
+                    {
+                        name: 'singleLineComment',
+                        search: /^\s*?[^http:\/\/]\/\/.*\r\n?/gi,
+                        replace: ''
+                    },
+                    {
+                        name: 'singleLineCommentSameLine',
+                        search: /[^http:\/\/]\/\/.*/gi,
+                        replace: ''
+                    }
+                ]
+            }
+        },
         uglify: {
             options: {
-                preserveComments: false,
-                banner: '/*! <%= "\\r\\n * " + pkg.name %> v<%= pkg.version %> - <%= grunt.template.today("mm/dd/yyyy") + "\\r\\n" %>' +
-                    ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> <%= (pkg.homepage ? "(" + pkg.homepage + ")" : "") + "\\r\\n" %>' +
-                    ' * Licensed under <%= pkg.licenses[0].type + " " + pkg.licenses[0].url + "\\r\\n */\\r\\n" %>',
+                preserveComments: 'some',
                 report: 'gzip'
             },
             all: {
@@ -121,9 +140,10 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-regex-replace');
 
     grunt.registerTask('default', ['build']);
     grunt.registerTask('api', ['clean:api', 'yuidoc']);
-    grunt.registerTask('build', ['clean:build', 'concat', 'jshint', 'qunit']);
+    grunt.registerTask('build', ['clean:build', 'concat', 'regex-replace', 'jshint', 'qunit']);
     grunt.registerTask('release', ['build', 'api', 'uglify']);
 };
