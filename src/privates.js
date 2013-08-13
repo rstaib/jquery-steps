@@ -876,8 +876,8 @@ function render(wizard, options, state)
     var wrapperTemplate = "<{0} class=\"{1}\">{2}</{0}>",
         orientation = getValidEnumValue(stepsOrientation, options.stepsOrientation),
         verticalCssClass = (orientation === stepsOrientation.vertical) ? " vertical" : "",
-        contentWrapper = $(format(wrapperTemplate, options.contentContainerTag, "content clearfix", wizard.html())),
-        stepsWrapper = $(format(wrapperTemplate, options.stepsContainerTag, "steps clearfix", "<ul role=\"tablist\"></ul>")),
+        contentWrapper = $(format(wrapperTemplate, options.contentContainerTag, "content " + options.clearFixCssClass, wizard.html())),
+        stepsWrapper = $(format(wrapperTemplate, options.stepsContainerTag, "steps " + options.clearFixCssClass, "<ul role=\"tablist\"></ul>")),
         stepTitles = contentWrapper.children(options.headerTag),
         stepContents = contentWrapper.children(options.bodyTag);
 
@@ -937,7 +937,7 @@ function renderPagination(wizard, options, state)
 {
     if (options.enablePagination)
     {
-        var pagination = "<{0} class=\"actions clearfix\"><ul role=\"menu\" aria-label=\"{1}\">{2}</ul></{0}>",
+        var pagination = "<{0} class=\"actions {1}\"><ul role=\"menu\" aria-label=\"{2}\">{3}</ul></{0}>",
             buttonTemplate = "<li><a href=\"#{0}\" role=\"menuitem\">{1}</a></li>",
             buttons = "";
 
@@ -953,7 +953,8 @@ function renderPagination(wizard, options, state)
             buttons += format(buttonTemplate, "finish", options.labels.finish);
         }
 
-        wizard.append(format(pagination, options.actionContainerTag, options.labels.pagination, buttons));
+        wizard.append(format(pagination, options.actionContainerTag, options.clearFixCssClass,
+            options.labels.pagination, buttons));
 
         refreshPagination(wizard, options, state);
         loadAsyncContent(wizard, options, state);
