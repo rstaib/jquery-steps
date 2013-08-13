@@ -13,5 +13,81 @@
 
 <div class="content">
     <div class="row-fluid">
+        <nav id="lefthand" class="span3">
+            <ul id="lefthand-nav" class="nav nav-list">
+                <li><a href="#basic">Basic Example</a></li>
+                <li><a href="#basic-form">Basic Form Example</a></li>
+                <li><a href="#advanced-form">Advanced Form Example</a></li>
+                <li><a href="#manipulation">Dynamic Manipulation Example</a></li>
+                <li><a href="#tabs">Tabs Example</a></li>
+                <li><a href="#vertical">Vertical Steps Example</a></li>
+                <li><a href="#async">Async Content Loading Example</a></li>
+                <li><a href="#embed">Embedded Content Example</a></li>
+            </ul>
+        </nav>
+        <div class="span9 main">
+            <section id="basic">
+                <h2 class="page-header">Basic Example</h2>
+                <div id="wizard-1">
+                    <h3>Keyboard</h3>
+                    <section>
+                        <p>Try the keyboard navigation by clicking arrow left or right!</p>
+                    </section>
+
+                    <h3>Transition Effects</h3>
+                    <section>
+                        <p>ljlkjlk</p>
+                    </section>
+
+                    <h3>Pager</h3>
+                    <section>
+                        <p>jggj</p>
+                    </section>
+                </div>
+            </section>
+            <section id="basic-form">
+                <h2 class="page-header">Basic Form Example</h2>
+                
+            </section>
+            <section id="advanced-form">
+                <h2 class="page-header">Advanced Form Example</h2>
+                
+            </section>
+            <section id="manipulation">
+                <h2 class="page-header">Dynamic Manipulation Example</h2>
+
+            </section>
+            <section id="tabs">
+                <h2 class="page-header">Tabs Example</h2>
+
+            </section>
+            <section id="vertical">
+                <h2 class="page-header">Vertical Steps Example</h2>
+
+            </section>
+            <section id="async">
+                <h2 class="page-header">Async Content Loading Example</h2>
+
+            </section>
+            <section id="embed">
+                <h2 class="page-header">Embedded Content Example</h2>
+
+            </section>
+        </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        $(function ()
+        {
+            $("#wizard-1").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                autoFocus: true
+            });
+        });
+    </script>
+}
