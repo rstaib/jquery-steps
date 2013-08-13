@@ -1107,13 +1107,12 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
         case transitionEffect.slideLeft:
             var outerWidth = currentStep.outerWidth(true),
                 posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
-                posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth),
-                posLeft = currentStep.parent().position().left;
+                posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
             currentStep.animate({ left: posFadeOut }, effectSpeed, 
                 function () { $(this)._hideAria(); }).promise();
             newStep.css("left", posFadeIn + "px")._showAria()
-                .animate({ left: posLeft }, effectSpeed).promise();
+                .animate({ left: 0 }, effectSpeed).promise();
             break;
 
         default:

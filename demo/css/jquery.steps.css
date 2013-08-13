@@ -32,6 +32,7 @@
     background: #fff;
     width: 600px;
     height: 30px;
+    position: relative;
 }
 
 .wizard.vertical > .steps
@@ -85,6 +86,7 @@
     width: 600px;
     height: 300px;
     overflow: hidden;
+    position: relative;
 }
 
 .wizard.vertical > .content
@@ -126,6 +128,7 @@
 {
     width: 600px;
     height: 30px;
+    position: relative;
 }
 
 .wizard > .actions [aria-disabled="true"] a
