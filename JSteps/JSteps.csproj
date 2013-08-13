@@ -165,6 +165,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery.steps.js" />
     <Content Include="Scripts\jquery.steps.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\prettify.js" />
     <Content Include="Scripts\social.js" />
     <Content Include="Scripts\tracking.js" />

@@ -16,6 +16,7 @@ namespace JSteps
                 .Include("~/Scripts/prettify.js"));
             bundles.Add(GetBaseScripts("~/Scripts/Examples")
                 .Include("~/Scripts/jquery.steps.js")
+                .Include("~/Scripts/jquery.validate.js")
                 .Include("~/Scripts/prettify.js"));
 
             bundles.Add(GetBaseStyles("~/Content/Base"));

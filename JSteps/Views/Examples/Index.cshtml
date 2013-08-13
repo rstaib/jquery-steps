@@ -47,7 +47,47 @@
             </section>
             <section id="basic-form">
                 <h2 class="page-header">Basic Form Example</h2>
-                
+                <form id="form-2" action="#">
+                    <div id="wizard-2">
+                        <h4>Account</h4>
+                        <section>
+                            <label for="userName">User name *</label><br>
+                            <input id="userName" name="userName" type="text" class="required"><br>
+                            <label for="password">Password *</label><br>
+                            <input id="password" name="password" type="text" class="required"><br>
+                            <label for="confirm">Confirm Password *</label><br>
+                            <input id="confirm" name="confirm" type="text" class="required"><br>
+                            <p>(*) Mandatory</p>
+                        </section>
+
+                        <h4>Profile</h4>
+                        <section>
+                            <label for="name">First name *</label><br>
+                            <input id="name" name="name" type="text" class="required"><br>
+                            <label for="surname">Last name *</label><br>
+                            <input id="surname" name="surname" type="text" class="required"><br>
+                            <label for="email">Email *</label><br>
+                            <input id="email" name="email" type="text" class="required email"><br>
+                            <label for="address">Address</label><br>
+                            <input id="address" name="address" type="text"><br>
+                            <p>(*) Mandatory</p>
+                        </section>
+
+                        <h4>Hints</h4>
+                        <section>
+                            <ul>
+                                <li>Foo</li>
+                                <li>Bar</li>
+                                <li>Foobar</li>
+                            </ul>
+                        </section>
+
+                        <h4>Finish</h4>
+                        <section>
+                            <input id="acceptTerms" name="acceptTerms" type="checkbox" class="required"> <label for="acceptTerms">I agree with the Terms and Conditions.</label>
+                        </section>
+                    </div>
+                </form>
             </section>
             <section id="advanced-form">
                 <h2 class="page-header">Advanced Form Example</h2>
@@ -87,6 +127,34 @@
                 bodyTag: "section",
                 transitionEffect: "slideLeft",
                 autoFocus: true
+            });
+
+            $("#form-2").validate({
+                rules: {
+                    confirm: {
+                        equalTo: "#password"
+                    }
+                }
+            });
+
+            $("#wizard-2").steps({
+                headerTag: "h4",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    $("#form-2").validate().settings.ignore = ":disabled,:hidden";
+                    return $("#form-2").valid();
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                    $("#form-2").validate().settings.ignore = ":disabled";
+                    return $("#form-2").valid();
+                },
+                onFinished: function (event, currentIndex)
+                {
+                    alert("Submitted!");
+                }
             });
         });
     </script>

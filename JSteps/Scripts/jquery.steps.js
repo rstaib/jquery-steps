@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.0pre - 08/13/2013
+ * jQuery Steps v1.0.0pre - 08/14/2013
  * Copyright (c) 2013 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -427,7 +427,7 @@ function paginationClickHandler(event)
     event.preventDefault();
 
     var anchor = $(this),
-        wizard = anchor.parents(":has(.steps)"),
+        wizard = anchor.parent().parent().parent().parent(),
         options = getOptions(wizard),
         state = getState(wizard),
         href = anchor.attr("href");
@@ -793,13 +793,12 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
         case transitionEffect.slideLeft:
             var outerWidth = currentStep.outerWidth(true),
                 posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
-                posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth),
-                posLeft = 0; //currentStep.parent().position().left;
+                posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
             currentStep.animate({ left: posFadeOut }, effectSpeed, 
                 function () { $(this)._hideAria(); }).promise();
             newStep.css("left", posFadeIn + "px")._showAria()
-                .animate({ left: posLeft }, effectSpeed).promise();
+                .animate({ left: 0 }, effectSpeed).promise();
             break;
 
         default:
@@ -814,7 +813,7 @@ function stepClickHandler(event)
     event.preventDefault();
 
     var anchor = $(this),
-        wizard = anchor.parents(":has(.steps)"),
+        wizard = anchor.parent().parent().parent().parent(),
         options = getOptions(wizard),
         state = getState(wizard),
         oldIndex = state.currentIndex;
