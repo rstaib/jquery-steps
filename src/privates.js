@@ -635,7 +635,7 @@ function paginationClickHandler(event)
     event.preventDefault();
 
     var anchor = $(this),
-        wizard = anchor.parents(":has(.steps)"),
+        wizard = anchor.parent().parent().parent().parent(),
         options = getOptions(wizard),
         state = getState(wizard),
         href = anchor.attr("href");
@@ -1090,7 +1090,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
             state.transitionElement = newStep;
             currentStep[hide](effectSpeed, function ()
             {
-                var wizard = $(this)._hideAria().parents(":has(.steps)"),
+                var wizard = $(this)._hideAria().parent().parent().parent(),
                     state = getState(wizard);
 
                 if (state.transitionElement)
@@ -1135,7 +1135,7 @@ function stepClickHandler(event)
     event.preventDefault();
 
     var anchor = $(this),
-        wizard = anchor.parents(":has(.steps)"),
+        wizard = anchor.parent().parent().parent().parent(),
         options = getOptions(wizard),
         state = getState(wizard),
         oldIndex = state.currentIndex;
