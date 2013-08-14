@@ -776,7 +776,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
             state.transitionElement = newStep;
             currentStep[hide](effectSpeed, function ()
             {
-                var wizard = $(this)._hideAria().parents(":has(.steps)"),
+                var wizard = $(this)._hideAria().parent().parent().parent(),
                     state = getState(wizard);
 
                 if (state.transitionElement)

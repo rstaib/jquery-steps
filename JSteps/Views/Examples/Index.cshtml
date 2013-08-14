@@ -122,6 +122,17 @@
     <script>
         $(function ()
         {
+            $("#lefthand-nav").affix({
+                offset: {
+                    top: function ()
+                    {
+                        return $("#topbar").outerHeight() + $("#banner").outerHeight();
+                    }
+                }
+            });
+
+            prettyPrint();
+
             $("#wizard-1").steps({
                 headerTag: "h3",
                 bodyTag: "section",
