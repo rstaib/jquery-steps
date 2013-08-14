@@ -3,7 +3,7 @@
     public string GetTitle()
     {
         var title = "jQuery Steps";
-        if (!string.IsNullOrWhiteSpace(@ViewBag.Title))
+        if (!string.IsNullOrWhiteSpace(ViewBag.Title))
         {
             title = string.Concat(ViewBag.Title, " - ", title);
         }
@@ -67,6 +67,10 @@
         {
             @Styles.Render("~/Content/Extended")
         }
+        else if (ViewBag.Examples == true)
+        {
+            @Styles.Render("~/Content/Examples")
+        }
         else
         {
             @Styles.Render("~/Content/Base")
@@ -119,6 +123,10 @@
         @if (ViewBag.Prettify == true)
         {
             @Scripts.Render("~/Scripts/Extended")
+        }
+        else if (ViewBag.Examples == true)
+        {
+            @Scripts.Render("~/Scripts/Examples")
         }
         else
         {

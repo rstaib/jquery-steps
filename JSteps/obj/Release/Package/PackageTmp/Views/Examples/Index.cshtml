@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Examples";
+    ViewBag.Examples = true;
 }
 
 @section Header
@@ -12,5 +13,266 @@
 
 <div class="content">
     <div class="row-fluid">
+        <nav id="lefthand" class="span3">
+            <ul id="lefthand-nav" class="nav nav-list">
+                <li><a href="#basic">Basic Example</a></li>
+                <li><a href="#basic-form">Basic Form Example</a></li>
+                <li><a href="#advanced-form">Advanced Form Example</a></li>
+                <li><a href="#manipulation">Dynamic Manipulation Example</a></li>
+                <li><a href="#tabs">Tabs Example</a></li>
+                <li><a href="#vertical">Vertical Steps Example</a></li>
+                <li><a href="#async">Async Content Loading Example</a></li>
+                <li><a href="#embed">Embedded Content Example</a></li>
+            </ul>
+        </nav>
+        <div class="span9 main">
+            <section id="basic">
+                <h2 class="page-header">Basic Example</h2>
+                <div id="wizard-1">
+                    <h3>Keyboard</h3>
+                    <section>
+                        <p>Try the keyboard navigation by clicking arrow left or right!</p>
+                    </section>
+
+                    <h3>Effects</h3>
+                    <section>
+                        <p>ljlkjlk</p>
+                    </section>
+
+                    <h3>Pager</h3>
+                    <section>
+                        <p>jggj</p>
+                    </section>
+                </div>
+            </section>
+            <section id="basic-form">
+                <h2 class="page-header">Basic Form Example</h2>
+                <form id="form-2" action="#">
+                    <div id="wizard-2">
+                        <h3>Account</h3>
+                        <section>
+                            <label for="userName">User name *</label><br>
+                            <input id="userName" name="userName" type="text" class="required"><br>
+                            <label for="password">Password *</label><br>
+                            <input id="password" name="password" type="text" class="required"><br>
+                            <label for="confirm">Confirm Password *</label><br>
+                            <input id="confirm" name="confirm" type="text" class="required"><br>
+                            <p>(*) Mandatory</p>
+                        </section>
+
+                        <h3>Profile</h3>
+                        <section>
+                            <label for="name">First name *</label><br>
+                            <input id="name" name="name" type="text" class="required"><br>
+                            <label for="surname">Last name *</label><br>
+                            <input id="surname" name="surname" type="text" class="required"><br>
+                            <label for="email">Email *</label><br>
+                            <input id="email" name="email" type="text" class="required email"><br>
+                            <label for="address">Address</label><br>
+                            <input id="address" name="address" type="text"><br>
+                            <p>(*) Mandatory</p>
+                        </section>
+
+                        <h3>Hints</h3>
+                        <section>
+                            <ul>
+                                <li>Foo</li>
+                                <li>Bar</li>
+                                <li>Foobar</li>
+                            </ul>
+                        </section>
+
+                        <h3>Finish</h3>
+                        <section>
+                            <input id="acceptTerms" name="acceptTerms" type="checkbox" class="required"> <label for="acceptTerms">I agree with the Terms and Conditions.</label>
+                        </section>
+                    </div>
+                </form>
+            </section>
+            <section id="advanced-form">
+                <h2 class="page-header">Advanced Form Example</h2>
+                <form id="form-3" action="#">
+                    <h3>Account</h3>
+                    <fieldset>
+                        <legend>Account Information</legend>
+
+                        <label for="userName">User name *</label>
+                        <input id="userName-2" name="userName" type="text" class="required">
+                        <label for="password">Password *</label>
+                        <input id="password-2" name="password" type="text" class="required">
+                        <label for="confirm">Confirm Password *</label>
+                        <input id="confirm-2" name="confirm" type="text" class="required">
+                        <p>(*) Mandatory</p>
+                    </fieldset>
+
+                    <h3>Profile</h3>
+                    <fieldset>
+                        <legend>Profile Information</legend>
+
+                        <label for="name">First name *</label>
+                        <input id="name-2" name="name" type="text" class="required">
+                        <label for="surname">Last name *</label>
+                        <input id="surname-2" name="surname" type="text" class="required">
+                        <label for="email">Email *</label>
+                        <input id="email-2" name="email" type="text" class="required email">
+                        <label for="address">Address</label>
+                        <input id="address-2" name="address" type="text">
+                        <label for="age">Age (Hint page will show up if age is less than 18) *</label>
+                        <input id="age-2" name="age" type="text" class="required number">
+                        <p>(*) Mandatory</p>
+                    </fieldset>
+
+                    <h3>Warning</h3>
+                    <fieldset>
+                        <legend>You are to young</legend>
+
+                        <p>Please go away ;-)</p>
+                    </fieldset>
+
+                    <h3>Finish</h3>
+                    <fieldset>
+                        <legend>Terms and Conditions</legend>
+
+                        <input id="acceptTerms-2" name="acceptTerms" type="checkbox" class="required"> <label for="acceptTerms">I agree with the Terms and Conditions.</label>
+                    </fieldset>
+                </form>
+            </section>
+            <section id="manipulation">
+                <h2 class="page-header">Dynamic Manipulation Example</h2>
+
+            </section>
+            <section id="tabs">
+                <h2 class="page-header">Tabs Example</h2>
+
+            </section>
+            <section id="vertical">
+                <h2 class="page-header">Vertical Steps Example</h2>
+
+            </section>
+            <section id="async">
+                <h2 class="page-header">Async Content Loading Example</h2>
+
+            </section>
+            <section id="embed">
+                <h2 class="page-header">Embedded Content Example</h2>
+
+            </section>
+        </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        $(function ()
+        {
+            $("#lefthand-nav").affix({
+                offset: {
+                    top: function ()
+                    {
+                        return $("#topbar").outerHeight() + $("#banner").outerHeight();
+                    }
+                }
+            });
+
+            prettyPrint();
+
+            $("#wizard-1").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                autoFocus: true
+            });
+
+            $("#form-2").validate({
+                rules: {
+                    confirm: {
+                        equalTo: "#password"
+                    }
+                }
+            });
+
+            $("#wizard-2").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    $("#form-2").validate().settings.ignore = ":disabled,:hidden";
+                    return $("#form-2").valid();
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                    $("#form-2").validate().settings.ignore = ":disabled";
+                    return $("#form-2").valid();
+                },
+                onFinished: function (event, currentIndex)
+                {
+                    alert("Submitted!");
+                }
+            });
+
+            $("#form-3").steps({
+                headerTag: "h3",
+                bodyTag: "fieldset",
+                transitionEffect: "slideLeft",
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Allways allow previous action even if the current form is not valid!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid next action on "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age-2").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    // Needed in some cases if the user went back (clean up)
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $("#form-3 .body:eq(" + newIndex + ") label.error").remove();
+                        $("#form-3 .body:eq(" + newIndex + ") .error").removeClass("error");
+                    }
+
+                    $("#form-3").validate().settings.ignore = ":disabled,:hidden";
+                    return $("#form-3").valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Used to skip the "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age-2").val()) >= 18)
+                    {
+                        $("#form-3").steps("next");
+                    }
+
+                    // Used to skip the "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $("#form-3").steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                    $("#form-3").validate().settings.ignore = ":disabled";
+                    return $("#form-3").valid();
+                },
+                onFinished: function (event, currentIndex)
+                {
+                    alert("Submitted!");
+                }
+            });
+
+            $("#form-3").validate({
+                rules: {
+                    confirm: {
+                        equalTo: "#password-2"
+                    }
+                }
+            });
+        });
+    </script>
+}
