@@ -39,7 +39,8 @@
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-yuidoc": "~0.4.0",
     "grunt-contrib-clean": "~0.4.1",
-    "grunt-regex-replace": "~0.2.5"
+    "grunt-regex-replace": "~0.2.5",
+    "grunt-contrib-compress": "~0.5.2"
   },
   "readmeFilename": "README.md",
   "gitHead": "0d9f4f8b6a0c3d3b8a73eabf6a4b8cececd52f7a",

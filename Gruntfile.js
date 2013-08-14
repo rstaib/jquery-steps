@@ -51,6 +51,16 @@ module.exports = function (grunt)
                 ]
             }
         },
+        compress: {
+            main: {
+                options: {
+                    archive: '<%= pkg.folders.dist %>/jquery.steps-<%= pkg.version %>.zip'
+                },
+                files: [
+                  { flatten: true, expand: true, src: ['<%= pkg.folders.dist %>/*.js'], dest: '/' }
+                ]
+            }
+        },
         uglify: {
             options: {
                 preserveComments: 'some',
@@ -140,10 +150,11 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-regex-replace');
 
     grunt.registerTask('default', ['build']);
     grunt.registerTask('api', ['clean:api', 'yuidoc']);
     grunt.registerTask('build', ['clean:build', 'concat', 'regex-replace', 'jshint', 'qunit']);
-    grunt.registerTask('release', ['build', 'api', 'uglify']);
+    grunt.registerTask('release', ['build', 'api', 'uglify', 'compress']);
 };
