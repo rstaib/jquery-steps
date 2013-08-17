@@ -203,9 +203,6 @@
     <Content Include="Views\Examples\Index.cshtml" />
     <Content Include="Views\About\Index.cshtml" />
     <Content Include="Views\Donation\Success.cshtml" />
-    <Content Include="Scripts\jquery.steps.min.js.map">
-      <DependentUpon>jquery.steps.js</DependentUpon>
-    </Content>
     <Content Include="Views\Examples\EmbeddedContent.cshtml" />
   </ItemGroup>
   <PropertyGroup>

@@ -59,6 +59,12 @@
     width: 100%;
 }
 
+.wizard.vertical > .steps
+{
+    float: left;
+    width: 29%;
+}
+
 .wizard > .steps .number
 {
     font-size: 1.429em;
@@ -75,13 +81,19 @@
     float: left;
 }
 
+.wizard.vertical > .steps > ul > li
+{
+    float: none;
+    width: 100%;
+}
+
 .wizard > .steps a,
 .wizard > .steps a:hover,
 .wizard > .steps a:active
 {
     display: block;
     width: auto;
-    margin: 0 0.5em;
+    margin: 0 0.5em 0.5em;
     padding: 1em 1em;
     text-decoration: none;
 
@@ -137,6 +149,13 @@
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+}
+
+.wizard.vertical > .content
+{
+    float: left;
+    margin: 0 0 0.5em 0.5em;
+    width: 69%;
 }
 
 .wizard > .content > .body

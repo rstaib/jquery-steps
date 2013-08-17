@@ -326,3 +326,31 @@
 {
     display: list-item;
 }
+
+@media (max-width: 600px)
+{
+    .wizard > .steps > ul > li
+    {
+        width: 50%;
+    }
+
+    .wizard > .steps a,
+    .wizard > .steps a:hover,
+    .wizard > .steps a:active
+    {
+        margin-top: 0.5em;
+    }
+
+    .wizard > .content > .body
+    {
+        width: auto;
+    }
+}
+
+@media (max-width: 480px)
+{
+    .wizard > .steps > ul > li
+    {
+        width: 100%;
+    }
+}

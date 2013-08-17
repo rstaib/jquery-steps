@@ -51,25 +51,25 @@
                     <div id="wizard-2">
                         <h3>Account</h3>
                         <section>
-                            <label for="userName">User name *</label><br>
-                            <input id="userName" name="userName" type="text" class="required"><br>
-                            <label for="password">Password *</label><br>
-                            <input id="password" name="password" type="text" class="required"><br>
-                            <label for="confirm">Confirm Password *</label><br>
-                            <input id="confirm" name="confirm" type="text" class="required"><br>
+                            <label for="userName">User name *</label>
+                            <input id="userName" name="userName" type="text" class="required">
+                            <label for="password">Password *</label>
+                            <input id="password" name="password" type="text" class="required">
+                            <label for="confirm">Confirm Password *</label>
+                            <input id="confirm" name="confirm" type="text" class="required">
                             <p>(*) Mandatory</p>
                         </section>
 
                         <h3>Profile</h3>
                         <section>
-                            <label for="name">First name *</label><br>
-                            <input id="name" name="name" type="text" class="required"><br>
-                            <label for="surname">Last name *</label><br>
-                            <input id="surname" name="surname" type="text" class="required"><br>
-                            <label for="email">Email *</label><br>
-                            <input id="email" name="email" type="text" class="required email"><br>
-                            <label for="address">Address</label><br>
-                            <input id="address" name="address" type="text"><br>
+                            <label for="name">First name *</label>
+                            <input id="name" name="name" type="text" class="required">
+                            <label for="surname">Last name *</label>
+                            <input id="surname" name="surname" type="text" class="required">
+                            <label for="email">Email *</label>
+                            <input id="email" name="email" type="text" class="required email">
+                            <label for="address">Address</label>
+                            <input id="address" name="address" type="text">
                             <p>(*) Mandatory</p>
                         </section>
 
@@ -96,11 +96,11 @@
                     <fieldset>
                         <legend>Account Information</legend>
 
-                        <label for="userName">User name *</label>
+                        <label for="userName-2">User name *</label>
                         <input id="userName-2" name="userName" type="text" class="required">
-                        <label for="password">Password *</label>
+                        <label for="password-2">Password *</label>
                         <input id="password-2" name="password" type="text" class="required">
-                        <label for="confirm">Confirm Password *</label>
+                        <label for="confirm-2">Confirm Password *</label>
                         <input id="confirm-2" name="confirm" type="text" class="required">
                         <p>(*) Mandatory</p>
                     </fieldset>
@@ -109,15 +109,15 @@
                     <fieldset>
                         <legend>Profile Information</legend>
 
-                        <label for="name">First name *</label>
+                        <label for="name-2">First name *</label>
                         <input id="name-2" name="name" type="text" class="required">
-                        <label for="surname">Last name *</label>
+                        <label for="surname-2">Last name *</label>
                         <input id="surname-2" name="surname" type="text" class="required">
-                        <label for="email">Email *</label>
+                        <label for="email-2">Email *</label>
                         <input id="email-2" name="email" type="text" class="required email">
-                        <label for="address">Address</label>
+                        <label for="address-2">Address</label>
                         <input id="address-2" name="address" type="text">
-                        <label for="age">Age (Hint page will show up if age is less than 18) *</label>
+                        <label for="age-2">Age (Hint page will show up if age is less than 18) *</label>
                         <input id="age-2" name="age" type="text" class="required number">
                         <p>(*) Mandatory</p>
                     </fieldset>
@@ -133,17 +133,98 @@
                     <fieldset>
                         <legend>Terms and Conditions</legend>
 
-                        <input id="acceptTerms-2" name="acceptTerms" type="checkbox" class="required"> <label for="acceptTerms">I agree with the Terms and Conditions.</label>
+                        <input id="acceptTerms-2" name="acceptTerms" type="checkbox" class="required"> <label for="acceptTerms-2">I agree with the Terms and Conditions.</label>
                     </fieldset>
                 </form>
             </section>
             <section id="manipulation">
                 <h2 class="page-header">Dynamic Manipulation Example</h2>
+                <div id="wizard-4">
+                    <h3>Add Step</h3>
+                    <section>
+                        <p>
+                            <label for="title-3">HTML Title *</label><br />
+                            <input id="title-3" type="text"><br />
+                            <label for="text-3">HTML Content *</label><br />
+                            <textarea id="text-3" rows="5"></textarea>
+                        </p>
+                        <p><a href="javascript:void(0);" onclick="$('#wizard-4').steps('add', { title: $('#title-3').val(), content: $('#text-3').val() });">Add</a></p>
+                        <p>(*) Mandatory</p>
+                    </section>
+
+                    <h3>Insert Step</h3>
+                    <section>
+                        <p>
+                            <label for="position-3">Position (zero-based) *</label><br />
+                            <input id="position-3" type="text"><br />
+                            <label for="title2-3">HTML Title *</label><br />
+                            <input id="title2-3" type="text"><br />
+                            <label for="text2-3">HTML Content *</label><br />
+                            <textarea id="text2-3" rows="5"></textarea>
+                        </p>
+                        <p><a href="javascript:void(0);" onclick="$('#wizard-4').steps('insert', Number($('#position-3').val()), { title: $('#title2-3').val(), content: $('#text2-3').val() });">Insert</a></p>
+                        <p>(*) Mandatory</p>
+                    </section>
+
+                    <h3>Remove Step</h3>
+                    <section>
+                        <p>
+                            <label for="position2-3">Position (zero-based) *</label><br />
+                            <input id="position2-3" type="text">
+                        </p>
+                        <p><a href="javascript:void(0);" onclick="$('#wizard-4').steps('remove', Number($('#position2-3').val()));">Remove</a></p>
+                        <p>(*) Mandatory</p>
+                    </section>
+                </div>
 
             </section>
             <section id="tabs">
                 <h2 class="page-header">Tabs Example</h2>
+                <div id="wizard-5">
+                    <h3>Keyboard</h3>
+                    <section>
+                        <p>What is needed to transform it to a tabs component? Not much. Just override some properties and done.</p>
+<pre class="prettyprint linenums">$("#wizard").steps({
+    // Disables the finish button (required if pagination is enabled)
+    enableFinishButton: false, 
+    // Disables the next and previous buttons (optional)
+    enablePagination: false, 
+    // Enables all steps from the begining
+    enableAllSteps: true, 
+    // Removes the number from the title
+    titleTemplate: "#title#" 
+});</pre>
+                    </section>
 
+                    <h3>Other demos</h3>
+                    <section>
+                        <ul>
+                            <li><a href="basic.html">Basic Example</a></li>
+                            <li>Async Example</li>
+                            <li><a href="iframe.html">Embedded Iframe Example</a></li>
+                            <li><a href="basic-form.html">Basic Form Example</a></li>
+                            <li><a href="advanced-form.html">Advanced Form Example</a></li>
+                            <li><a href="add-remove.html">Dynamic Manipulation Example</a></li>
+                            <li>Pagination Example</li>
+                            <li>Multiple Wizard Example</li>
+                        </ul>
+                    </section>
+
+                    <h3>Documentation</h3>
+                    <section>
+                        <p>For more information <a href="https://github.com/rstaib/jquery-steps/wiki">check out the documentation</a>!</p>
+                    </section>
+
+                    <h3>Download</h3>
+                    <section>
+                        <p>You could easily download the latest version direct from here!</p>
+                        <ul>
+                            <li><a href="https://github.com/rstaib/jquery-steps/blob/master/README.md">Readme</a></li>
+                            <li><a href="downloads/jquery.steps.min.js">Minified</a></li>
+                            <li><a href="downloads/jquery.steps.js">Uncompressed</a></li>
+                        </ul>
+                    </section>
+                </div>
             </section>
             <section id="vertical">
                 <h2 class="page-header">Vertical Steps Example</h2>
@@ -155,7 +236,36 @@
             </section>
             <section id="embed">
                 <h2 class="page-header">Embedded Content Example</h2>
+                <div id="wizard-8">
+                    <h3>Iframe Step</h3>
+                    <section data-mode="iframe" data-url="@Url.Action("EmbeddedContent")">
+                    </section>
 
+                    <h3>Second Step</h3>
+                    <section>
+                        <p>Donec mi sapien, hendrerit nec egestas a, rutrum vitae dolor. Nullam venenatis diam ac ligula elementum pellentesque. 
+                            In lobortis sollicitudin felis non eleifend. Morbi tristique tellus est, sed tempor elit. Morbi varius, nulla quis condimentum 
+                            dictum, nisi elit condimentum magna, nec venenatis urna quam in nisi. Integer hendrerit sapien a diam adipiscing consectetur. 
+                            In euismod augue ullamcorper leo dignissim quis elementum arcu porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                            Vestibulum leo velit, blandit ac tempor nec, ultrices id diam. Donec metus lacus, rhoncus sagittis iaculis nec, malesuada a diam. 
+                            Donec non pulvinar urna. Aliquam id velit lacus.</p>
+                    </section>
+
+                    <h3>Third Step</h3>
+                    <section>
+                        <p>Morbi ornare tellus at elit ultrices id dignissim lorem elementum. Sed eget nisl at justo condimentum dapibus. Fusce eros justo, 
+                            pellentesque non euismod ac, rutrum sed quam. Ut non mi tortor. Vestibulum eleifend varius ullamcorper. Aliquam erat volutpat. 
+                            Donec diam massa, porta vel dictum sit amet, iaculis ac massa. Sed elementum dui commodo lectus sollicitudin in auctor mauris 
+                            venenatis.</p>
+                    </section>
+
+                    <h3>Forth Step</h3>
+                    <section>
+                        <p>Quisque at sem turpis, id sagittis diam. Suspendisse malesuada eros posuere mauris vehicula vulputate. Aliquam sed sem tortor. 
+                            Quisque sed felis ut mauris feugiat iaculis nec ac lectus. Sed consequat vestibulum purus, imperdiet varius est pellentesque vitae. 
+                            Suspendisse consequat cursus eros, vitae tempus enim euismod non. Nullam ut commodo tortor.</p>
+                    </section>
+                </div>
             </section>
         </div>
     </div>
@@ -177,6 +287,19 @@
 
             prettyPrint();
 
+            function errorPlacement(error, element)
+            {
+                element.popover({
+                    content: error.text(),
+                    placement: function ()
+                    {
+                        return (element.parents(".content").width() >= 550) ? "right" : "top";
+                    },
+                    trigger: "focus hover"
+                });
+                $(".popover-content", element.next(".popover")).empty().prepend(error);
+            }
+
             $("#wizard-1").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -185,6 +308,7 @@
             });
 
             $("#form-2").validate({
+                errorPlacement: errorPlacement,
                 rules: {
                     confirm: {
                         equalTo: "#password"
@@ -267,11 +391,37 @@
             });
 
             $("#form-3").validate({
+                errorPlacement: errorPlacement,
                 rules: {
                     confirm: {
                         equalTo: "#password-2"
                     }
                 }
+            });
+
+            $("#wizard-4").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                enableAllSteps: true,
+                enablePagination: false
+            });
+
+            $("#wizard-5").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                autoFocus: true,
+                enableFinishButton: false,
+                enablePagination: false,
+                enableAllSteps: true,
+                titleTemplate: "#title#",
+                cssClass: "tabcontrol"
+            });
+
+            $("#wizard-8").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "fade"
             });
         });
     </script>

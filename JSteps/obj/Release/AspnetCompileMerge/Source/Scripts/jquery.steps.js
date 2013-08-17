@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.0pre - 08/14/2013
+ * jQuery Steps v1.0.0pre - 08/16/2013
  * Copyright (c) 2013 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -776,7 +776,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
             state.transitionElement = newStep;
             currentStep[hide](effectSpeed, function ()
             {
-                var wizard = $(this)._hideAria().parent().parent().parent(),
+                var wizard = $(this)._hideAria().parent().parent(),
                     state = getState(wizard);
 
                 if (state.transitionElement)
