@@ -61,8 +61,9 @@
 
 .wizard.vertical > .steps
 {
+    display: inline;
     float: left;
-    width: 29%;
+    width: 30%;
 }
 
 .wizard > .steps .number
@@ -153,18 +154,19 @@
 
 .wizard.vertical > .content
 {
+    display: inline;
     float: left;
-    margin: 0 0 0.5em 0.5em;
-    width: 69%;
+    margin: 0 0 0.5em 2.5%;
+    width: 67.5%;
 }
 
 .wizard > .content > .body
 {
     float: left;
     position: absolute;
-    width: 100%;
-    height: 100%;
-    padding: 1em;
+    width: 95%;
+    height: 95%;
+    padding: 2.5%;
 }
 
 .wizard > .content > .body ul
@@ -210,6 +212,12 @@
     display: block;
     text-align: right;
     width: 100%;
+}
+
+.wizard.vertical > .actions
+{
+    display: inline;
+    float: right;
 }
 
 .wizard > .actions > ul
@@ -360,8 +368,19 @@
         margin-top: 0.5em;
     }
 
-    .wizard > .content > .body
+    .wizard.vertical > .steps,
+    .wizard.vertical > .actions
     {
+        display: block;
+        float: none;
+        width: 100%;
+    }
+
+    .wizard.vertical > .content
+    {
+        display: block;
+        float: none;
+        margin: 0 0.5em 0.5em;
         width: auto;
     }
 }

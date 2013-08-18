@@ -36,12 +36,12 @@
 
                     <h3>Effects</h3>
                     <section>
-                        <p>ljlkjlk</p>
+                        <p>Wonderful transition effects.</p>
                     </section>
 
                     <h3>Pager</h3>
                     <section>
-                        <p>jggj</p>
+                        <p>The next and previous buttons help you to navigate through your content.</p>
                     </section>
                 </div>
             </section>
@@ -184,7 +184,8 @@
                     <h3>Keyboard</h3>
                     <section>
                         <p>What is needed to transform it to a tabs component? Not much. Just override some properties and done.</p>
-<pre class="prettyprint linenums">$("#wizard").steps({
+<pre class="prettyprint linenums">
+$("#wizard").steps({
     // Disables the finish button (required if pagination is enabled)
     enableFinishButton: false, 
     // Disables the next and previous buttons (optional)
@@ -193,7 +194,8 @@
     enableAllSteps: true, 
     // Removes the number from the title
     titleTemplate: "#title#" 
-});</pre>
+});
+</pre>
                     </section>
 
                     <h3>Other demos</h3>
@@ -228,7 +230,22 @@
             </section>
             <section id="vertical">
                 <h2 class="page-header">Vertical Steps Example</h2>
+                <div id="wizard-6">
+                    <h3>Keyboard</h3>
+                    <section>
+                        <p>Try the keyboard navigation by clicking arrow left or right!</p>
+                    </section>
 
+                    <h3>Effects</h3>
+                    <section>
+                        <p>Wonderful transition effects.</p>
+                    </section>
+
+                    <h3>Pager</h3>
+                    <section>
+                        <p>The next and previous buttons help you to navigate through your content.</p>
+                    </section>
+                </div>
             </section>
             <section id="async">
                 <h2 class="page-header">Async Content Loading Example</h2>
@@ -410,12 +427,19 @@
                 headerTag: "h3",
                 bodyTag: "section",
                 transitionEffect: "slideLeft",
-                autoFocus: true,
                 enableFinishButton: false,
                 enablePagination: false,
                 enableAllSteps: true,
                 titleTemplate: "#title#",
                 cssClass: "tabcontrol"
+            });
+
+            $("#wizard-6").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                stepsOrientation: "vertical"
+
             });
 
             $("#wizard-8").steps({
