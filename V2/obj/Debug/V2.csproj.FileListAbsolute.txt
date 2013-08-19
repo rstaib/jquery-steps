@@ -1,5 +1,0 @@
-D:\GitHub\jquery-steps\V2\bin\V2.dll
-D:\GitHub\jquery-steps\V2\bin\V2.pdb
-D:\GitHub\jquery-steps\V2\obj\Debug\V2.csprojResolveAssemblyReference.cache
-D:\GitHub\jquery-steps\V2\obj\Debug\V2.dll
-D:\GitHub\jquery-steps\V2\obj\Debug\V2.pdb

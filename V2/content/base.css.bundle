@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<bundle minify="true" runOnBuild="true" output="base.css">
-  <!--The order of the <file> elements determines the order of them when bundled.-->
-  <file>/content/viewport-fix-mobile-ie10.css</file>
-  <file>/content/bootstrap.min.css</file>
-  <file>/content/site.css</file>
-</bundle>
