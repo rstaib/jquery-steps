@@ -19,7 +19,7 @@ namespace JSteps.Controllers
         {
             await Task.Delay(2000);
 
-            return Json(new { title = "Async", content = "Async Result " + DateTime.UtcNow.ToString() });
+            return Content("<p>To test async loading again press \"Next\" and then go back to the first step.</p><p>I deactivated content cache for this demo so that you can try it again and again.</p>");
         }
 
         public ActionResult EmbeddedContent()

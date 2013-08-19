@@ -117,7 +117,7 @@
                         <input id="email-2" name="email" type="text" class="required email">
                         <label for="address-2">Address</label>
                         <input id="address-2" name="address" type="text">
-                        <label for="age-2">Age (Hint page will show up if age is less than 18) *</label>
+                        <label for="age-2">Age (The warning step will show up if age is less than 18) *</label>
                         <input id="age-2" name="age" type="text" class="required number">
                         <p>(*) Mandatory</p>
                     </fieldset>
@@ -249,7 +249,36 @@ $("#wizard").steps({
             </section>
             <section id="async">
                 <h2 class="page-header">Async Content Loading Example</h2>
+                <div id="wizard-7">
+                    <h3>Async Step</h3>
+                    <section data-mode="async" data-url="@Url.Action("AsyncContent")">
+                    </section>
 
+                    <h3>Second Step</h3>
+                    <section>
+                        <p>Donec mi sapien, hendrerit nec egestas a, rutrum vitae dolor. Nullam venenatis diam ac ligula elementum pellentesque. 
+                            In lobortis sollicitudin felis non eleifend. Morbi tristique tellus est, sed tempor elit. Morbi varius, nulla quis condimentum 
+                            dictum, nisi elit condimentum magna, nec venenatis urna quam in nisi. Integer hendrerit sapien a diam adipiscing consectetur. 
+                            In euismod augue ullamcorper leo dignissim quis elementum arcu porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                            Vestibulum leo velit, blandit ac tempor nec, ultrices id diam. Donec metus lacus, rhoncus sagittis iaculis nec, malesuada a diam. 
+                            Donec non pulvinar urna. Aliquam id velit lacus.</p>
+                    </section>
+
+                    <h3>Third Step</h3>
+                    <section>
+                        <p>Morbi ornare tellus at elit ultrices id dignissim lorem elementum. Sed eget nisl at justo condimentum dapibus. Fusce eros justo, 
+                            pellentesque non euismod ac, rutrum sed quam. Ut non mi tortor. Vestibulum eleifend varius ullamcorper. Aliquam erat volutpat. 
+                            Donec diam massa, porta vel dictum sit amet, iaculis ac massa. Sed elementum dui commodo lectus sollicitudin in auctor mauris 
+                            venenatis.</p>
+                    </section>
+
+                    <h3>Forth Step</h3>
+                    <section>
+                        <p>Quisque at sem turpis, id sagittis diam. Suspendisse malesuada eros posuere mauris vehicula vulputate. Aliquam sed sem tortor. 
+                            Quisque sed felis ut mauris feugiat iaculis nec ac lectus. Sed consequat vestibulum purus, imperdiet varius est pellentesque vitae. 
+                            Suspendisse consequat cursus eros, vitae tempus enim euismod non. Nullam ut commodo tortor.</p>
+                    </section>
+                </div>
             </section>
             <section id="embed">
                 <h2 class="page-header">Embedded Content Example</h2>
@@ -306,15 +335,17 @@ $("#wizard").steps({
 
             function errorPlacement(error, element)
             {
-                element.popover({
-                    content: error.text(),
-                    placement: function ()
-                    {
-                        return (element.parents(".content").width() >= 550) ? "right" : "top";
-                    },
-                    trigger: "focus hover"
-                });
-                $(".popover-content", element.next(".popover")).empty().prepend(error);
+                element.before(error);
+
+                //element.popover({
+                //    content: error.text(),
+                //    placement: function ()
+                //    {
+                //        return (element.parents(".content").width() >= 550) ? "right" : "top";
+                //    },
+                //    trigger: "focus hover"
+                //});
+                //$(".popover-content", element.next(".popover")).empty().prepend(error);
             }
 
             $("#wizard-1").steps({
@@ -405,9 +436,7 @@ $("#wizard").steps({
                 {
                     alert("Submitted!");
                 }
-            });
-
-            $("#form-3").validate({
+            }).validate({
                 errorPlacement: errorPlacement,
                 rules: {
                     confirm: {
@@ -440,6 +469,12 @@ $("#wizard").steps({
                 transitionEffect: "slideLeft",
                 stepsOrientation: "vertical"
 
+            });
+
+            $("#wizard-7").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slide"
             });
 
             $("#wizard-8").steps({

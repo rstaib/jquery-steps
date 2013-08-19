@@ -11,196 +11,196 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/Antlr3.Runtime.dll">
-      <publishTime>08/17/2013 17:36:59</publishTime>
+      <publishTime>08/12/2013 09:58:21</publishTime>
     </File>
     <File Include="bin/App_global.asax.compiled">
-      <publishTime>08/18/2013 13:45:32</publishTime>
+      <publishTime>08/19/2013 11:29:17</publishTime>
     </File>
     <File Include="bin/App_global.asax.dll">
-      <publishTime>08/18/2013 13:45:32</publishTime>
+      <publishTime>08/19/2013 11:29:17</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/JSteps.dll">
-      <publishTime>08/18/2013 13:24:21</publishTime>
+      <publishTime>08/19/2013 10:43:33</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
-      <publishTime>08/17/2013 17:36:59</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Mvc.FixedDisplayModes.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
-      <publishTime>08/17/2013 17:36:59</publishTime>
+      <publishTime>08/12/2013 09:58:21</publishTime>
     </File>
     <File Include="bin/System.Net.Http.dll">
-      <publishTime>08/17/2013 17:36:59</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Net.Http.WebRequest.dll">
-      <publishTime>08/17/2013 17:36:59</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Web.Http.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Web.Http.WebHost.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Web.Mvc.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Web.Optimization.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Web.Providers.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Web.Razor.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.Deployment.dll">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.dll">
-      <publishTime>08/17/2013 17:36:59</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.Razor.dll">
-      <publishTime>08/17/2013 17:36:59</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
-      <publishTime>08/17/2013 17:36:59</publishTime>
+      <publishTime>08/12/2013 09:58:21</publishTime>
     </File>
     <File Include="Content/bootstrap.css">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/bootstrap.min.css">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/custom.css">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Content/examples.css">
-      <publishTime>08/18/2013 13:43:27</publishTime>
+      <publishTime>08/19/2013 11:27:53</publishTime>
     </File>
     <File Include="Content/images/bg.jpg">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/images/crossbrowser.png">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/images/glyphicons-halflings-white.png">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/images/glyphicons-halflings.png">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/images/html5.png">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/images/lightweight.png">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/images/loading.gif">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/images/me.png">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Content/images/social.png">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Content/prettify.css">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 13:19:17</publishTime>
     </File>
     <File Include="Content/viewport-fix-mobile-ie10.css">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="github-btn.html">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:18</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/12/2013 09:58:20</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
-      <publishTime>08/18/2013 13:45:30</publishTime>
+      <publishTime>08/19/2013 11:29:15</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Scripts/bootstrap.min.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Scripts/html5shiv.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Scripts/jquery-1.10.2.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Scripts/jquery-1.10.2.min.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Scripts/jquery.steps.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Scripts/jquery.steps.min.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Scripts/jquery.steps.min.js.map">
       <publishTime>08/14/2013 16:01:12</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.min.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Scripts/prettify.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 13:19:33</publishTime>
     </File>
     <File Include="Scripts/social.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Scripts/tracking.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Scripts/viewport-fix-mobile-ie10.js">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Views/About/Index.cshtml">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Views/Donation/Success.cshtml">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Views/Examples/EmbeddedContent.cshtml">
-      <publishTime>08/17/2013 17:36:56</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Views/Examples/Index.cshtml">
-      <publishTime>08/17/2013 17:36:56</publishTime>
+      <publishTime>08/19/2013 11:08:02</publishTime>
     </File>
     <File Include="Views/GettingStarted/Index.cshtml">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/19/2013 09:07:52</publishTime>
     </File>
     <File Include="Views/Web.config">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Views/_ViewStart.cshtml">
-      <publishTime>08/17/2013 17:36:57</publishTime>
+      <publishTime>08/12/2013 09:58:17</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>08/17/2013 17:36:58</publishTime>
+      <publishTime>08/19/2013 10:43:49</publishTime>
     </File>
   </ItemGroup>
 </Project>
