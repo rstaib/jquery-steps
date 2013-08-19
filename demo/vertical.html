@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="css/jquery.steps.css">
         <script src="../lib/modernizr-2.6.2.min.js"></script>
         <script src="../lib/jquery-1.9.1.min.js"></script>
+        <script src="../lib/jquery.cookie-1.3.1.js"></script>
         <script src="../build/jquery.steps.js"></script>
     </head>
     <body>
@@ -43,17 +44,10 @@
                 {
                     $("#wizard").steps({
                         headerTag: "h2",
-                        bodyTag: "section"
+                        bodyTag: "section",
+                        transitionEffect: "slideLeft",
+                        stepsOrientation: "vertical"
                     });
-                    $("#wizard").steps("add", { 
-                        title: "Fifth Step", 
-                        content: "New!" 
-                    });
-                    $("#wizard").steps("insert", 1, { 
-                        title: "Second Step", 
-                        content: "New!" 
-                    });
-                    $("#wizard").steps("remove", 2);
                 });
             </script>
 

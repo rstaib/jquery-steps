@@ -3,50 +3,73 @@ module.exports = function (grunt)
 {
     "use strict";
 
+    /* Hint: Using grunt-strip-code to remove comments from the release file */
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
+            options: {
+                separator: '\r\n\r\n',
+                banner: '/*! <%= "\\r\\n * " + pkg.title %> v<%= pkg.version %> - <%= grunt.template.today("mm/dd/yyyy") + "\\r\\n" %>' +
+                    ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> <%= (pkg.homepage ? "(" + pkg.homepage + ")" : "") + "\\r\\n" %>' +
+                    ' * Licensed under <%= pkg.licenses[0].type + " " + pkg.licenses[0].url + "\\r\\n */\\r\\n" %>' + 
+                    ';(function ($, undefined)\r\n{\r\n',
+                footer: '\r\n})(jQuery);'
+            },
             dist: {
                 files: {
-                    'dist/jquery.steps.js': ['jquery.steps.js']
+                    '<%= pkg.folders.dist %>/jquery.steps.js': [
+                        '<%= pkg.folders.src %>/privates.js',
+                        '<%= pkg.folders.src %>/publics.js',
+                        '<%= pkg.folders.src %>/enums.js',
+                        '<%= pkg.folders.src %>/model.js',
+                        '<%= pkg.folders.src %>/defaults.js',
+                        '<%= pkg.folders.src %>/helper.js'
+                    ]
                 }
             }
         },
-        uglify: {
-            options: {
-                preserveComments: false,
-                banner: '/*! <%= "\\r\\n * " + pkg.name %> v<%= pkg.version %> - <%= grunt.template.today("mm/dd/yyyy") + "\\r\\n" %>' +
-                    ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> <%= (pkg.homepage ? "(" + pkg.homepage + ")" : "") + "\\r\\n" %>' +
-                    ' * Licensed under <%= pkg.licenses[0].type + " " + pkg.licenses[0].url + "\\r\\n */\\r\\n" %>'
-            },
+        "regex-replace": {
             all: {
-                files: {
-                    'dist/jquery.steps.min.js': ['dist/jquery.steps.js']
-                }
+                src: ['<%= pkg.folders.dist %>/jquery.steps.js'],
+                actions: [
+                    {
+                        name: 'multiLineComments',
+                        search: /\/\*[^!](.|\r|\n)*?\*\/\r\n?/gim,
+                        replace: ''
+                    },
+                    {
+                        name: 'singleLineComment',
+                        search: /^\s*?[^http:\/\/]\/\/.*\r\n?/gi,
+                        replace: ''
+                    },
+                    {
+                        name: 'singleLineCommentSameLine',
+                        search: /[^http:\/\/]\/\/.*/gi,
+                        replace: ''
+                    }
+                ]
             }
         },
         compress: {
             main: {
                 options: {
-                    archive: 'dist/<%= pkg.name %>-<%= pkg.version %>.zip'
+                    archive: '<%= pkg.folders.dist %>/jquery.steps-<%= pkg.version %>.zip'
                 },
                 files: [
-                    {
-                        src: [
-                            'README.md',
-                            /*'changelog.txt',*/
-                            'docs/**/*.*',
-                            'demo/**/*.*',
-                            'lib/*.*',
-                            'test/**/*.*'
-                        ]
-                    },
-                    {
-                        flatten: true,
-                        src: ['dist/*.js'],
-                        filter: 'isFile'
-                    }
+                  { flatten: true, expand: true, src: ['<%= pkg.folders.dist %>/*.js'], dest: '/' }
                 ]
+            }
+        },
+        uglify: {
+            options: {
+                preserveComments: 'some',
+                report: 'gzip'
+            },
+            all: {
+                files: {
+                    '<%= pkg.folders.dist %>/jquery.steps.min.js': ['<%= pkg.folders.dist %>/jquery.steps.js']
+                }
             }
         },
         qunit: {
@@ -70,9 +93,7 @@ module.exports = function (grunt)
                     console: true
                 }
             },
-            files: [
-                'jquery.steps.js'
-            ],
+            files: ['<%= pkg.folders.dist %>/jquery.steps.js'],
             test: {
                 options: {
                     globals: {
@@ -113,11 +134,14 @@ module.exports = function (grunt)
                 options: {
                     exclude: 'qunit-1.11.0.js',
                     paths: '.',
-                    outdir: 'docs/'
+                    outdir: '<%= pkg.folders.docs %>/'
                 }
             }
         },
-        clean: ["dist", "docs"]
+        clean: {
+            api: ["<%= pkg.folders.docs %>"],
+            build: ["<%= pkg.folders.dist %>"]
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -125,10 +149,12 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
-    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-regex-replace');
 
-    grunt.registerTask('default', ['jshint', 'qunit']);
-    grunt.registerTask('api', ['clean', 'yuidoc']);
-    grunt.registerTask('release', ['default', 'api', 'concat', 'uglify', 'compress']);
+    grunt.registerTask('default', ['build']);
+    grunt.registerTask('api', ['clean:api', 'yuidoc']);
+    grunt.registerTask('build', ['clean:build', 'concat', 'regex-replace', 'jshint', 'qunit']);
+    grunt.registerTask('release', ['build', 'api', 'uglify', 'compress']);
 };
