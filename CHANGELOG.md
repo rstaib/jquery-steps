@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0pre
+## 1.0.0
 
 - Nested tags which have the same node name as the body tag cause an exception. Closes issue [#4](https://github.com/rstaib/jquery-steps/issues/4)
 - Separated data and UI changes from each other and improved code for testability
