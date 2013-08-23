@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.0 - 08/19/2013
+ * jQuery Steps v1.0.1 - 08/23/2013
  * Copyright (c) 2013 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -376,7 +376,7 @@ function loadAsyncContent(wizard, options, state)
             {
                 case contentMode.iframe:
                     wizard.find(".content > .body").eq(state.currentIndex).empty()
-                        .html("<iframe src=\"" + currentStep.contentUrl + "\" />")
+                        .html("<iframe src=\"" + currentStep.contentUrl + "\" frameborder=\"0\" scrolling=\"no\" />")
                         .data("loaded", "1");
                     break;
 
