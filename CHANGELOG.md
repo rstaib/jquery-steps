@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Fixed an iframe border and scrolling issue for older browsers (IE8 and lower)
+
 ## 1.0.0
 
 - Nested tags which have the same node name as the body tag cause an exception. Closes issue [#4](https://github.com/rstaib/jquery-steps/issues/4)

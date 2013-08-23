@@ -14,7 +14,7 @@
         "tabs",
         "steps"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": {
         "name": "Rafael Staib",
         "email": "me@rafaelstaib.com",
@@ -27,7 +27,7 @@
     "homepage": "http://www.jquery-steps.com",
     "docs": "https://github.com/rstaib/jquery-steps/wiki",
     "download": "http://www.jquery-steps.com",
-    "demo": "http://www.rafaelstaib.com/jquery-steps/basic.html",
+    "demo": "http://www.jquery-steps.com/Examples",
     "dependencies": {
         "jquery": ">=1.4.4"
     }

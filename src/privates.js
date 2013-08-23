@@ -564,7 +564,7 @@ function loadAsyncContent(wizard, options, state)
             {
                 case contentMode.iframe:
                     wizard.find(".content > .body").eq(state.currentIndex).empty()
-                        .html("<iframe src=\"" + currentStep.contentUrl + "\" />")
+                        .html("<iframe src=\"" + currentStep.contentUrl + "\" frameborder=\"0\" scrolling=\"no\" />")
                         .data("loaded", "1");
                     break;
 
