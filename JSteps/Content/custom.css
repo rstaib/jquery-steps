@@ -229,7 +229,7 @@ ol > li, ul > li
             .sitewrapper > .content #lefthand-nav.affix
             {
                 top: 7.143em;
-                width: 270px;
+                width: 220px;
             }
 
                 .sitewrapper > .content #lefthand-nav > li > a
@@ -347,6 +347,7 @@ body > footer
     .navbar > .navbar-inner
     {
         background: none #2184be;
+        filter: none;
         border: 0 none;
         min-height: 4.286em;
 
@@ -423,6 +424,14 @@ body > footer
                         font-weight: 700;
                     }
 
+@media (min-width: 1200px)
+{
+    .sitewrapper > .content #lefthand-nav.affix
+    {
+        width: 270px;
+    }
+}
+
 @media (max-width: 1199px)
 {
     .sitewrapper > header > p
@@ -432,7 +441,6 @@ body > footer
 
         .sitewrapper > .content #lefthand-nav.affix
         {
-            top: 7.143em;
             width: 220px;
         }
 }

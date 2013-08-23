@@ -88,7 +88,7 @@
                     @Html.ActionLink("jQuery Steps", "Index", "Home")
                 </h1>
                 
-                <nav>
+                <nav role="navigation">
                     <ul>
                         <li class="@GetActiveClass("GettingStarted")">@Html.ActionLink("Getting Started", "Index", "GettingStarted")</li>
                         <li class="@GetActiveClass("Examples")">@Html.ActionLink("Examples", "Index", "Examples")</li>
@@ -114,7 +114,7 @@
             @RenderBody()
         </div>
 
-        <footer id="footer">
+        <footer id="footer" role="contentinfo">
             <p>&copy; Copyright @DateTime.Now.Year, <a href="http://www.rafaelstaib.com">Rafael Staib</a></p>
             <ul class="links">
                 <li><a href="https://github.com/rstaib/jquery-steps/issues">Issues</a></li>

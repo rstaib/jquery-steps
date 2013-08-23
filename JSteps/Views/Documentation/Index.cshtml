@@ -19,9 +19,10 @@
 
 <div class="content">
     <div class="row-fluid">
-        <nav id="lefthand" class="span3">
+        <nav id="lefthand" class="span3" role="navigation">
             <ul id="lefthand-nav" class="nav nav-list">
                 <li><a href="#init">Initialization</a></li>
+                <li><a href="#css">CSS</a></li>
                 <li><a href="#options">Options</a></li>
                 <li><a href="#methods">Methods</a></li>
                 <li><a href="#requirements">Requirements</a></li>
@@ -29,7 +30,7 @@
                 <li><a href="#integration">Integration</a></li>
             </ul>
         </nav>
-        <div class="span9 main">
+        <div class="span9 main" role="main">
             <section id="init">
                 <h2 class="page-header">Initialization</h2>
                 <p class="lead">In this section you will learn how to intialize jQuery Steps and what will happen if you do that.</p>
@@ -86,10 +87,148 @@
 
                 <p class="alert alert-info"><strong>Info:</strong> </p>
             </section>
+            <section id="css">
+                <h2 class="page-header">CSS</h2>
+                <p class="lead">In this section you will learn about styling and the capabilities you have.</p>
+                <h3>Transformation</h3>
+                <p>With transformation is meant the transition of the initial <abbr title="Hypertext Markup Language">HTML</abbr> code 
+                    to the transformed <abbr title="Hypertext Markup Language">HTML</abbr> code.
+                    So our initial code looks like that.</p>
+<pre class="prettyprint linenums">
+&lt;div id="wizard"&gt;
+    &lt;h1&gt;First Step&lt;/h1&gt;
+    &lt;div&gt;First Content&lt;/div&gt;
+    &lt;h1&gt;Second Step&lt;/h1&gt;
+    &lt;div&gt;Second Content&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+                <p>And after the transformation our resulting code looks like this.</p>
+<pre class="prettyprint linenums">
+&lt;div class="wizard clearfix" id="wizard" role="application"&gt;
+    &lt;div class="steps clearfix"&gt;
+        &lt;ul role="tablist"&gt;
+            &lt;li class="first current" role="tab" aria-disabled="false" aria-selected="true"&gt;
+                &lt;a id="steps-uid-1-t-0" aria-controls="steps-uid-1-p-0" href="#steps-uid-1-h-0"&gt;&lt;span class="current-info audible"&gt;current step: &lt;/span&gt;&lt;span class="number"&gt;1.&lt;/span&gt; First Step&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class="disabled" role="tab" aria-disabled="true"&gt;
+                &lt;a id="steps-uid-1-t-1" aria-controls="steps-uid-1-p-1" href="#steps-uid-1-h-1"&gt;&lt;span class="number"&gt;2.&lt;/span&gt; Second Step&lt;/a&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;div class="content clearfix"&gt;
+        &lt;h1 tabindex="-1" class="title current" id="steps-uid-1-h-0"&gt;First Step&lt;/h1&gt;
+        &lt;div class="body current" id="steps-uid-1-p-0" role="tabpanel" aria-hidden="false" aria-labelledby="steps-uid-1-h-0" style="display: block;"&gt;
+            First Content
+        &lt;/div&gt;
+        &lt;h1 tabindex="-1" class="title" id="steps-uid-1-h-1"&gt;Second Step&lt;/h1&gt;
+        &lt;div class="body" id="steps-uid-1-p-1" role="tabpanel" aria-hidden="true" aria-labelledby="steps-uid-1-h-1" style="display: none;"&gt;
+            Second Content
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="actions clearfix"&gt;
+        &lt;ul role="menu" aria-label="Pagination"&gt;
+            &lt;li class="disabled" aria-disabled="true"&gt;
+                &lt;a role="menuitem" href="#previous"&gt;Previous&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li aria-disabled="false" aria-hidden="false"&gt;
+                &lt;a role="menuitem" href="#next"&gt;Next&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li aria-hidden="true" style="display: none;"&gt;
+                &lt;a role="menuitem" href="#finish"&gt;Finish&lt;/a&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+                <p>The resulting or transformed code is just for showing you your capabilities and how it is structured.</p>
+                <h3>CSS classes</h3>
+                <p>A list of all <abbr title="Cascading Style Sheets">CSS</abbr> classes.</p>
+                <table class="table table-bordered table-striped">
+                    <colgroup>
+                        <col class="span3">
+                        <col class="span9">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="span3">Class name</th>
+                            <th class="span9">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>wizard</code> *</td>
+                            <td>The main <abbr title="Cascading Style Sheets">CSS</abbr> class; it is set on the outer component wrapper.</td>
+                        </tr>
+                        <tr>
+                            <td><code>steps</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>content</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>actions</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>clearfix</code> *</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>current</code></td>
+                            <td>Marks the active step (the current step, content title and content body).</td>
+                        </tr>
+                        <tr>
+                            <td><code>current-info</code></td>
+                            <td>Adds more information for screenreader on the current step.</td>
+                        </tr>
+                        <tr>
+                            <td><code>audible</code></td>
+                            <td>Labels content that is important for screenreader but not for normal browser.</td>
+                        </tr>
+                        <tr>
+                            <td><code>disabled</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>first</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>last</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>error</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>done</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>number</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>body</code></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>title</code></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="muted">
+                    <small>* The <abbr title="Cascading Style Sheets">CSS</abbr> class name can be customized on initialization by using the options.</small>
+                </p>
+            </section>
             <section id="options">
                 <h2 class="page-header">Options</h2>
                 <p class="lead">
-                    
+                    Here you learn about customization.
                 </p>
                 <h3>Appearance</h3>
                 <table class="table table-bordered table-striped">
