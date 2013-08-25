@@ -424,6 +424,37 @@ body > footer
                         font-weight: 700;
                     }
 
+/* CSS structure tree */
+pre.css > span
+{
+    background: #fbfbfc;
+    padding: 0.1em 0.2em;
+    margin: 0 0.2em 0.2em 0;
+
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+    box-shadow: inset 1px 1px 0 #ececf0;
+
+    line-height: 20px;
+}
+
+pre.css > .tag
+{
+    color: #1e347b;
+}
+
+pre.css > .id
+{
+    color: teal;
+}
+
+pre.css > .class
+{
+    color: #d14;
+}
+
 @media (min-width: 1200px)
 {
     .sitewrapper > .content #lefthand-nav.affix

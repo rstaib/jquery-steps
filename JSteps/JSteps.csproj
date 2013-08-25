@@ -206,6 +206,9 @@
     <Content Include="Views\Donation\Success.cshtml" />
     <Content Include="Views\Examples\EmbeddedContent.cshtml" />
     <Content Include="Views\Documentation\Index.cshtml" />
+    <Content Include="Scripts\jquery.steps.min.js.map">
+      <DependentUpon>jquery.steps.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

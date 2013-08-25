@@ -65,7 +65,7 @@
     &lt;div&gt;Second Content&lt;/div&gt;
 &lt;/div&gt;
 </pre>
-                <p>The important thing to mention here is that each step is represented by a title and a content element of your choice (more details on this later).</p>
+                <p>The important thing here to mention is that each step is represented by a title and a content element of your choice (more details on this later).</p>
                 <h3>How to add steps dynamically?</h3>
                 <p>In the last example we have added two steps by using the <abbr title="Hypertext Markup Language">HTML</abbr> way. 
                     This differs from the dynamic way, because the later requires that the wizard is already initialized. 
@@ -102,45 +102,35 @@
     &lt;div&gt;Second Content&lt;/div&gt;
 &lt;/div&gt;
 </pre>
-                <p>And after the transformation our resulting code looks like this.</p>
-<pre class="prettyprint linenums">
-&lt;div class="wizard clearfix" id="wizard" role="application"&gt;
-    &lt;div class="steps clearfix"&gt;
-        &lt;ul role="tablist"&gt;
-            &lt;li class="first current" role="tab" aria-disabled="false" aria-selected="true"&gt;
-                &lt;a id="steps-uid-1-t-0" aria-controls="steps-uid-1-p-0" href="#steps-uid-1-h-0"&gt;&lt;span class="current-info audible"&gt;current step: &lt;/span&gt;&lt;span class="number"&gt;1.&lt;/span&gt; First Step&lt;/a&gt;
-            &lt;/li&gt;
-            &lt;li class="disabled" role="tab" aria-disabled="true"&gt;
-                &lt;a id="steps-uid-1-t-1" aria-controls="steps-uid-1-p-1" href="#steps-uid-1-h-1"&gt;&lt;span class="number"&gt;2.&lt;/span&gt; Second Step&lt;/a&gt;
-            &lt;/li&gt;
-        &lt;/ul&gt;
-    &lt;/div&gt;
-    &lt;div class="content clearfix"&gt;
-        &lt;h1 tabindex="-1" class="title current" id="steps-uid-1-h-0"&gt;First Step&lt;/h1&gt;
-        &lt;div class="body current" id="steps-uid-1-p-0" role="tabpanel" aria-hidden="false" aria-labelledby="steps-uid-1-h-0" style="display: block;"&gt;
-            First Content
-        &lt;/div&gt;
-        &lt;h1 tabindex="-1" class="title" id="steps-uid-1-h-1"&gt;Second Step&lt;/h1&gt;
-        &lt;div class="body" id="steps-uid-1-p-1" role="tabpanel" aria-hidden="true" aria-labelledby="steps-uid-1-h-1" style="display: none;"&gt;
-            Second Content
-        &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class="actions clearfix"&gt;
-        &lt;ul role="menu" aria-label="Pagination"&gt;
-            &lt;li class="disabled" aria-disabled="true"&gt;
-                &lt;a role="menuitem" href="#previous"&gt;Previous&lt;/a&gt;
-            &lt;/li&gt;
-            &lt;li aria-disabled="false" aria-hidden="false"&gt;
-                &lt;a role="menuitem" href="#next"&gt;Next&lt;/a&gt;
-            &lt;/li&gt;
-            &lt;li aria-hidden="true" style="display: none;"&gt;
-                &lt;a role="menuitem" href="#finish"&gt;Finish&lt;/a&gt;
-            &lt;/li&gt;
-        &lt;/ul&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
+                <p>And after transformation our resulting <abbr title="Hypertext Markup Language">HTML</abbr>/<abbr title="Cascading Style Sheets">CSS</abbr> hierarchy tree looks like this.</p>
+<pre class="css">
+<span class="tag">&lt;div&gt;</span><span class="id">#wizard</span><span class="class">.wizard</span><span class="class">.clearfix</span><span class="class status">.vertical</span>
+ ├── <span class="tag custom">&lt;div&gt;</span><span class="class">.steps</span><span class="class">.clearfix</span>
+ │    └── <span class="tag">&lt;ul&gt;</span>
+ │         └── <span class="tag">&lt;li&gt;</span><span class="class status">.first</span><span class="class status">.last</span><span class="class status">.current</span><span class="class status">.disabled</span><span class="class status">.done</span><span class="class status">.error</span>
+ │              └── <span class="tag">&lt;a&gt;</span><span class="id">#wizard-t-{index}</span>
+ │                   ├── <span class="tag">&lt;span&gt;</span><span class="class">.current-info</span><span class="class">.audible</span>
+ │                   ├── <span class="tag">&lt;span&gt;</span><span class="class">.number</span>
+ │                   └── Text
+ ├── <span class="tag">&lt;div&gt;</span><span class="class">.contents</span><span class="class">.clearfix</span>
+ │    ├── <span class="tag">&lt;h1&gt;</span><span class="id">#wizard-h-{index}</span><span class="class">.title</span><span class="class status">.current</span>
+ │    └── <span class="tag">&lt;div&gt;</span><span class="id">#wizard-p-{index}</span><span class="class">.body</span><span class="class status">.current</span>
+ └── <span class="tag">&lt;div&gt;</span><span class="class">.actions</span><span class="class">.clearfix</span>
+      └── <span class="tag">&lt;ul&gt;</span>
+           └── <span class="tag">&lt;li&gt;</span><span class="class status">.disabled</span>
+                └── <span class="tag">&lt;a&gt;</span>
 </pre>
-                <p>The resulting or transformed code is just for showing you your capabilities and how it is structured.</p>
+                <p>The following specific charactaristics must be considered:</p>
+                <ul>
+                    <li><code>.vertical</code> will be added to the outer component wrapper if the <code>stepsOrientation</code> option is set to <code>vertical</code> or <code>0</code>.</li>
+                    <li><code>.first</code> is added to the first step and <code>.last</code> to the last step.</li>
+                    <li><code>.current</code> will be added to the active step, title and panel.</li>
+                    <li><code>.disabled</code> will be added to disabled steps or buttons.</li>
+                    <li><code>.done</code> will be set on valid steps and <code>.error</code> on invalid steps.</li>
+                    <li><code>{index}</code> is a placeholder for the position (zero-based) of steps and their related contents (title and panel).</li>
+                    <li>The <code>div</code> and <code>h1</code> elements can be separatly configured on initialization (please see the next section).</li>
+                </ul>
+
                 <h3>CSS classes</h3>
                 <p>A list of all <abbr title="Cascading Style Sheets">CSS</abbr> classes.</p>
                 <table class="table table-bordered table-striped">
@@ -173,6 +163,10 @@
                         </tr>
                         <tr>
                             <td><code>clearfix</code> *</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><code>vertical</code></td>
                             <td></td>
                         </tr>
                         <tr>
