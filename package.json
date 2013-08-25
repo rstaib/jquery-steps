@@ -1,7 +1,7 @@
 {
   "name": "jquery-steps",
   "title": "jQuery Steps",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A powerful jQuery wizard plugin that supports accessibility and HTML5",
   "homepage": "http://www.jquery-steps.com",
   "author": {
@@ -39,8 +39,8 @@
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-yuidoc": "~0.4.0",
     "grunt-contrib-clean": "~0.4.1",
-    "grunt-regex-replace": "~0.2.5",
-    "grunt-contrib-compress": "~0.5.2"
+    "grunt-contrib-compress": "~0.5.2",
+    "grunt-regex-replace": "~0.2.5"
   },
   "readmeFilename": "README.md",
   "gitHead": "0d9f4f8b6a0c3d3b8a73eabf6a4b8cececd52f7a",

@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.1 - 08/23/2013
+ * jQuery Steps v1.0.2 - 08/25/2013
  * Copyright (c) 2013 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -165,7 +165,14 @@ function getUniqueId(wizard)
 
     if (uniqueId == null)
     {
-        uniqueId = "steps-uid-".concat(++_uniqueId);
+        uniqueId = wizard._getId();
+        if (uniqueId == null)
+        {
+            uniqueId = "steps-uid-".concat(_uniqueId);
+            wizard._setId(uniqueId);
+        }
+
+        _uniqueId++;
         wizard.data("uid", uniqueId);
     }
 
@@ -1087,6 +1094,11 @@ $.fn.extend({
     _deselectAria: function ()
     {
         return this.removeClass("current")._aria("selected", "false");
+    },
+
+    _getId: function ()
+    {
+        return this.attr("id");
     },
 
     _setId: function (id)

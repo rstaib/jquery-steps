@@ -253,7 +253,14 @@ function getUniqueId(wizard)
 
     if (uniqueId == null)
     {
-        uniqueId = "steps-uid-".concat(++_uniqueId);
+        uniqueId = wizard._getId();
+        if (uniqueId == null)
+        {
+            uniqueId = "steps-uid-".concat(_uniqueId);
+            wizard._setId(uniqueId);
+        }
+
+        _uniqueId++;
         wizard.data("uid", uniqueId);
     }
 

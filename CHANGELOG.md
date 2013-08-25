@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+
+- Adding an id to the outer control wrapper tag will have as of now an impact on the internal uniqueid handling and therefore to the sub tag ids as well
+- Bug fix for having the same tag for titles and panels
+
 ## 1.0.1
 
 - Fixed an iframe border and scrolling issue for older browsers (IE8 and lower)

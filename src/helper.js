@@ -39,6 +39,11 @@ $.fn.extend({
         return this.removeClass("current")._aria("selected", "false");
     },
 
+    _getId: function ()
+    {
+        return this.attr("id");
+    },
+
     _setId: function (id)
     {
         return this.attr("id", id);
