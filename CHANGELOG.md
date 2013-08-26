@@ -4,6 +4,8 @@
 
 - Adding an id to the outer control wrapper tag will have as of now an impact on the internal uniqueid handling and therefore to the sub tag ids as well
 - Bug fix for having the same tag for titles and panels
+- AJAX crawling scheme support for SEO
+- History support for newer browsers (pushState)
 
 ## 1.0.1
 
