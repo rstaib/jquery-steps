@@ -63,6 +63,13 @@
         @Scripts.Render("~/Scripts/html5shiv")
         <![endif]-->
         
+        <style>
+            @@-webkit-viewport { width: device-width; }
+            @@-moz-viewport { width: device-width; }
+            @@-ms-viewport { width: device-width; }
+            @@-o-viewport { width: device-width; }
+            @@viewport { width: device-width; }
+        </style>
         <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
         @if (ViewBag.Prettify == true)
         {
@@ -123,6 +130,14 @@
             </ul>
         </footer>
         
+        <script>
+            if (navigator.userAgent.match(/IEMobile\/10\.0/))
+            {
+                var msViewportStyle = document.createElement("style");
+                msViewportStyle.appendChild(document.createTextNode("@@-ms-viewport{width:auto!important}"));
+                document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+            }
+        </script>
         @if (ViewBag.Prettify == true)
         {
             @Scripts.Render("~/Scripts/Extended")
