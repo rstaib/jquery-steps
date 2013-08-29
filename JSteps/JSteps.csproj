@@ -213,6 +213,15 @@
     <Content Include="Views\Donation\Success.cshtml" />
     <Content Include="Views\Examples\EmbeddedContent.cshtml" />
     <Content Include="Views\Documentation\Index.cshtml" />
+    <None Include="Properties\PublishProfiles\rstaib - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\rstaib - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\Web Deploy Cloud.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JSteps.Web.Mvc\JSteps.Web.Mvc.csproj">
+      <Project>{d933771b-d80f-45b2-b6d7-c1dca7969f2b}</Project>
+      <Name>JSteps.Web.Mvc</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

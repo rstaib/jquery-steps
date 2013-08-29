@@ -1,0 +1,4 @@
+D:\GitHub\jquery-steps\JSteps.Web.Mvc\bin\Release\JSteps.Web.Mvc.dll
+D:\GitHub\jquery-steps\JSteps.Web.Mvc\bin\Release\JSteps.Web.Mvc.pdb
+D:\GitHub\jquery-steps\JSteps.Web.Mvc\obj\Release\JSteps.Web.Mvc.dll
+D:\GitHub\jquery-steps\JSteps.Web.Mvc\obj\Release\JSteps.Web.Mvc.pdb

@@ -1,0 +1,5 @@
+D:\GitHub\jquery-steps\JSteps.Web.Mvc\obj\Debug\JSteps.Web.Mvc.csprojResolveAssemblyReference.cache
+D:\GitHub\jquery-steps\JSteps.Web.Mvc\bin\Debug\JSteps.Web.Mvc.dll
+D:\GitHub\jquery-steps\JSteps.Web.Mvc\bin\Debug\JSteps.Web.Mvc.pdb
+D:\GitHub\jquery-steps\JSteps.Web.Mvc\obj\Debug\JSteps.Web.Mvc.dll
+D:\GitHub\jquery-steps\JSteps.Web.Mvc\obj\Debug\JSteps.Web.Mvc.pdb
