@@ -6,6 +6,7 @@
 - Bug fix for having the same tag for titles and panels
 - AJAX crawling scheme support for SEO
 - History support for newer browsers (pushState)
+- Auto height calculation
 
 ## 1.0.1
 
