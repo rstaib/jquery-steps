@@ -67,6 +67,10 @@ wizard.steps("add", {
 
 Instructions will follow soon!
 
+## Asking questions
+
+I'm always happy to help answer your questions. The best way to get quick answers is to go to [stackoverflow.com](http://stackoverflow.com) and tag your questions always with **jquery-steps**.
+
 ## Contributing
 
 Instructions will follow soon!
