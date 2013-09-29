@@ -181,6 +181,22 @@ function format(value)
     return value;
 }
 
+function getCurrentEnumKey(enumType, value)
+{
+    validateArgument("enumType", enumType);
+    validateArgument("value", value);
+
+    for (var key in enumType)
+    {
+        if (enumType[key] === value)
+        {
+            return key;
+        }
+    }
+
+    throwError("Invalid enum value '{0}'.", value);
+}
+
 function getStepAnchor(wizard, index)
 {
     var uniqueId = getUniqueId(wizard);
@@ -883,6 +899,8 @@ function render(wizard, options, state)
     var wrapperTemplate = "<{0} class=\"{1}\">{2}</{0}>",
         orientation = getValidEnumValue(stepsOrientation, options.stepsOrientation),
         verticalCssClass = (orientation === stepsOrientation.vertical) ? " vertical" : "",
+        effect = getValidEnumValue(transitionEffect, options.transitionEffect),
+        effectCssClass = getCurrentEnumKey(transitionEffect, effect) + "Fx",
         contentWrapper = $(format(wrapperTemplate, options.contentContainerTag, "content " + options.clearFixCssClass, wizard.html())),
         stepsWrapper = $(format(wrapperTemplate, options.stepsContainerTag, "steps " + options.clearFixCssClass, "<ul role=\"tablist\"></ul>")),
         stepTitles = contentWrapper.children(options.headerTag),
@@ -890,7 +908,7 @@ function render(wizard, options, state)
 
     // Transform the wizard wrapper and remove the inner HTML
     wizard.attr("role", "application").empty().append(stepsWrapper).append(contentWrapper)
-        .addClass(options.cssClass + " " + options.clearFixCssClass + verticalCssClass);
+        .addClass(options.cssClass + " " + effectCssClass + " " + options.clearFixCssClass + verticalCssClass);
 
     // Add WIA-ARIA support
     stepContents.each(function (index)

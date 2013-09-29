@@ -1,12 +1,13 @@
 # Changelog
 
-## 1.0.2
+## 1.1.0
 
 - Adding an id to the outer control wrapper tag will have as of now an impact on the internal uniqueid handling and therefore to the sub tag ids as well
 - Bug fix for having the same tag for titles and panels
 - AJAX crawling scheme support for SEO
 - History support for newer browsers (pushState) [#5](https://github.com/rstaib/jquery-steps/issues/5)
 - Dynamic height calculation [#8](https://github.com/rstaib/jquery-steps/issues/8)
+- AMD support
 
 ## 1.0.1
 

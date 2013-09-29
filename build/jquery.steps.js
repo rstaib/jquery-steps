@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.2 - 08/25/2013
+ * jQuery Steps v1.1.0 - 09/28/2013
  * Copyright (c) 2013 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -109,6 +109,22 @@ function format(value)
     }
 
     return value;
+}
+
+function getCurrentEnumKey(enumType, value)
+{
+    validateArgument("enumType", enumType);
+    validateArgument("value", value);
+
+    for (var key in enumType)
+    {
+        if (enumType[key] === value)
+        {
+            return key;
+        }
+    }
+
+    throwError("Invalid enum value '{0}'.", value);
 }
 
 function getStepAnchor(wizard, index)
@@ -621,6 +637,8 @@ function render(wizard, options, state)
     var wrapperTemplate = "<{0} class=\"{1}\">{2}</{0}>",
         orientation = getValidEnumValue(stepsOrientation, options.stepsOrientation),
         verticalCssClass = (orientation === stepsOrientation.vertical) ? " vertical" : "",
+        effect = getValidEnumValue(transitionEffect, options.transitionEffect),
+        effectCssClass = getCurrentEnumKey(transitionEffect, effect) + "Fx",
         contentWrapper = $(format(wrapperTemplate, options.contentContainerTag, "content " + options.clearFixCssClass, wizard.html())),
         stepsWrapper = $(format(wrapperTemplate, options.stepsContainerTag, "steps " + options.clearFixCssClass, "<ul role=\"tablist\"></ul>")),
         stepTitles = contentWrapper.children(options.headerTag),
@@ -628,7 +646,7 @@ function render(wizard, options, state)
 
    
     wizard.attr("role", "application").empty().append(stepsWrapper).append(contentWrapper)
-        .addClass(options.cssClass + " " + options.clearFixCssClass + verticalCssClass);
+        .addClass(options.cssClass + " " + effectCssClass + " " + options.clearFixCssClass + verticalCssClass);
 
    
     stepContents.each(function (index)
@@ -1003,6 +1021,8 @@ var defaults = $.fn.steps.defaults = {
 
     
         autoFocus: false,
+
+         dynamicHeight: false,
 
         enableAllSteps: false,
 
