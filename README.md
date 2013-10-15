@@ -20,6 +20,7 @@ Everything you need to start is:
         <meta charset="utf-8">
         <script src="jquery.js"></script> 
         <script src="jquery.steps.js"></script>
+        <link href="jquery.steps.css" rel="stylesheet">
     </head>
     <body>
         <script>

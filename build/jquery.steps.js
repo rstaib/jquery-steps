@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.1 - 08/23/2013
+ * jQuery Steps v1.0.2 - 10/15/2013
  * Copyright (c) 2013 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -84,6 +84,43 @@ function decreaseCurrentIndexBy(state, decreaseBy)
     return state.currentIndex - decreaseBy;
 }
 
+function destroy(wizard, options)
+{
+    var eventNamespace = getEventNamespace(wizard);
+
+   
+    wizard.unbind(eventNamespace).removeData("uid").removeData("options")
+        .removeData("state").removeData("steps").removeData("eventNamespace")
+        .find(".actions a").unbind(eventNamespace);
+
+   
+    wizard.removeClass(options.clearFixCssClass + " vertical");
+
+    var contents = wizard.find(".content > *");
+
+   
+    contents.removeData("loaded").removeData("mode").removeData("url");
+
+   
+    contents.removeAttr("id").removeAttr("role").removeAttr("tabindex")
+        .removeAttr("class").removeAttr("style")._removeAria("labelledby")
+        ._removeAria("hidden");
+
+   
+    wizard.find(".content > [data-mode='async'],.content > [data-mode='iframe']").empty();
+
+    var wizardSubstitute = $(format("<{0} class=\"{1}\"></{0}>", wizard.get(0).tagName, wizard.attr("class")));
+
+    if (wizard.attr("id") != null && wizard.attr("id") !== "")
+    {
+        wizardSubstitute._setId(wizard.attr("id"));
+    }
+
+    wizardSubstitute.html(wizard.find(".content").html());
+    wizard.after(wizardSubstitute);
+    wizard.remove();
+}
+
 function finishStep(wizard, state)
 {
     var currentStep = wizard.find(".steps li").eq(state.currentIndex);
@@ -109,6 +146,19 @@ function format(value)
     }
 
     return value;
+}
+
+function getEventNamespace(wizard)
+{
+    var eventNamespace = wizard.data("eventNamespace");
+
+    if (eventNamespace == null)
+    {
+        eventNamespace = "." + getUniqueId(wizard);
+        wizard.data("eventNamespace", eventNamespace);
+    }
+
+    return eventNamespace;
 }
 
 function getStepAnchor(wizard, index)
@@ -551,17 +601,19 @@ function refreshSteps(wizard, options, state, index)
 
 function registerEvents(wizard, options)
 {
-    wizard.bind("finishing.steps", options.onFinishing);
-    wizard.bind("finished.steps", options.onFinished);
-    wizard.bind("stepChanging.steps", options.onStepChanging);
-    wizard.bind("stepChanged.steps", options.onStepChanged);
+    var eventNamespace = getEventNamespace(wizard);
+
+    wizard.bind("finishing" + eventNamespace, options.onFinishing);
+    wizard.bind("finished" + eventNamespace, options.onFinished);
+    wizard.bind("stepChanging" + eventNamespace, options.onStepChanging);
+    wizard.bind("stepChanged" + eventNamespace, options.onStepChanged);
 
     if (options.enableKeyNavigation)
     {
-        wizard.bind("keyup.steps", keyUpHandler);
+        wizard.bind("keyup" + eventNamespace, keyUpHandler);
     }
 
-    wizard.find(".actions a").bind("click.steps", paginationClickHandler);
+    wizard.find(".actions a").bind("click" + eventNamespace, paginationClickHandler);
 }
 
 function removeStep(wizard, options, state, index)
@@ -747,7 +799,7 @@ function renderTitle(wizard, options, state, header, index)
     }
 
    
-    stepItem.children("a").bind("click.steps", stepClickHandler);
+    stepItem.children("a").bind("click" + getEventNamespace(wizard), stepClickHandler);
 }
 
 function saveCurrentStateToCookie(wizard, options, state)
@@ -874,6 +926,13 @@ $.fn.steps.add = function (step)
         state = getState(this);
 
     return insertStep(this, options, state, state.stepCount, step);
+};
+
+$.fn.steps.destroy = function ()
+{
+    var options = getOptions(this);
+
+    return destroy(this, options);
 };
 
 $.fn.steps.finish = function ()

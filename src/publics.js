@@ -39,6 +39,18 @@ $.fn.steps.add = function (step)
 };
 
 /**
+ * Removes the control functionality completely and transforms the current state to the initial HTML structure.
+ *
+ * @method destroy
+ **/
+$.fn.steps.destroy = function ()
+{
+    var options = getOptions(this);
+
+    return destroy(this, options);
+};
+
+/**
  * Triggers the onFinishing and onFinished event.
  *
  * @method finish

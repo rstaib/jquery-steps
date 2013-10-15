@@ -146,6 +146,51 @@ function decreaseCurrentIndexBy(state, decreaseBy)
 }
 
 /**
+ * Removes the control functionality completely and transforms the current state to the initial HTML structure.
+ *
+ * @static
+ * @private
+ * @method destroy
+ * @param wizard {Object} A jQuery wizard object
+ **/
+function destroy(wizard, options)
+{
+    var eventNamespace = getEventNamespace(wizard);
+
+    // Remove virtual data objects from the wizard
+    wizard.unbind(eventNamespace).removeData("uid").removeData("options")
+        .removeData("state").removeData("steps").removeData("eventNamespace")
+        .find(".actions a").unbind(eventNamespace);
+
+    // Remove attributes and CSS classes from the wizard
+    wizard.removeClass(options.clearFixCssClass + " vertical");
+
+    var contents = wizard.find(".content > *");
+
+    // Remove virtual data objects from panels and their titles
+    contents.removeData("loaded").removeData("mode").removeData("url");
+
+    // Remove attributes, CSS classes and reset inline styles on all panels and their titles
+    contents.removeAttr("id").removeAttr("role").removeAttr("tabindex")
+        .removeAttr("class").removeAttr("style")._removeAria("labelledby")
+        ._removeAria("hidden");
+
+    // Empty panels if the mode is set to 'async' or 'iframe'
+    wizard.find(".content > [data-mode='async'],.content > [data-mode='iframe']").empty();
+
+    var wizardSubstitute = $(format("<{0} class=\"{1}\"></{0}>", wizard.get(0).tagName, wizard.attr("class")));
+
+    if (wizard.attr("id") != null && wizard.attr("id") !== "")
+    {
+        wizardSubstitute._setId(wizard.attr("id"));
+    }
+
+    wizardSubstitute.html(wizard.find(".content").html());
+    wizard.after(wizardSubstitute);
+    wizard.remove();
+}
+
+/**
  * Triggers the onFinishing and onFinished event.
  *
  * @static
@@ -179,6 +224,28 @@ function format(value)
     }
 
     return value;
+}
+
+/**
+ * Gets or creates if not exist an unique event namespace for the given wizard instance.
+ *
+ * @static
+ * @private
+ * @method getEventNamespace
+ * @param wizard {Object} A jQuery wizard object
+ * @return {String} Returns the unique event namespace for the given wizard
+ */
+function getEventNamespace(wizard)
+{
+    var eventNamespace = wizard.data("eventNamespace");
+
+    if (eventNamespace == null)
+    {
+        eventNamespace = "." + getUniqueId(wizard);
+        wizard.data("eventNamespace", eventNamespace);
+    }
+
+    return eventNamespace;
 }
 
 function getStepAnchor(wizard, index)
@@ -791,17 +858,19 @@ function refreshSteps(wizard, options, state, index)
 
 function registerEvents(wizard, options)
 {
-    wizard.bind("finishing.steps", options.onFinishing);
-    wizard.bind("finished.steps", options.onFinished);
-    wizard.bind("stepChanging.steps", options.onStepChanging);
-    wizard.bind("stepChanged.steps", options.onStepChanged);
+    var eventNamespace = getEventNamespace(wizard);
+
+    wizard.bind("finishing" + eventNamespace, options.onFinishing);
+    wizard.bind("finished" + eventNamespace, options.onFinished);
+    wizard.bind("stepChanging" + eventNamespace, options.onStepChanging);
+    wizard.bind("stepChanged" + eventNamespace, options.onStepChanged);
 
     if (options.enableKeyNavigation)
     {
-        wizard.bind("keyup.steps", keyUpHandler);
+        wizard.bind("keyup" + eventNamespace, keyUpHandler);
     }
 
-    wizard.find(".actions a").bind("click.steps", paginationClickHandler);
+    wizard.find(".actions a").bind("click" + eventNamespace, paginationClickHandler);
 }
 
 /**
@@ -1051,7 +1120,7 @@ function renderTitle(wizard, options, state, header, index)
     }
 
     // Register click event
-    stepItem.children("a").bind("click.steps", stepClickHandler);
+    stepItem.children("a").bind("click" + getEventNamespace(wizard), stepClickHandler);
 }
 
 /**

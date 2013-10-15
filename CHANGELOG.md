@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- Add destroy method to remove the control functionality completely
+
 ## 1.0.1
 
 - Fixed an iframe border and scrolling issue for older browsers (IE8 and lower)
