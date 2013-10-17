@@ -47,7 +47,7 @@ $.fn.steps.destroy = function ()
 {
     var options = getOptions(this);
 
-    return destroy(this, options);
+    destroy(this, options);
 };
 
 /**
