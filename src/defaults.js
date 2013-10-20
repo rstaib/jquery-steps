@@ -89,12 +89,13 @@ var defaults = $.fn.steps.defaults = {
     clearFixCssClass: "clearfix",
 
     /**
-     * The css class which will be used for floating scenarios.
+     * Determines whether the steps are vertically or horizontally oriented.
      *
-     * @property clearFixCssClass
-     * @type String
-     * @default "clearfix"
+     * @property stepsOrientation
+     * @type stepsOrientation
+     * @default horizontal
      * @for defaults
+     * @since 1.0.0
      **/
     stepsOrientation: stepsOrientation.horizontal,
 

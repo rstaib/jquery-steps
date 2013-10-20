@@ -180,14 +180,17 @@ function destroy(wizard, options)
 
     var wizardSubstitute = $(format("<{0} class=\"{1}\"></{0}>", wizard.get(0).tagName, wizard.attr("class")));
 
-    if (wizard.attr("id") != null && wizard.attr("id") !== "")
+    var wizardId = wizard._getId();
+    if (wizardId != null && wizardId !== "")
     {
-        wizardSubstitute._setId(wizard.attr("id"));
+        wizardSubstitute._setId(wizardId);
     }
 
     wizardSubstitute.html(wizard.find(".content").html());
     wizard.after(wizardSubstitute);
     wizard.remove();
+
+    return wizardSubstitute;
 }
 
 /**
@@ -320,7 +323,14 @@ function getUniqueId(wizard)
 
     if (uniqueId == null)
     {
-        uniqueId = "steps-uid-".concat(++_uniqueId);
+        uniqueId = wizard._getId();
+        if (uniqueId == null)
+        {
+            uniqueId = "steps-uid-".concat(_uniqueId);
+            wizard._setId(uniqueId);
+        }
+
+        _uniqueId++;
         wizard.data("uid", uniqueId);
     }
 

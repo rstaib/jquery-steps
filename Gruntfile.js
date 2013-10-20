@@ -29,26 +29,21 @@ module.exports = function (grunt)
                 }
             }
         },
-        "regex-replace": {
-            all: {
-                src: ['<%= pkg.folders.dist %>/jquery.steps.js'],
-                actions: [
-                    {
-                        name: 'multiLineComments',
-                        search: /\/\*[^!](.|\r|\n)*?\*\/\r\n?/gim,
-                        replace: ''
-                    },
-                    {
-                        name: 'singleLineComment',
-                        search: /^\s*?[^http:\/\/]\/\/.*\r\n?/gi,
-                        replace: ''
-                    },
-                    {
-                        name: 'singleLineCommentSameLine',
-                        search: /[^http:\/\/]\/\/.*/gi,
-                        replace: ''
-                    }
-                ]
+        //"regex-replace": {
+        //    all: {
+        //        src: ['<%= pkg.folders.nuget %>/jQuery.Steps.nuspec'],
+        //        actions: [
+        //            {
+        //                name: 'versionNumber',
+        //                search: /<version>.*?<\/version>/gi,
+        //                replace: '<version><%= pkg.version %></version>'
+        //            }
+        //        ]
+        //    }
+        //},
+        exec: {
+            createPkg: {
+                cmd: "<%= pkg.folders.nuget %>\\Nuget pack <%= pkg.folders.nuget %>\\jQuery.Steps.nuspec -OutputDirectory <%= pkg.folders.dist %> -Version <%= pkg.version %>"
             }
         },
         compress: {
@@ -152,9 +147,10 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-regex-replace');
+    grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('default', ['build']);
     grunt.registerTask('api', ['clean:api', 'yuidoc']);
-    grunt.registerTask('build', ['clean:build', 'concat', 'regex-replace', 'jshint', 'qunit']);
-    grunt.registerTask('release', ['build', 'api', 'uglify', 'compress']);
+    grunt.registerTask('build', ['clean:build', 'concat', 'jshint', 'qunit']);
+    grunt.registerTask('release', ['build', 'api', 'uglify', 'compress', 'exec:createPkg']);
 };

@@ -203,7 +203,7 @@ module("internal", {
     },
     teardown: function ()
     {
-        $("#internal").remove();
+        $("#internal").steps("destroy").remove();
     }
 });
 
@@ -221,4 +221,27 @@ test("stepCache", 4, function ()
 
     removeStepFromCache(wizard, 0);
     equal(steps.length, 1, "Valid count after remove step to cache!");
+});
+
+test("uniqueId", 5, function ()
+{
+    // Custom Id Test
+    var wizard = $("#internal");
+
+    var wizardId = getUniqueId(wizard);
+    equal(wizardId, "internal", "Valid id after initialization!");
+
+    wizard.steps("add", { title: "add" });
+    equal($("#" + wizardId + "-t-0").text(), "1. add", "Valid step id!");
+    equal($("#" + wizardId + "-h-0").text(), "add", "Valid title id!");
+    equal($("#" + wizardId + "-p-0").length, 1, "Valid panel id!");
+
+    // Auto Id Test
+    $("#qunit-fixture").append($("<div class=\"uniqueIdTest\"></div>"));
+    var wizard2 = $(".uniqueIdTest").steps();
+
+    var wizardId2 = getUniqueId(wizard2);
+    equal(wizardId2.substring(0, 10), "steps-uid-", "Valid auto id after initialization!");
+
+    wizard2.steps("destroy").remove();
 });

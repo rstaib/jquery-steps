@@ -42,12 +42,13 @@ $.fn.steps.add = function (step)
  * Removes the control functionality completely and transforms the current state to the initial HTML structure.
  *
  * @method destroy
+ * @chainable
  **/
 $.fn.steps.destroy = function ()
 {
     var options = getOptions(this);
 
-    destroy(this, options);
+    return destroy(this, options);
 };
 
 /**

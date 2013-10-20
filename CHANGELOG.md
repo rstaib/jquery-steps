@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- Adding an id to the outer control wrapper tag will have as of now an impact on the internal uniqueid handling and therefore to the sub tag ids as well
+
 ## 1.0.2
 
 - Add destroy method to remove the control functionality completely
