@@ -1017,26 +1017,26 @@ function renderPagination(wizard, options, state)
     if (options.enablePagination)
     {
         var pagination = options.paginationTemplate || "<{0} class=\"actions {1}\"><ul role=\"menu\" aria-label=\"{2}\">{3}</ul></{0}>",
-            buttonTemplate = options.buttonTemplate || "<li><a href=\"#{0}\" role=\"menuitem\">{1}</a></li>",
-            buttons = "";
+            buttonTemplate = options.buttonTemplate || "<li><a class=\"{0}\" href=\"#{1}\" role=\"menuitem\">{2}</a></li>",
+            buttons = "",
+            linkClass = options.paginationLinkClass || 'action';
 
         if (!options.forceMoveForward)
         {
-            buttons += format(buttonTemplate, "previous", options.labels.previous);
+            buttons += format(buttonTemplate, [linkClass, "previous"].join(" "), "previous", options.labels.previous);
         }
 
-        buttons += format(buttonTemplate, "next", options.labels.next);
+        buttons += format(buttonTemplate, [linkClass, "next"].join(" "), "next", options.labels.next);
 
         if (options.enableFinishButton)
         {
-            buttons += format(buttonTemplate, "finish", options.labels.finish);
+            buttons += format(buttonTemplate, [linkClass, "finish"].join(" "), "finish", options.labels.finish);
         }
 
         wizard.append(format(pagination, options.actionContainerTag, options.clearFixCssClass,
             options.labels.pagination, buttons));
 
         refreshPagination(wizard, options, state);
-        loadAsyncContent(wizard, options, state);
     }
 }
 
