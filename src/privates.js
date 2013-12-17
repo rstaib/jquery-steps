@@ -720,7 +720,7 @@ function paginationClickHandler(event)
     switch (href.substring(href.lastIndexOf("#")))
     {
         case "#finish":
-            finishStep(wizard, options, state);
+            finishStep(wizard, state);
             break;
 
         case "#next":
