@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4
+
+- Fixed an issue regarding currentIndex on finish and finished event. Closes issue [#24](https://github.com/rstaib/jquery-steps/issues/24) and [#33](https://github.com/rstaib/jquery-steps/issues/33)
+
 ## 1.0.3
 
 - Adding an id to the outer control wrapper tag will have as of now an impact on the internal uniqueid handling and therefore to the sub tag ids as well

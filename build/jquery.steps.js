@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.3 - 10/20/2013
+ * jQuery Steps v1.0.4 - 12/17/2013
  * Copyright (c) 2013 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -727,7 +727,7 @@ function paginationClickHandler(event)
     switch (href.substring(href.lastIndexOf("#")))
     {
         case "#finish":
-            finishStep(wizard, options, state);
+            finishStep(wizard, state);
             break;
 
         case "#next":
