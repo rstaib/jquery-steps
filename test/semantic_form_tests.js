@@ -16,19 +16,16 @@ test("contentMode", 5, function ()
     equal(contentModeWithStringArgument.steps("getCurrentStep").contentMode, 0, "Valid string argument");
 });
 
-module("visualization", {
+module("semantic form visualization", {
     setup: function ()
     {
         $("#qunit-fixture").append($("<div id=\"vis\">" +
-                "<h1>First</h1>" +
-                "<div>Content 1</div>" +
-                "<h1>Second</h1>" +
-                "<div>Content 2</div>" +
-                "<h1>Third</h1>" +
-                "<div>Content 3</div>" +
+                "<fieldset><legend>First</legend>Content 1</fieldset>" +
+                "<fieldset><legend>Second</legend>Content 2</fieldset>" +
+                "<fieldset><legend>Third</legend>Content 3</fieldset>" +
             "</div>"));
 
-        $("#vis").steps();
+        $("#vis").steps({ 'headerTag': 'fieldset legend', 'bodyTag': 'fieldset' });
     },
     teardown: function ()
     {
@@ -245,4 +242,3 @@ test("uniqueId", 5, function ()
 
     wizard2.steps("destroy").remove();
 });
-
