@@ -87,8 +87,8 @@ function addStepToCache(wizard, step)
 
 function analyzeData(wizard, options, state)
 {
-    var stepTitles = wizard.children(options.headerTag),
-        stepContents = wizard.children(options.bodyTag);
+    var stepTitles = wizard.find(options.headerTag),
+        stepContents = wizard.find(options.bodyTag);
 
     // Validate content
     if (stepTitles.length > stepContents.length)
@@ -957,8 +957,8 @@ function render(wizard, options, state)
         verticalCssClass = (orientation === stepsOrientation.vertical) ? " vertical" : "",
         contentWrapper = $(format(wrapperTemplate, options.contentContainerTag, "content " + options.clearFixCssClass, wizard.html())),
         stepsWrapper = $(format(wrapperTemplate, options.stepsContainerTag, "steps " + options.clearFixCssClass, "<ul role=\"tablist\"></ul>")),
-        stepTitles = contentWrapper.children(options.headerTag),
-        stepContents = contentWrapper.children(options.bodyTag);
+        stepTitles = contentWrapper.find(options.headerTag),
+        stepContents = contentWrapper.find(options.bodyTag);
 
     // Transform the wizard wrapper and remove the inner HTML
     wizard.attr("role", "application").empty().append(stepsWrapper).append(contentWrapper)
