@@ -1094,7 +1094,10 @@ function renderTitle(wizard, options, state, header, index)
             title: header.html()
         }),
         stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId + 
-            "\" aria-controls=\"" + uniqueBodyId + "\">" + title + "</a></li>");
+            "\" aria-controls=\"" + uniqueBodyId + "\">" + title + "</a></li>"),
+        classList= $(header).attr('class') === undefined ? [] : $(header).attr('class');
+
+    stepItem.addClass(classList);
         
     if (!options.enableAllSteps)
     {
