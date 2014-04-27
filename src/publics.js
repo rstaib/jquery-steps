@@ -32,10 +32,8 @@ $.fn.steps = function (method)
  **/
 $.fn.steps.add = function (step)
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-    return insertStep(this, options, state, state.stepCount, step);
+    var state = getState(this);
+    return insertStep(this, getOptions(this), state, state.stepCount, step);
 };
 
 /**
@@ -46,9 +44,7 @@ $.fn.steps.add = function (step)
  **/
 $.fn.steps.destroy = function ()
 {
-    var options = getOptions(this);
-
-    return destroy(this, options);
+    return destroy(this, getOptions(this));
 };
 
 /**
@@ -58,9 +54,7 @@ $.fn.steps.destroy = function ()
  **/
 $.fn.steps.finish = function ()
 {
-    var state = getState(this);
-
-    finishStep(this, state);
+    finishStep(this, getState(this));
 };
 
 /**
@@ -115,10 +109,7 @@ $.fn.steps.getStep = function (index)
  **/
 $.fn.steps.insert = function (index, step)
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-    return insertStep(this, options, state, index, step);
+    return insertStep(this, getOptions(this), getState(this), index, step);
 };
 
 /**
@@ -129,11 +120,7 @@ $.fn.steps.insert = function (index, step)
  **/
 $.fn.steps.next = function ()
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-
-    return goToNextStep(this, options, state);
+    return goToNextStep(this, getOptions(this), getState(this));
 };
 
 /**
@@ -144,10 +131,7 @@ $.fn.steps.next = function ()
  **/
 $.fn.steps.previous = function ()
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-    return goToPreviousStep(this, options, state);
+    return goToPreviousStep(this, getOptions(this), getState(this));
 };
 
 /**
@@ -159,10 +143,7 @@ $.fn.steps.previous = function ()
  **/
 $.fn.steps.remove = function (index)
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-    return removeStep(this, options, state, index);
+    return removeStep(this, getOptions(this), getState(this), index);
 };
 
 /**

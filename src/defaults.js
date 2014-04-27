@@ -189,6 +189,16 @@ var defaults = $.fn.steps.defaults = {
     enableContentCache: true,
 
     /**
+     * Shows the cancel button if enabled.
+     *
+     * @property enableCancelButton
+     * @type Boolean
+     * @default true
+     * @for defaults
+     **/
+    enableCancelButton: true,
+
+    /**
      * Shows the finish button if enabled.
      *
      * @property enableFinishButton
@@ -300,6 +310,16 @@ var defaults = $.fn.steps.defaults = {
     onStepChanged: function (event, currentIndex, priorIndex) { },
 
     /**
+     * Fires after cancelation. 
+     *
+     * @property onCanceled
+     * @type Event
+     * @default function (event) { }
+     * @for defaults
+     **/
+    onCanceled: function (event) { },
+
+    /**
      * Fires before finishing and can be used to prevent completion by returning `false`. 
      * Very useful for form validation. 
      *
@@ -328,6 +348,16 @@ var defaults = $.fn.steps.defaults = {
      * @for defaults
      **/
     labels: {
+        /**
+         * Label for the cancel button.
+         *
+         * @property cancel
+         * @type String
+         * @default "Cancel"
+         * @for defaults
+         **/
+        cancel: "Cancel",
+
         /**
          * This label is important for accessability reasons.
          * Indicates which step is activated.

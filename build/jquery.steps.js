@@ -200,6 +200,19 @@ function analyzeData(wizard, options, state)
     });
 }
 
+/**
+ * Triggers the onCanceled event.
+ *
+ * @static
+ * @private
+ * @method cancel
+ * @param wizard {Object} The jQuery wizard object
+ **/
+function cancel(wizard)
+{
+    wizard.triggerHandler("canceled");
+}
+
 function decreaseCurrentIndexBy(state, decreaseBy)
 {
     return state.currentIndex - decreaseBy;
@@ -765,17 +778,21 @@ function paginationClickHandler(event)
         state = getState(wizard),
         href = anchor.attr("href");
 
-    switch (href.substring(href.lastIndexOf("#")))
+    switch (href.substring(href.lastIndexOf("#") + 1))
     {
-        case "#finish":
+        case "cancel":
+            cancel(wizard);
+            break;
+
+        case "finish":
             finishStep(wizard, state);
             break;
 
-        case "#next":
+        case "next":
             goToNextStep(wizard, options, state);
             break;
 
-        case "#previous":
+        case "previous":
             goToPreviousStep(wizard, options, state);
             break;
     }
@@ -811,7 +828,7 @@ function refreshPagination(wizard, options, state)
         }
         else
         {
-            finish._showAria(options.enableFinishButton && state.stepCount > (state.currentIndex + 1));
+            finish._showAria(options.enableFinishButton && state.stepCount >= (state.currentIndex + 1));
             next._showAria(state.stepCount === 0 || state.stepCount > (state.currentIndex + 1)).
                 _enableAria(state.stepCount > (state.currentIndex + 1) || !options.enableFinishButton);
         }
@@ -882,6 +899,7 @@ function registerEvents(wizard, options)
 {
     var eventNamespace = getEventNamespace(wizard);
 
+    wizard.bind("canceled" + eventNamespace, options.onCanceled);
     wizard.bind("finishing" + eventNamespace, options.onFinishing);
     wizard.bind("finished" + eventNamespace, options.onFinished);
     wizard.bind("stepChanging" + eventNamespace, options.onStepChanging);
@@ -1042,6 +1060,11 @@ function renderPagination(wizard, options, state)
         if (options.enableFinishButton)
         {
             buttons += buttonTemplate.format("finish", options.labels.finish);
+        }
+
+        if (options.enableCancelButton)
+        {
+            buttons += buttonTemplate.format("cancel", options.labels.cancel);
         }
 
         wizard.append(pagination.format(options.actionContainerTag, options.clearFixCssClass,
@@ -1305,10 +1328,8 @@ $.fn.steps = function (method)
  **/
 $.fn.steps.add = function (step)
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-    return insertStep(this, options, state, state.stepCount, step);
+    var state = getState(this);
+    return insertStep(this, getOptions(this), state, state.stepCount, step);
 };
 
 /**
@@ -1319,9 +1340,7 @@ $.fn.steps.add = function (step)
  **/
 $.fn.steps.destroy = function ()
 {
-    var options = getOptions(this);
-
-    return destroy(this, options);
+    return destroy(this, getOptions(this));
 };
 
 /**
@@ -1331,9 +1350,7 @@ $.fn.steps.destroy = function ()
  **/
 $.fn.steps.finish = function ()
 {
-    var state = getState(this);
-
-    finishStep(this, state);
+    finishStep(this, getState(this));
 };
 
 /**
@@ -1388,10 +1405,7 @@ $.fn.steps.getStep = function (index)
  **/
 $.fn.steps.insert = function (index, step)
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-    return insertStep(this, options, state, index, step);
+    return insertStep(this, getOptions(this), getState(this), index, step);
 };
 
 /**
@@ -1402,11 +1416,7 @@ $.fn.steps.insert = function (index, step)
  **/
 $.fn.steps.next = function ()
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-
-    return goToNextStep(this, options, state);
+    return goToNextStep(this, getOptions(this), getState(this));
 };
 
 /**
@@ -1417,10 +1427,7 @@ $.fn.steps.next = function ()
  **/
 $.fn.steps.previous = function ()
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-    return goToPreviousStep(this, options, state);
+    return goToPreviousStep(this, getOptions(this), getState(this));
 };
 
 /**
@@ -1432,10 +1439,7 @@ $.fn.steps.previous = function ()
  **/
 $.fn.steps.remove = function (index)
 {
-    var options = getOptions(this),
-        state = getState(this);
-
-    return removeStep(this, options, state, index);
+    return removeStep(this, getOptions(this), getState(this), index);
 };
 
 /**
@@ -1775,6 +1779,16 @@ var defaults = $.fn.steps.defaults = {
     enableContentCache: true,
 
     /**
+     * Shows the cancel button if enabled.
+     *
+     * @property enableCancelButton
+     * @type Boolean
+     * @default true
+     * @for defaults
+     **/
+    enableCancelButton: true,
+
+    /**
      * Shows the finish button if enabled.
      *
      * @property enableFinishButton
@@ -1886,6 +1900,16 @@ var defaults = $.fn.steps.defaults = {
     onStepChanged: function (event, currentIndex, priorIndex) { },
 
     /**
+     * Fires after cancelation. 
+     *
+     * @property onCanceled
+     * @type Event
+     * @default function (event) { }
+     * @for defaults
+     **/
+    onCanceled: function (event) { },
+
+    /**
      * Fires before finishing and can be used to prevent completion by returning `false`. 
      * Very useful for form validation. 
      *
@@ -1914,6 +1938,16 @@ var defaults = $.fn.steps.defaults = {
      * @for defaults
      **/
     labels: {
+        /**
+         * Label for the cancel button.
+         *
+         * @property cancel
+         * @type String
+         * @default "Cancel"
+         * @for defaults
+         **/
+        cancel: "Cancel",
+
         /**
          * This label is important for accessability reasons.
          * Indicates which step is activated.

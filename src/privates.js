@@ -140,6 +140,19 @@ function analyzeData(wizard, options, state)
     });
 }
 
+/**
+ * Triggers the onCanceled event.
+ *
+ * @static
+ * @private
+ * @method cancel
+ * @param wizard {Object} The jQuery wizard object
+ **/
+function cancel(wizard)
+{
+    wizard.triggerHandler("canceled");
+}
+
 function decreaseCurrentIndexBy(state, decreaseBy)
 {
     return state.currentIndex - decreaseBy;
@@ -705,17 +718,21 @@ function paginationClickHandler(event)
         state = getState(wizard),
         href = anchor.attr("href");
 
-    switch (href.substring(href.lastIndexOf("#")))
+    switch (href.substring(href.lastIndexOf("#") + 1))
     {
-        case "#finish":
+        case "cancel":
+            cancel(wizard);
+            break;
+
+        case "finish":
             finishStep(wizard, state);
             break;
 
-        case "#next":
+        case "next":
             goToNextStep(wizard, options, state);
             break;
 
-        case "#previous":
+        case "previous":
             goToPreviousStep(wizard, options, state);
             break;
     }
@@ -751,7 +768,7 @@ function refreshPagination(wizard, options, state)
         }
         else
         {
-            finish._showAria(options.enableFinishButton && state.stepCount > (state.currentIndex + 1));
+            finish._showAria(options.enableFinishButton && state.stepCount >= (state.currentIndex + 1));
             next._showAria(state.stepCount === 0 || state.stepCount > (state.currentIndex + 1)).
                 _enableAria(state.stepCount > (state.currentIndex + 1) || !options.enableFinishButton);
         }
@@ -822,6 +839,7 @@ function registerEvents(wizard, options)
 {
     var eventNamespace = getEventNamespace(wizard);
 
+    wizard.bind("canceled" + eventNamespace, options.onCanceled);
     wizard.bind("finishing" + eventNamespace, options.onFinishing);
     wizard.bind("finished" + eventNamespace, options.onFinished);
     wizard.bind("stepChanging" + eventNamespace, options.onStepChanging);
@@ -982,6 +1000,11 @@ function renderPagination(wizard, options, state)
         if (options.enableFinishButton)
         {
             buttons += buttonTemplate.format("finish", options.labels.finish);
+        }
+
+        if (options.enableCancelButton)
+        {
+            buttons += buttonTemplate.format("cancel", options.labels.cancel);
         }
 
         wizard.append(pagination.format(options.actionContainerTag, options.clearFixCssClass,
