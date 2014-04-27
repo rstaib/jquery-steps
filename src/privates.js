@@ -539,7 +539,7 @@ function insertStep(wizard, options, state, index, step)
     // Change data
     step = $.extend({}, stepModel, step);
     insertStepToCache(wizard, index, step);
-    if (state.currentIndex >= index)
+    if (state.currentIndex !== state.stepCount && state.currentIndex >= index)
     {
         state.currentIndex++;
         saveCurrentStateToCookie(wizard, options, state);
@@ -567,6 +567,10 @@ function insertStep(wizard, options, state, index, step)
     renderBody(wizard, body, index);
     renderTitle(wizard, options, state, header, index);
     refreshSteps(wizard, options, state, index);
+    if (index === state.currentIndex)
+    {
+        refreshStepNavigation(wizard, options, state);
+    }
     refreshPagination(wizard, options, state);
 
     return wizard;

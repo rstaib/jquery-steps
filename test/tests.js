@@ -232,7 +232,7 @@ test("uniqueId", 5, function ()
     equal(wizardId, "internal", "Valid id after initialization!");
 
     wizard.steps("add", { title: "add" });
-    equal($("#" + wizardId + "-t-0").text(), "1. add", "Valid step id!");
+    equal($("#" + wizardId + "-t-0").text(), "current step: 1. add", "Valid step id!");
     equal($("#" + wizardId + "-h-0").text(), "add", "Valid title id!");
     equal($("#" + wizardId + "-p-0").length, 1, "Valid panel id!");
 
