@@ -9,43 +9,44 @@ $.fn.extend({
         return this.removeAttr("aria-" + name);
     },
 
-    _enableAria: function ()
+    _enableAria: function (enable)
     {
-        return this.removeClass("disabled")._aria("disabled", "false");
+        return (enable == null || enable) ? 
+            this.removeClass("disabled")._aria("disabled", "false") : 
+            this.addClass("disabled")._aria("disabled", "true");
     },
 
-    _disableAria: function ()
+    _showAria: function (show)
     {
-        return this.addClass("disabled")._aria("disabled", "true");
+        return (show == null || show) ? 
+            this.show()._aria("hidden", "false") : 
+            this.hide()._aria("hidden", "true");
     },
 
-    _hideAria: function ()
+    _selectAria: function (select)
     {
-        return this.hide()._aria("hidden", "true");
+        return (select == null || select) ? 
+            this.addClass("current")._aria("selected", "true") : 
+            this.removeClass("current")._aria("selected", "false");
     },
 
-    _showAria: function ()
+    _id: function (id)
     {
-        return this.show()._aria("hidden", "false");
-    },
-
-    _selectAria: function ()
-    {
-        return this.addClass("current")._aria("selected", "true");
-    },
-
-    _deselectAria: function ()
-    {
-        return this.removeClass("current")._aria("selected", "false");
-    },
-
-    _getId: function ()
-    {
-        return this.attr("id");
-    },
-
-    _setId: function (id)
-    {
-        return this.attr("id", id);
+        return (id) ? this.attr("id", id) : this.attr("id");
     }
 });
+
+if (!String.prototype.format)
+{
+    String.prototype.format = function()
+    {
+        var args = (arguments.length === 1 && $.isArray(arguments[0])) ? arguments[0] : arguments;
+        var formattedString = this;
+        for (var i = 0; i < args.length; i++)
+        {
+            var pattern = new RegExp("\\{" + i + "\\}", "gm");
+            formattedString = formattedString.replace(pattern, args[i]);
+        }
+        return formattedString;
+    };
+}

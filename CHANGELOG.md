@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.5
+
+- Added a cancel button
+- Fixed a bug regarding adding steps dynamically. Closes issue [#56](https://github.com/rstaib/jquery-steps/issues/56)
+
 ## 1.0.4
 
 - Fixed an issue regarding currentIndex on finish and finished event. Closes issue [#24](https://github.com/rstaib/jquery-steps/issues/24) and [#33](https://github.com/rstaib/jquery-steps/issues/33)

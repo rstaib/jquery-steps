@@ -132,6 +132,7 @@ $.fn.steps.next = function ()
     var options = getOptions(this),
         state = getState(this);
 
+
     return goToNextStep(this, options, state);
 };
 
