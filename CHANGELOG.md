@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.6
+- Small fix. Closes issue [#56](https://github.com/rstaib/jquery-steps/issues/56)
+
 ## 1.0.5
 
 - Added a cancel button

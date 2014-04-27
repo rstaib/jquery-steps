@@ -564,7 +564,7 @@ function insertStep(wizard, options, state, index, step)
         getStepPanel(wizard, (index - 1)).after(body).after(header);
     }
 
-    renderBody(wizard, body, index);
+    renderBody(wizard, state, body, index);
     renderTitle(wizard, options, state, header, index);
     refreshSteps(wizard, options, state, index);
     if (index === state.currentIndex)
@@ -941,11 +941,8 @@ function render(wizard, options, state)
     // Add WIA-ARIA support
     stepContents.each(function (index)
     {
-        renderBody(wizard, $(this), index);
+        renderBody(wizard, state, $(this), index);
     });
-
-    // Make the start step visible
-    stepContents.eq(state.currentIndex)._showAria();
 
     stepTitles.each(function (index)
     {
@@ -966,14 +963,14 @@ function render(wizard, options, state)
  * @param body {Object} A jQuery body object
  * @param index {Integer} The position of the body
  */
-function renderBody(wizard, body, index)
+function renderBody(wizard, state, body, index)
 {
     var uniqueId = getUniqueId(wizard),
         uniqueBodyId = uniqueId + _tabpanelSuffix + index,
         uniqueHeaderId = uniqueId + _titleSuffix + index;
 
     body._id(uniqueBodyId).attr("role", "tabpanel")._aria("labelledby", uniqueHeaderId)
-        .addClass("body")._showAria(false);
+        .addClass("body")._showAria(state.currentIndex === index);
 }
 
 /**
