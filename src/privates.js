@@ -772,7 +772,7 @@ function refreshPagination(wizard, options, state)
         }
         else
         {
-            finish._showAria(options.enableFinishButton && state.stepCount >= (state.currentIndex + 1));
+            finish._showAria(options.enableFinishButton && state.stepCount === (state.currentIndex + 1));
             next._showAria(state.stepCount === 0 || state.stepCount > (state.currentIndex + 1)).
                 _enableAria(state.stepCount > (state.currentIndex + 1) || !options.enableFinishButton);
         }

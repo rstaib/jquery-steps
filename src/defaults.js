@@ -193,10 +193,10 @@ var defaults = $.fn.steps.defaults = {
      *
      * @property enableCancelButton
      * @type Boolean
-     * @default true
+     * @default false
      * @for defaults
      **/
-    enableCancelButton: true,
+    enableCancelButton: false,
 
     /**
      * Shows the finish button if enabled.

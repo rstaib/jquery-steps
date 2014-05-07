@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.6 - 04/27/2014
+ * jQuery Steps v1.0.7 - 05/07/2014
  * Copyright (c) 2014 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -832,7 +832,7 @@ function refreshPagination(wizard, options, state)
         }
         else
         {
-            finish._showAria(options.enableFinishButton && state.stepCount >= (state.currentIndex + 1));
+            finish._showAria(options.enableFinishButton && state.stepCount === (state.currentIndex + 1));
             next._showAria(state.stepCount === 0 || state.stepCount > (state.currentIndex + 1)).
                 _enableAria(state.stepCount > (state.currentIndex + 1) || !options.enableFinishButton);
         }
@@ -1784,10 +1784,10 @@ var defaults = $.fn.steps.defaults = {
      *
      * @property enableCancelButton
      * @type Boolean
-     * @default true
+     * @default false
      * @for defaults
      **/
-    enableCancelButton: true,
+    enableCancelButton: false,
 
     /**
      * Shows the finish button if enabled.
