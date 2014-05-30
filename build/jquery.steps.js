@@ -1468,6 +1468,21 @@ $.fn.steps.skip = function (count)
 };
 
 /**
+ * Sets the current step index.
+ *
+ * @method setCurrentIndex
+ * @param index {Integer} The new step index (zero-based)
+ * @return {Boolean} Indicates whether the action executed
+ **/
+$.fn.steps.setCurrentIndex = function (index)
+{
+    var options = getOptions(this),
+        state = getState(this);
+
+    return goToStep(this, options, state, index);
+};
+
+/**
  * An enum represents the different content types of a step and their loading mechanisms.
  *
  * @class contentMode
