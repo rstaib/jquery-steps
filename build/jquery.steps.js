@@ -1,4 +1,4 @@
-/*! 
+/*!
  * jQuery Steps v1.0.7 - 05/07/2014
  * Copyright (c) 2014 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
@@ -18,22 +18,22 @@ $.fn.extend({
 
     _enableAria: function (enable)
     {
-        return (enable == null || enable) ? 
-            this.removeClass("disabled")._aria("disabled", "false") : 
+        return (enable == null || enable) ?
+            this.removeClass("disabled")._aria("disabled", "false") :
             this.addClass("disabled")._aria("disabled", "true");
     },
 
     _showAria: function (show)
     {
-        return (show == null || show) ? 
-            this.show()._aria("hidden", "false") : 
+        return (show == null || show) ?
+            this.show()._aria("hidden", "false") :
             this.hide()._aria("hidden", "true");
     },
 
     _selectAria: function (select)
     {
-        return (select == null || select) ? 
-            this.addClass("current")._aria("selected", "true") : 
+        return (select == null || select) ?
+            this.addClass("current")._aria("selected", "true") :
             this.removeClass("current")._aria("selected", "false");
     },
 
@@ -159,7 +159,7 @@ function analyzeData(wizard, options, state)
     {
         throwError(_missingCorrespondingElementErrorMessage, "titles");
     }
-        
+
     var startIndex = options.startIndex;
 
     state.stepCount = stepTitles.length;
@@ -168,7 +168,7 @@ function analyzeData(wizard, options, state)
     if (options.saveState && $.cookie)
     {
         var savedState = $.cookie(_cookiePrefix + getUniqueId(wizard));
-        // Sets the saved position to the start index if not undefined or out of range 
+        // Sets the saved position to the start index if not undefined or out of range
         var savedIndex = parseInt(savedState, 0);
         if (!isNaN(savedIndex) && savedIndex < state.stepCount)
         {
@@ -233,12 +233,12 @@ function destroy(wizard, options)
     // Remove virtual data objects from the wizard
     wizard.unbind(eventNamespace).removeData("uid").removeData("options")
         .removeData("state").removeData("steps").removeData("eventNamespace")
-        .find(".actions a").unbind(eventNamespace);
+        .children(".actions").find("a").unbind(eventNamespace);
 
     // Remove attributes and CSS classes from the wizard
     wizard.removeClass(options.clearFixCssClass + " vertical");
 
-    var contents = wizard.find(".content > *");
+    var contents = wizard.children(".content").children();
 
     // Remove virtual data objects from panels and their titles
     contents.removeData("loaded").removeData("mode").removeData("url");
@@ -249,7 +249,7 @@ function destroy(wizard, options)
         ._removeAria("hidden");
 
     // Empty panels if the mode is set to 'async' or 'iframe'
-    wizard.find(".content > [data-mode='async'],.content > [data-mode='iframe']").empty();
+    wizard.children(".content").children("[data-mode='async'], [data-mode='iframe']").empty();
 
     var wizardSubstitute = $("<{0} class=\"{1}\"></{0}>".format(wizard.get(0).tagName, wizard.attr("class")));
 
@@ -259,7 +259,7 @@ function destroy(wizard, options)
         wizardSubstitute._id(wizardId);
     }
 
-    wizardSubstitute.html(wizard.find(".content").html());
+    wizardSubstitute.html(wizard.children(".content").html());
     wizard.after(wizardSubstitute);
     wizard.remove();
 
@@ -277,7 +277,7 @@ function destroy(wizard, options)
  **/
 function finishStep(wizard, state)
 {
-    var currentStep = wizard.find(".steps li").eq(state.currentIndex);
+    var currentStep = wizard.children(".steps").find("li").eq(state.currentIndex);
 
     if (wizard.triggerHandler("finishing", [state.currentIndex]))
     {
@@ -400,7 +400,7 @@ function getUniqueId(wizard)
 
 /**
  * Gets a valid enum value by checking a specific enum key or value.
- * 
+ *
  * @static
  * @private
  * @method getValidEnumValue
@@ -516,7 +516,7 @@ function goToStep(wizard, options, state, index)
     }
     else
     {
-        wizard.find(".steps li").eq(oldIndex).addClass("error");
+        wizard.children(".steps").find("li").eq(oldIndex).addClass("error");
     }
 
     return true;
@@ -606,7 +606,7 @@ function insertStep(wizard, options, state, index, step)
     }
     state.stepCount++;
 
-    var contentContainer = wizard.find(".content"),
+    var contentContainer = wizard.children(".content"),
         header = $("<{0}>{1}</{0}>".format(options.headerTag, step.title)),
         body = $("<{0}></{0}>".format(options.bodyTag));
 
@@ -705,7 +705,7 @@ function loadAsyncContent(wizard, options, state)
             switch (getValidEnumValue(contentMode, currentStep.contentMode))
             {
                 case contentMode.iframe:
-                    wizard.find(".content > .body").eq(state.currentIndex).empty()
+                    wizard.children(".content > .body").eq(state.currentIndex).empty()
                         .html("<iframe src=\"" + currentStep.contentUrl + "\" frameborder=\"0\" scrolling=\"no\" />")
                         .data("loaded", "1");
                     break;
@@ -816,12 +816,12 @@ function refreshPagination(wizard, options, state)
 {
     if (options.enablePagination)
     {
-        var finish = wizard.find(".actions a[href$='#finish']").parent(),
-            next = wizard.find(".actions a[href$='#next']").parent();
+        var finish = wizard.children(".actions").find("a[href$='#finish']").parent(),
+            next = wizard.children(".actions").find("a[href$='#next']").parent();
 
         if (!options.forceMoveForward)
         {
-            var previous = wizard.find(".actions a[href$='#previous']").parent();
+            var previous = wizard.children(".actions").find("a[href$='#previous']").parent();
             previous._enableAria(state.currentIndex > 0);
         }
 
@@ -854,7 +854,7 @@ function refreshStepNavigation(wizard, options, state, oldIndex)
 {
     var currentOrNewStepAnchor = getStepAnchor(wizard, state.currentIndex),
         currentInfo = $("<span class=\"current-info audible\">" + options.labels.current + " </span>"),
-        stepTitles = wizard.find(".content > .title");
+        stepTitles = wizard.children(".content > .title");
 
     if (oldIndex != null)
     {
@@ -889,12 +889,12 @@ function refreshSteps(wizard, options, state, index)
         var uniqueStepId = uniqueId + _tabSuffix + i,
             uniqueBodyId = uniqueId + _tabpanelSuffix + i,
             uniqueHeaderId = uniqueId + _titleSuffix + i,
-            title = wizard.find(".title").eq(i)._id(uniqueHeaderId);
+            title = wizard.children(".content").children(".title").eq(i)._id(uniqueHeaderId);
 
-        wizard.find(".steps a").eq(i)._id(uniqueStepId)
+        wizard.children(".steps").find("a").eq(i)._id(uniqueStepId)
             ._aria("controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
             .html(renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
-        wizard.find(".body").eq(i)._id(uniqueBodyId)
+        wizard.children(".content").children(".body").eq(i)._id(uniqueBodyId)
             ._aria("labelledby", uniqueHeaderId);
     }
 }
@@ -914,7 +914,7 @@ function registerEvents(wizard, options)
         wizard.bind("keyup" + eventNamespace, keyUpHandler);
     }
 
-    wizard.find(".actions a").bind("click" + eventNamespace, paginationClickHandler);
+    wizard.children(".actions").find("a").bind("click" + eventNamespace, paginationClickHandler);
 }
 
 /**
@@ -950,16 +950,16 @@ function removeStep(wizard, options, state, index)
     getStepPanel(wizard, index).remove();
     getStepAnchor(wizard, index).parent().remove();
 
-    // Set the "first" class to the new first step button 
+    // Set the "first" class to the new first step button
     if (index === 0)
     {
-        wizard.find(".steps li").first().addClass("first");
+        wizard.children(".steps").find("li").first().addClass("first");
     }
 
-    // Set the "last" class to the new last step button 
+    // Set the "last" class to the new last step button
     if (index === state.stepCount)
     {
-        wizard.find(".steps li").eq(index).addClass("last");
+        wizard.children(".steps").find("li").eq(index).addClass("last");
     }
 
     refreshSteps(wizard, options, state, index);
@@ -1092,7 +1092,7 @@ function renderTemplate(template, substitutes)
 
     for (var i = 0; i < matches.length; i++)
     {
-        var match = matches[i], 
+        var match = matches[i],
             key = match.substring(1, match.length - 1);
 
         if (substitutes[key] === undefined)
@@ -1124,14 +1124,14 @@ function renderTitle(wizard, options, state, header, index)
         uniqueStepId = uniqueId + _tabSuffix + index,
         uniqueBodyId = uniqueId + _tabpanelSuffix + index,
         uniqueHeaderId = uniqueId + _titleSuffix + index,
-        stepCollection = wizard.find(".steps > ul"),
+        stepCollection = wizard.children(".steps").children("ul"),
         title = renderTemplate(options.titleTemplate, {
             index: index + 1,
             title: header.html()
         }),
-        stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId + 
+        stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId +
             "\" aria-controls=\"" + uniqueBodyId + "\">" + title + "</a></li>");
-        
+
     stepItem._enableAria(options.enableAllSteps || state.currentIndex > index);
 
     if (state.currentIndex > index)
@@ -1186,7 +1186,7 @@ function saveCurrentStateToCookie(wizard, options, state)
 
 function startTransitionEffect(wizard, options, state, index, oldIndex)
 {
-    var stepContents = wizard.find(".content > .body"),
+    var stepContents = wizard.children(".content").children(".body"),
         effect = getValidEnumValue(transitionEffect, options.transitionEffect),
         effectSpeed = options.transitionEffectSpeed,
         newStep = stepContents.eq(index),
@@ -1221,7 +1221,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
                 posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
                 posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
-            currentStep.animate({ left: posFadeOut }, effectSpeed, 
+            currentStep.animate({ left: posFadeOut }, effectSpeed,
                 function () { $(this)._showAria(false); }).promise();
             newStep.css("left", posFadeIn + "px")._showAria()
                 .animate({ left: 0 }, effectSpeed).promise();
@@ -1702,7 +1702,7 @@ var defaults = $.fn.steps.defaults = {
      * @default "<span class=\"number\">#index#.</span> #title#"
      * @for defaults
      **/
-    titleTemplate: "<span class=\"number\">#index#.</span> #title#",
+    titleTemplate: "<span class=\"number\"></span> #title#",
 
     /**
      * The loading template which will be used to create the loading animation.
@@ -1719,7 +1719,7 @@ var defaults = $.fn.steps.defaults = {
      */
 
     /**
-     * Sets the focus to the first wizard instance in order to enable the key navigation from the begining if `true`. 
+     * Sets the focus to the first wizard instance in order to enable the key navigation from the begining if `true`.
      *
      * @property autoFocus
      * @type Boolean
@@ -1810,7 +1810,7 @@ var defaults = $.fn.steps.defaults = {
     preloadContent: false,
 
     /**
-     * Shows the finish button always (on each step; right beside the next button) if `true`. 
+     * Shows the finish button always (on each step; right beside the next button) if `true`.
      * Otherwise the next button will be replaced by the finish button if the last step becomes active.
      *
      * @property showFinishButtonAlways
@@ -1880,8 +1880,8 @@ var defaults = $.fn.steps.defaults = {
      */
 
     /**
-     * Fires before the step changes and can be used to prevent step changing by returning `false`. 
-     * Very useful for form validation. 
+     * Fires before the step changes and can be used to prevent step changing by returning `false`.
+     * Very useful for form validation.
      *
      * @property onStepChanging
      * @type Event
@@ -1891,7 +1891,7 @@ var defaults = $.fn.steps.defaults = {
     onStepChanging: function (event, currentIndex, newIndex) { return true; },
 
     /**
-     * Fires after the step has change. 
+     * Fires after the step has change.
      *
      * @property onStepChanged
      * @type Event
@@ -1901,7 +1901,7 @@ var defaults = $.fn.steps.defaults = {
     onStepChanged: function (event, currentIndex, priorIndex) { },
 
     /**
-     * Fires after cancelation. 
+     * Fires after cancelation.
      *
      * @property onCanceled
      * @type Event
@@ -1911,8 +1911,8 @@ var defaults = $.fn.steps.defaults = {
     onCanceled: function (event) { },
 
     /**
-     * Fires before finishing and can be used to prevent completion by returning `false`. 
-     * Very useful for form validation. 
+     * Fires before finishing and can be used to prevent completion by returning `false`.
+     * Very useful for form validation.
      *
      * @property onFinishing
      * @type Event
@@ -1922,7 +1922,7 @@ var defaults = $.fn.steps.defaults = {
     onFinishing: function (event, currentIndex) { return true; },
 
     /**
-     * Fires after completion. 
+     * Fires after completion.
      *
      * @property onFinished
      * @type Event
@@ -1932,7 +1932,7 @@ var defaults = $.fn.steps.defaults = {
     onFinished: function (event, currentIndex) { },
 
     /**
-     * Contains all labels. 
+     * Contains all labels.
      *
      * @property labels
      * @type Object
