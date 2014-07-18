@@ -142,7 +142,7 @@
     background: #eee;
     display: block;
     margin: 0.5em;
-    min-height: 35em;
+    /*min-height: 35em;*/
     overflow: hidden;
     position: relative;
     width: auto;
@@ -165,7 +165,7 @@
     float: left;
     position: absolute;
     width: 95%;
-    height: 95%;
+    /*height: 95%;*/
     padding: 2.5%;
 }
 
