@@ -1232,7 +1232,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
                 function () { $(this)._showAria(false); }).promise();
             newStep.css("left", posFadeIn + "px")._showAria()
                 .animate({ left: 0 }, effectSpeed).promise();
-            currentStep.parent().animate({"height": outerHeight+"px"},250);
+            currentStep.parent().animate({"height": outerHeight+"px"},options.transitionEffectSpeed);
             break;
 
         default:
