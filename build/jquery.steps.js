@@ -1011,6 +1011,12 @@ function render(wizard, options, state)
 
     refreshStepNavigation(wizard, options, state);
     renderPagination(wizard, options, state);
+    
+    // Set the initial and min height of body content
+	var initialHeight = wizard.find(".body.current").outerHeight(true),
+		minHeight = wizard.find(".steps ul[role='tablist']").height();
+	if (orientation) wizard.find(".content").css("min-height", minHeight + "px");
+	wizard.find(".content").css("height", initialHeight + "px");
 }
 
 /**
@@ -1218,6 +1224,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
 
         case transitionEffect.slideLeft:
             var outerWidth = currentStep.outerWidth(true),
+                outerHeight = newStep.outerHeight(false),
                 posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
                 posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
@@ -1225,6 +1232,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
                 function () { $(this)._showAria(false); }).promise();
             newStep.css("left", posFadeIn + "px")._showAria()
                 .animate({ left: 0 }, effectSpeed).promise();
+            currentStep.parent().animate({"height": outerHeight+"px"},options.transitionEffectSpeed);
             break;
 
         default:
