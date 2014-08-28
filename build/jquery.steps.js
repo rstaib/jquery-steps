@@ -1334,6 +1334,19 @@ $.fn.steps.add = function (step)
 };
 
 /**
+ * Gets the step count.
+ *
+ * @method count
+ * @return {Integer} step count
+ * @for steps
+ **/
+$.fn.steps.count = function ()
+{
+    var state = getState(this);
+    return state.stepCount;
+};
+
+/**
  * Removes the control functionality completely and transforms the current state to the initial HTML structure.
  *
  * @method destroy
