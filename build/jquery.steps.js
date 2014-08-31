@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.7 - 08/31/2014
+ * jQuery Steps v1.0.8 - 08/31/2014
  * Copyright (c) 2014 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */

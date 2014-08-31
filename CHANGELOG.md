@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.8
+- Small fix. Closes issue [#88](https://github.com/rstaib/jquery-steps/issues/88)
+
 ## 1.0.7
 - Small fix. Closes issue [#58](https://github.com/rstaib/jquery-steps/issues/58)
 - Set the default value of `enableCancelButton` for backward compatibility reasons to `false`
