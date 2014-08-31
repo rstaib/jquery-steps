@@ -509,10 +509,16 @@ function goToStep(wizard, options, state, index)
         // Change visualisation
         refreshStepNavigation(wizard, options, state, oldIndex);
         refreshPagination(wizard, options, state);
-        loadAsyncContent(wizard, options, state);
-        startTransitionEffect(wizard, options, state, index, oldIndex);
-
-        wizard.triggerHandler("stepChanged", [index, oldIndex]);
+        $.when(loadAsyncContent(wizard, options, state)).then(
+            function() {
+                startTransitionEffect(wizard, options, state, index, oldIndex);
+                wizard.triggerHandler("stepChanged", [index, oldIndex]);
+            },
+            function() {
+                // TODO add error handler
+                alert('Error load content');
+            }
+        );
     }
     else
     {
@@ -714,11 +720,10 @@ function loadAsyncContent(wizard, options, state)
                     var currentStepContent = getStepPanel(wizard, state.currentIndex)._aria("busy", "true")
                         .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
 
-                    $.ajax({ url: currentStep.contentUrl, cache: false }).done(function (data)
+                    return $.ajax({ url: currentStep.contentUrl, cache: false }).done(function (data)
                     {
                         currentStepContent.empty().html(data)._aria("busy", "false").data("loaded", "1");
                     });
-                    break;
             }
         }
     }
