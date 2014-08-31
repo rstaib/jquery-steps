@@ -99,7 +99,7 @@ function analyzeData(wizard, options, state)
     {
         throwError(_missingCorrespondingElementErrorMessage, "titles");
     }
-        
+
     var startIndex = options.startIndex;
 
     state.stepCount = stepTitles.length;
@@ -108,7 +108,7 @@ function analyzeData(wizard, options, state)
     if (options.saveState && $.cookie)
     {
         var savedState = $.cookie(_cookiePrefix + getUniqueId(wizard));
-        // Sets the saved position to the start index if not undefined or out of range 
+        // Sets the saved position to the start index if not undefined or out of range
         var savedIndex = parseInt(savedState, 0);
         if (!isNaN(savedIndex) && savedIndex < state.stepCount)
         {
@@ -340,7 +340,7 @@ function getUniqueId(wizard)
 
 /**
  * Gets a valid enum value by checking a specific enum key or value.
- * 
+ *
  * @static
  * @private
  * @method getValidEnumValue
@@ -456,7 +456,6 @@ function goToStep(wizard, options, state, index)
             },
             function() {
                 // TODO add error handler
-                alert('Error load content');
             }
         );
     }
@@ -895,13 +894,13 @@ function removeStep(wizard, options, state, index)
     getStepPanel(wizard, index).remove();
     getStepAnchor(wizard, index).parent().remove();
 
-    // Set the "first" class to the new first step button 
+    // Set the "first" class to the new first step button
     if (index === 0)
     {
         wizard.find(".steps li").first().addClass("first");
     }
 
-    // Set the "last" class to the new last step button 
+    // Set the "last" class to the new last step button
     if (index === state.stepCount)
     {
         wizard.find(".steps li").eq(index).addClass("last");
@@ -1037,7 +1036,7 @@ function renderTemplate(template, substitutes)
 
     for (var i = 0; i < matches.length; i++)
     {
-        var match = matches[i], 
+        var match = matches[i],
             key = match.substring(1, match.length - 1);
 
         if (substitutes[key] === undefined)
@@ -1074,9 +1073,9 @@ function renderTitle(wizard, options, state, header, index)
             index: index + 1,
             title: header.html()
         }),
-        stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId + 
+        stepItem = $("<li role=\"tab\"><a id=\"" + uniqueStepId + "\" href=\"#" + uniqueHeaderId +
             "\" aria-controls=\"" + uniqueBodyId + "\">" + title + "</a></li>");
-        
+
     stepItem._enableAria(options.enableAllSteps || state.currentIndex > index);
 
     if (state.currentIndex > index)
@@ -1166,7 +1165,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
                 posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
                 posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
-            currentStep.animate({ left: posFadeOut }, effectSpeed, 
+            currentStep.animate({ left: posFadeOut }, effectSpeed,
                 function () { $(this)._showAria(false); }).promise();
             newStep.css("left", posFadeIn + "px")._showAria()
                 .animate({ left: 0 }, effectSpeed).promise();
