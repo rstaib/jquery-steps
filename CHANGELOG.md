@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.8
+- Fixed issue [#91](https://github.com/rstaib/jquery-steps/issues/91) (`stepChanged` event is fired before transitions are done)
+
 ## 1.0.7
 - Small fix. Closes issue [#58](https://github.com/rstaib/jquery-steps/issues/58)
 - Set the default value of `enableCancelButton` for backward compatibility reasons to `false`

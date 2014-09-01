@@ -450,9 +450,10 @@ function goToStep(wizard, options, state, index)
         refreshStepNavigation(wizard, options, state, oldIndex);
         refreshPagination(wizard, options, state);
         loadAsyncContent(wizard, options, state);
-        startTransitionEffect(wizard, options, state, index, oldIndex);
-
-        wizard.triggerHandler("stepChanged", [index, oldIndex]);
+        startTransitionEffect(wizard, options, state, index, oldIndex, function()
+        {
+            wizard.triggerHandler("stepChanged", [index, oldIndex]);
+        });
     }
     else
     {
@@ -1124,7 +1125,7 @@ function saveCurrentStateToCookie(wizard, options, state)
     }
 }
 
-function startTransitionEffect(wizard, options, state, index, oldIndex)
+function startTransitionEffect(wizard, options, state, index, oldIndex, doneCallback)
 {
     var stepContents = wizard.find(".content > .body"),
         effect = getValidEnumValue(transitionEffect, options.transitionEffect),
@@ -1150,10 +1151,10 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
                     state.transitionElement[show](effectSpeed, function ()
                     {
                         $(this)._showAria();
-                    });
+                    }).promise().done(doneCallback);
                     state.transitionElement = null;
                 }
-            }).promise();
+            });
             break;
 
         case transitionEffect.slideLeft:
@@ -1161,15 +1162,15 @@ function startTransitionEffect(wizard, options, state, index, oldIndex)
                 posFadeOut = (index > oldIndex) ? -(outerWidth) : outerWidth,
                 posFadeIn = (index > oldIndex) ? outerWidth : -(outerWidth);
 
-            currentStep.animate({ left: posFadeOut }, effectSpeed, 
-                function () { $(this)._showAria(false); }).promise();
-            newStep.css("left", posFadeIn + "px")._showAria()
-                .animate({ left: 0 }, effectSpeed).promise();
+            $.when(currentStep.animate({ left: posFadeOut }, effectSpeed, 
+                    function () { $(this)._showAria(false); }),
+                newStep.css("left", posFadeIn + "px")._showAria()
+                    .animate({ left: 0 }, effectSpeed)).done(doneCallback);
             break;
 
         default:
-            currentStep._showAria(false);
-            newStep._showAria();
+            $.when(currentStep._showAria(false), newStep._showAria())
+                .done(doneCallback);
             break;
     }
 }
