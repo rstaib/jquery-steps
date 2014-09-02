@@ -10,12 +10,9 @@
 			<a href="http://rstaib.github.io/jquery-steps">jQuery Steps Plugin</a> Test Suite
 		</h1>
 		<div id="qunit-banner"></div>
-		<div id="qunit-testrunner-toolbar"><span>jQuery Versions: <input id="version-144" name="version" type="radio" value="1.4.4" /><label for="version-144">jQuery 1.4.4</label> 
-			<input id="version-152" name="version" type="radio" value="1.5.2" /><label for="version-152">jQuery 1.5.2</label> 
-			<input id="version-164" name="version" type="radio" value="1.6.4" /><label for="version-164">jQuery 1.6.4</label> 
-			<input id="version-172" name="version" type="radio" value="1.7.2" /><label for="version-172">jQuery 1.7.2</label> 
-			<input id="version-183" name="version" type="radio" value="1.8.3" /><label for="version-183">jQuery 1.8.3</label> 
-			<input id="version-191" name="version" type="radio" value="1.9.1" /><label for="version-191">jQuery 1.9.1</label>
+		<div id="qunit-testrunner-toolbar"><span>jQuery Versions: <input id="version-191" name="version" type="radio" value="1.9.1" /><label for="version-191">jQuery 1.9.1</label>
+            <input id="version-1102" name="version" type="radio" value="1.10.2" /><label for="version-1102">jQuery 1.10.2</label>
+            <input id="version-1111" name="version" type="radio" value="1.11.1" /><label for="version-1111">jQuery 1.11.1</label>
 			<input id="version-latest" name="version" type="radio" value="latest" /><label for="version-latest">jQuery Latest (git)</label></span></div>
 		<h2 id="qunit-userAgent"></h2>
 		<ol id="qunit-tests"></ol>
@@ -71,9 +68,9 @@
 					location.href = "?version=" + $(this).val();
 				});
 
-				var versionPattern = /^[\?|\&]{1}version=(\d\.\d\.\d|latest)/,
+				var versionPattern = /^[\?|\&]{1}version=(\d{1,2}\.\d{1,2}\.\d{1,2}|latest)/,
 					version = versionPattern.exec(location.search),
-					defaultVersion = "1.9.1";
+					defaultVersion = "1.11.1";
 
 				if (version != null && version.length > 0)
 				{

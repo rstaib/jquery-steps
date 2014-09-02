@@ -29,6 +29,6 @@
     "download": "http://www.jquery-steps.com",
     "demo": "http://www.jquery-steps.com/Examples",
     "dependencies": {
-        "jquery": ">=1.4.4"
+        "jquery": ">=1.9.0"
     }
 }
