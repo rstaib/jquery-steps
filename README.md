@@ -1,4 +1,4 @@
-jQuery Steps Plugin [![Build Status](https://travis-ci.org/rstaib/jquery-steps.png?branch=master)](https://travis-ci.org/rstaib/jquery-steps)
+jQuery Steps Plugin [![Build Status](https://travis-ci.org/rstaib/jquery-steps.svg?branch=master)](https://travis-ci.org/rstaib/jquery-steps) [![Bower version](https://badge.fury.io/bo/jquery.steps.svg)](http://badge.fury.io/bo/jquery.steps) [![NuGet version](https://badge.fury.io/nu/jquery.steps.svg)](http://badge.fury.io/nu/jquery.steps)
 ============
 
 A powerful jQuery wizard plugin that supports accessibility and HTML5.
