@@ -153,9 +153,18 @@ $.fn.steps.remove = function (index)
  * @param index {Integer} An integer that belongs to the position of a step
  * @param step {Object} The step object to change
  **/
-$.fn.steps.setStep = function (index, step)
+$.fn.steps.setStep = function (index, skipEvent)
 {
-    throw new Error("Not yet implemented!");
+    var state = getState(this);
+    if ( index < 0 || state && index > state.stepCount) {
+        return;
+    }
+    var range = Array.apply(null, new Array(index)).map(function (_, i) {return i;});
+    $.each(range, function(stepIndex) {
+        $('#steps-t-' + stepIndex).parent().removeClass('disabled').addClass('done');
+    });
+
+    return goToStep(this, getOptions(this), state, index, skipEvent);
 };
 
 /**

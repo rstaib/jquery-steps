@@ -427,8 +427,12 @@ function goToPreviousStep(wizard, options, state)
  * @param index {Integer} The position (zero-based) to route to
  * @return {Boolean} Indicates whether the action succeeded or failed
  **/
-function goToStep(wizard, options, state, index)
+function goToStep(wizard, options, state, index, skipEvent)
 {
+    if (typeof skipEvent === 'undefined') {
+      skipEvent = false;
+    }
+
     if (index < 0 || index >= state.stepCount)
     {
         throwError(_indexOutOfRangeErrorMessage);
@@ -440,7 +444,11 @@ function goToStep(wizard, options, state, index)
     }
 
     var oldIndex = state.currentIndex;
-    if (wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
+    var eventResult = true;
+    if (!skipEvent) {
+        eventResult = wizard.triggerHandler("stepChanging", [state.currentIndex, index]);
+    }
+    if (eventResult)
     {
         // Save new state
         state.currentIndex = index;
@@ -1078,7 +1086,7 @@ function renderTitle(wizard, options, state, header, index)
 
     stepItem._enableAria(options.enableAllSteps || state.currentIndex > index);
 
-    if (state.currentIndex > index)
+    if (state.currentIndex > index || options.enableAllSteps)
     {
         stepItem.addClass("done");
     }

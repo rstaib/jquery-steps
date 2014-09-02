@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.8 - 08/31/2014
+ * jQuery Steps v1.0.8 - 09/02/2014
  * Copyright (c) 2014 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -487,8 +487,12 @@ function goToPreviousStep(wizard, options, state)
  * @param index {Integer} The position (zero-based) to route to
  * @return {Boolean} Indicates whether the action succeeded or failed
  **/
-function goToStep(wizard, options, state, index)
+function goToStep(wizard, options, state, index, skipEvent)
 {
+    if (typeof skipEvent === 'undefined') {
+      skipEvent = false;
+    }
+
     if (index < 0 || index >= state.stepCount)
     {
         throwError(_indexOutOfRangeErrorMessage);
@@ -500,7 +504,11 @@ function goToStep(wizard, options, state, index)
     }
 
     var oldIndex = state.currentIndex;
-    if (wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
+    var eventResult = true;
+    if (!skipEvent) {
+        eventResult = wizard.triggerHandler("stepChanging", [state.currentIndex, index]);
+    }
+    if (eventResult)
     {
         // Save new state
         state.currentIndex = index;
@@ -1138,7 +1146,7 @@ function renderTitle(wizard, options, state, header, index)
 
     stepItem._enableAria(options.enableAllSteps || state.currentIndex > index);
 
-    if (state.currentIndex > index)
+    if (state.currentIndex > index || options.enableAllSteps)
     {
         stepItem.addClass("done");
     }
@@ -1455,9 +1463,18 @@ $.fn.steps.remove = function (index)
  * @param index {Integer} An integer that belongs to the position of a step
  * @param step {Object} The step object to change
  **/
-$.fn.steps.setStep = function (index, step)
+$.fn.steps.setStep = function (index, skipEvent)
 {
-    throw new Error("Not yet implemented!");
+    var state = getState(this);
+    if ( index < 0 || state && index > state.stepCount) {
+        return;
+    }
+    var range = Array.apply(null, new Array(index)).map(function (_, i) {return i;});
+    $.each(range, function(stepIndex) {
+        $('#steps-t-' + stepIndex).parent().removeClass('disabled').addClass('done');
+    });
+
+    return goToStep(this, getOptions(this), state, index, skipEvent);
 };
 
 /**
@@ -1471,6 +1488,7 @@ $.fn.steps.skip = function (count)
 {
     throw new Error("Not yet implemented!");
 };
+
 
 /**
  * An enum represents the different content types of a step and their loading mechanisms.
@@ -1724,7 +1742,7 @@ var defaults = $.fn.steps.defaults = {
      */
 
     /**
-     * Sets the focus to the first wizard instance in order to enable the key navigation from the begining if `true`. 
+     * Sets the focus to the first wizard instance in order to enable the key navigation from the begining if `true`.
      *
      * @property autoFocus
      * @type Boolean
@@ -1815,7 +1833,7 @@ var defaults = $.fn.steps.defaults = {
     preloadContent: false,
 
     /**
-     * Shows the finish button always (on each step; right beside the next button) if `true`. 
+     * Shows the finish button always (on each step; right beside the next button) if `true`.
      * Otherwise the next button will be replaced by the finish button if the last step becomes active.
      *
      * @property showFinishButtonAlways
@@ -1885,8 +1903,8 @@ var defaults = $.fn.steps.defaults = {
      */
 
     /**
-     * Fires before the step changes and can be used to prevent step changing by returning `false`. 
-     * Very useful for form validation. 
+     * Fires before the step changes and can be used to prevent step changing by returning `false`.
+     * Very useful for form validation.
      *
      * @property onStepChanging
      * @type Event
@@ -1896,7 +1914,7 @@ var defaults = $.fn.steps.defaults = {
     onStepChanging: function (event, currentIndex, newIndex) { return true; },
 
     /**
-     * Fires after the step has change. 
+     * Fires after the step has change.
      *
      * @property onStepChanged
      * @type Event
@@ -1906,7 +1924,7 @@ var defaults = $.fn.steps.defaults = {
     onStepChanged: function (event, currentIndex, priorIndex) { },
 
     /**
-     * Fires after cancelation. 
+     * Fires after cancelation.
      *
      * @property onCanceled
      * @type Event
@@ -1916,8 +1934,8 @@ var defaults = $.fn.steps.defaults = {
     onCanceled: function (event) { },
 
     /**
-     * Fires before finishing and can be used to prevent completion by returning `false`. 
-     * Very useful for form validation. 
+     * Fires before finishing and can be used to prevent completion by returning `false`.
+     * Very useful for form validation.
      *
      * @property onFinishing
      * @type Event
@@ -1927,7 +1945,7 @@ var defaults = $.fn.steps.defaults = {
     onFinishing: function (event, currentIndex) { return true; },
 
     /**
-     * Fires after completion. 
+     * Fires after completion.
      *
      * @property onFinished
      * @type Event
@@ -1937,7 +1955,7 @@ var defaults = $.fn.steps.defaults = {
     onFinished: function (event, currentIndex) { },
 
     /**
-     * Contains all labels. 
+     * Contains all labels.
      *
      * @property labels
      * @type Object
@@ -2017,4 +2035,5 @@ var defaults = $.fn.steps.defaults = {
         loading: "Loading ..."
     }
 };
+
 })(jQuery);

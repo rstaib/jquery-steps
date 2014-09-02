@@ -150,7 +150,7 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('api', ['clean:api', 'yuidoc']);
+    grunt.registerTask('api', ['clean:api']);
     grunt.registerTask('build', ['clean:build', 'concat', 'jshint', 'qunit']);
-    grunt.registerTask('release', ['build', 'api', 'uglify', 'compress', 'exec:createPkg']);
+    grunt.registerTask('release', ['build', 'api', 'uglify', 'compress']);
 };
