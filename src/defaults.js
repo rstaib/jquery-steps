@@ -341,6 +341,26 @@ var defaults = $.fn.steps.defaults = {
     onFinished: function (event, currentIndex) { },
 
     /**
+     * Fires after async content is loaded. 
+     *
+     * @property onContentLoaded
+     * @type Event
+     * @default function (event, index) { }
+     * @for defaults
+     **/
+    onContentLoaded: function (event, currentIndex) { },
+
+    /**
+     * Fires when the wizard is initialized. 
+     *
+     * @property onInit
+     * @type Event
+     * @default function (event) { }
+     * @for defaults
+     **/
+    onInit: function (event, currentIndex) { },
+
+    /**
      * Contains all labels. 
      *
      * @property labels

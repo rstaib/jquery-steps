@@ -1,5 +1,5 @@
 /*! 
- * jQuery Steps v1.0.8 - 09/01/2014
+ * jQuery Steps v1.1.0 - 09/04/2014
  * Copyright (c) 2014 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -565,6 +565,8 @@ function initialize(options)
         {
             getStepAnchor(wizard, opts.startIndex).focus();
         }
+
+        wizard.triggerHandler("init", [opts.startIndex]);
     });
 }
 
@@ -699,7 +701,8 @@ function loadAsyncContent(wizard, options, state)
 {
     if (state.stepCount > 0)
     {
-        var currentStep = getStep(wizard, state.currentIndex);
+        var currentIndex = state.currentIndex,
+            currentStep = getStep(wizard, currentIndex);
 
         if (!options.enableContentCache || !currentStep.contentLoaded)
         {
@@ -712,12 +715,13 @@ function loadAsyncContent(wizard, options, state)
                     break;
 
                 case contentMode.async:
-                    var currentStepContent = getStepPanel(wizard, state.currentIndex)._aria("busy", "true")
+                    var currentStepContent = getStepPanel(wizard, currentIndex)._aria("busy", "true")
                         .empty().append(renderTemplate(options.loadingTemplate, { text: options.labels.loading }));
 
                     $.ajax({ url: currentStep.contentUrl, cache: false }).done(function (data)
                     {
                         currentStepContent.empty().html(data)._aria("busy", "false").data("loaded", "1");
+                        wizard.triggerHandler("contentLoaded", [currentIndex]);
                     });
                     break;
             }
@@ -905,8 +909,10 @@ function registerEvents(wizard, options)
     var eventNamespace = getEventNamespace(wizard);
 
     wizard.bind("canceled" + eventNamespace, options.onCanceled);
+    wizard.bind("contentLoaded" + eventNamespace, options.onContentLoaded);
     wizard.bind("finishing" + eventNamespace, options.onFinishing);
     wizard.bind("finished" + eventNamespace, options.onFinished);
+    wizard.bind("init" + eventNamespace, options.onInit);
     wizard.bind("stepChanging" + eventNamespace, options.onStepChanging);
     wizard.bind("stepChanged" + eventNamespace, options.onStepChanged);
 
@@ -1931,6 +1937,26 @@ var defaults = $.fn.steps.defaults = {
      * @for defaults
      **/
     onFinished: function (event, currentIndex) { },
+
+    /**
+     * Fires after async content is loaded. 
+     *
+     * @property onContentLoaded
+     * @type Event
+     * @default function (event, index) { }
+     * @for defaults
+     **/
+    onContentLoaded: function (event, currentIndex) { },
+
+    /**
+     * Fires when the wizard is initialized. 
+     *
+     * @property onInit
+     * @type Event
+     * @default function (event) { }
+     * @for defaults
+     **/
+    onInit: function (event, currentIndex) { },
 
     /**
      * Contains all labels. 
