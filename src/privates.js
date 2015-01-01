@@ -440,8 +440,8 @@ function goToStep(wizard, options, state, index)
     }
 
     var oldIndex = state.currentIndex;
-    var changeState = null;
-    if (changeState = wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
+    var changeState = wizard.triggerHandler("stepChanging", [state.currentIndex, index]);
+    if (changeState)
     {
         // Save new state
         state.currentIndex = index;
