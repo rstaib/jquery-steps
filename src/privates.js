@@ -440,7 +440,8 @@ function goToStep(wizard, options, state, index)
     }
 
     var oldIndex = state.currentIndex;
-    if (wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
+    var changeState = null;
+    if (changeState = wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
     {
         // Save new state
         state.currentIndex = index;
@@ -455,7 +456,7 @@ function goToStep(wizard, options, state, index)
             wizard.triggerHandler("stepChanged", [index, oldIndex]);
         });
     }
-    else
+    else if (changeState !== null)
     {
         wizard.find(".steps li").eq(oldIndex).addClass("error");
     }
