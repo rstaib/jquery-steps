@@ -456,7 +456,16 @@ function getValidEnumValue(enumType, keyOrValue)
  **/
 function goToNextStep(wizard, options, state)
 {
-    return paginationClick(wizard, options, state, increaseCurrentIndexBy(state, 1));
+	// Determine next active step
+	var newIndex = increaseCurrentIndexBy(state, 1);
+	do {
+		if (typeof state.disabledSteps == 'undefined' || $.inArray(newIndex, state.disabledSteps) == -1) {
+			break;  //found an index that is not disabled => stop the loop
+		}
+		newIndex++;
+	} while (true);
+
+    return paginationClick(wizard, options, state, newIndex);
 }
 
 /**
@@ -472,7 +481,16 @@ function goToNextStep(wizard, options, state)
  **/
 function goToPreviousStep(wizard, options, state)
 {
-    return paginationClick(wizard, options, state, decreaseCurrentIndexBy(state, 1));
+	// Determine previous active step
+	var newIndex = decreaseCurrentIndexBy(state, 1);
+	do {
+		if (typeof state.disabledSteps == 'undefined' || $.inArray(newIndex, state.disabledSteps) == -1) {
+			break;  //found an index that is not disabled => stop the loop
+		}
+		newIndex--;
+	} while (true);
+
+    return paginationClick(wizard, options, state, newIndex);
 }
 
 /**
@@ -1472,6 +1490,63 @@ $.fn.steps.setStep = function (index, step)
 $.fn.steps.skip = function (count)
 {
     throw new Error("Not yet implemented!");
+};
+
+/**
+ * Sets the current step index.
+ *
+ * @method setCurrentIndex
+ * @param index {Integer} The new step index (zero-based)
+ * @return {Boolean} Indicates whether the action executed
+ **/
+$.fn.steps.setCurrentIndex = function (index)
+{
+    var options = getOptions(this),
+        state = getState(this);
+
+    return goToStep(this, options, state, index);
+};
+
+/**
+ * Disable a step so that it will be skipped on going to Next and Previous
+ *
+ * @method disableStep
+ * @param index {Integer} Index number of the step to disable
+ * @return {Boolean} Indicates whether the action executed
+ **/
+$.fn.steps.disableStep = function (index)
+{
+	var state = getState(this);
+
+	if (typeof state.disabledSteps == 'undefined') {
+		state.disabledSteps = [];
+	}
+	if ($.inArray(index, state.disabledSteps) == -1) {
+		state.disabledSteps.push(index);
+		return true;
+	}
+	return false;
+};
+
+/**
+ * Enable a step that was previously disabled
+ *
+ * @method enableStep
+ * @param index {Integer} Index number of the step to re-enable
+ * @return {Boolean} Indicates whether the action executed
+ **/
+$.fn.steps.enableStep = function (index)
+{
+	var state = getState(this);
+
+	if (typeof state.disabledSteps != 'undefined') {
+		var arrayIndex = $.inArray(index, state.disabledSteps);
+		if (arrayIndex > -1) {
+			state.disabledSteps.splice(arrayIndex, 1);
+			return true;
+		}
+	}
+	return false;
 };
 
 /**
