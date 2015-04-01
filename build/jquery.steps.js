@@ -1,6 +1,6 @@
 /*! 
- * jQuery Steps v1.1.0 - 09/04/2014
- * Copyright (c) 2014 Rafael Staib (http://www.jquery-steps.com)
+ * jQuery Steps v1.1.0 - 04/01/2015
+ * Copyright (c) 2015 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
 ;(function ($, undefined)
@@ -273,11 +273,12 @@ function destroy(wizard, options)
  * @private
  * @method finishStep
  * @param wizard {Object} The jQuery wizard object
+  * @param options {Object} Settings of the current wizard
  * @param state {Object} The state container of the current wizard
  **/
-function finishStep(wizard, state)
+function finishStep(wizard, options, state)
 {
-    var currentStep = wizard.find(".steps li").eq(state.currentIndex);
+    var currentStep = getStepsCollection(wizard, options).children("li").eq(state.currentIndex);
 
     if (wizard.triggerHandler("finishing", [state.currentIndex]))
     {
@@ -346,6 +347,26 @@ function getState(wizard)
 function getSteps(wizard)
 {
     return wizard.data("steps");
+}
+
+function getStepsCollection(wizard, options)
+{
+    return wizard.find('.' + options.stepsCssClass + ' > ul');
+}
+
+function getContentContainer(wizard, options)
+{
+    return wizard.find('.' + options.contentCssClass);
+}
+
+function getHeaderCollection(wizard, options)
+{
+    return wizard.find('.' + options.contentCssClass + ' > ' + '.' + options.headerCssClass);
+}
+
+function getBodyCollection(wizard, options)
+{
+    return wizard.find('.' + options.contentCssClass + ' > ' + '.' + options.bodyCssClass);
 }
 
 /**
@@ -517,7 +538,7 @@ function goToStep(wizard, options, state, index)
     }
     else
     {
-        wizard.find(".steps li").eq(oldIndex).addClass("error");
+        getStepsCollection(wizard, options).children("li").eq(oldIndex).addClass("error");
     }
 
     return true;
@@ -609,7 +630,7 @@ function insertStep(wizard, options, state, index, step)
     }
     state.stepCount++;
 
-    var contentContainer = wizard.find(".content"),
+    var contentContainer = getContentContainer(wizard, options),
         header = $("<{0}>{1}</{0}>".format(options.headerTag, step.title)),
         body = $("<{0}></{0}>".format(options.bodyTag));
 
@@ -627,7 +648,7 @@ function insertStep(wizard, options, state, index, step)
         getStepPanel(wizard, (index - 1)).after(body).after(header);
     }
 
-    renderBody(wizard, state, body, index);
+    renderBody(wizard, options, state, body, index);
     renderTitle(wizard, options, state, header, index);
     refreshSteps(wizard, options, state, index);
     if (index === state.currentIndex)
@@ -709,7 +730,7 @@ function loadAsyncContent(wizard, options, state)
             switch (getValidEnumValue(contentMode, currentStep.contentMode))
             {
                 case contentMode.iframe:
-                    wizard.find(".content > .body").eq(state.currentIndex).empty()
+                    getBodyCollection(wizard, options).eq(state.currentIndex).empty()
                         .html("<iframe src=\"" + currentStep.contentUrl + "\" frameborder=\"0\" scrolling=\"no\" />")
                         .data("loaded", "1");
                     break;
@@ -794,7 +815,7 @@ function paginationClickHandler(event)
             break;
 
         case "finish":
-            finishStep(wizard, state);
+            finishStep(wizard, options, state);
             break;
 
         case "next":
@@ -859,19 +880,19 @@ function refreshStepNavigation(wizard, options, state, oldIndex)
 {
     var currentOrNewStepAnchor = getStepAnchor(wizard, state.currentIndex),
         currentInfo = $("<span class=\"current-info audible\">" + options.labels.current + " </span>"),
-        stepTitles = wizard.find(".content > .title");
+        stepTitles = getHeaderCollection(wizard, options);
 
     if (oldIndex != null)
     {
         var oldStepAnchor = getStepAnchor(wizard, oldIndex);
         oldStepAnchor.parent().addClass("done").removeClass("error")._selectAria(false);
-        stepTitles.eq(oldIndex).removeClass("current").next(".body").removeClass("current");
+        stepTitles.eq(oldIndex).removeClass("current").next("." + options.bodyCssClass).removeClass("current");
         currentInfo = oldStepAnchor.find(".current-info");
         currentOrNewStepAnchor.focus();
     }
 
     currentOrNewStepAnchor.prepend(currentInfo).parent()._selectAria().removeClass("done")._enableAria();
-    stepTitles.eq(state.currentIndex).addClass("current").next(".body").addClass("current");
+    stepTitles.eq(state.currentIndex).addClass("current").next("." + options.bodyCssClass).addClass("current");
 }
 
 /**
@@ -894,12 +915,12 @@ function refreshSteps(wizard, options, state, index)
         var uniqueStepId = uniqueId + _tabSuffix + i,
             uniqueBodyId = uniqueId + _tabpanelSuffix + i,
             uniqueHeaderId = uniqueId + _titleSuffix + i,
-            title = wizard.find(".title").eq(i)._id(uniqueHeaderId);
+            title = wizard.find("." + options.headerCssClass).eq(i)._id(uniqueHeaderId);
 
-        wizard.find(".steps a").eq(i)._id(uniqueStepId)
+        getStepsCollection(wizard, options).find("a").eq(i)._id(uniqueStepId)
             ._aria("controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
             .html(renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
-        wizard.find(".body").eq(i)._id(uniqueBodyId)
+        wizard.find("." + options.bodyCssClass).eq(i)._id(uniqueBodyId)
             ._aria("labelledby", uniqueHeaderId);
     }
 }
@@ -960,13 +981,13 @@ function removeStep(wizard, options, state, index)
     // Set the "first" class to the new first step button 
     if (index === 0)
     {
-        wizard.find(".steps li").first().addClass("first");
+        getStepsCollection(wizard, options).children("li").first().addClass("first");
     }
 
     // Set the "last" class to the new last step button 
     if (index === state.stepCount)
     {
-        wizard.find(".steps li").eq(index).addClass("last");
+        getStepsCollection(wizard, options).children("li").eq(index).addClass("last");
     }
 
     refreshSteps(wizard, options, state, index);
@@ -996,8 +1017,8 @@ function render(wizard, options, state)
     var wrapperTemplate = "<{0} class=\"{1}\">{2}</{0}>",
         orientation = getValidEnumValue(stepsOrientation, options.stepsOrientation),
         verticalCssClass = (orientation === stepsOrientation.vertical) ? " vertical" : "",
-        contentWrapper = $(wrapperTemplate.format(options.contentContainerTag, "content " + options.clearFixCssClass, wizard.html())),
-        stepsWrapper = $(wrapperTemplate.format(options.stepsContainerTag, "steps " + options.clearFixCssClass, "<ul role=\"tablist\"></ul>")),
+        contentWrapper = $(wrapperTemplate.format(options.contentContainerTag, options.contentCssClass + " " + options.clearFixCssClass, wizard.html())),
+        stepsWrapper = $(wrapperTemplate.format(options.stepsContainerTag, options.stepsCssClass + " " + options.clearFixCssClass, "<ul role=\"tablist\"></ul>")),
         stepTitles = contentWrapper.children(options.headerTag),
         stepContents = contentWrapper.children(options.bodyTag);
 
@@ -1008,7 +1029,7 @@ function render(wizard, options, state)
     // Add WIA-ARIA support
     stepContents.each(function (index)
     {
-        renderBody(wizard, state, $(this), index);
+        renderBody(wizard, options, state, $(this), index);
     });
 
     stepTitles.each(function (index)
@@ -1021,23 +1042,53 @@ function render(wizard, options, state)
 }
 
 /**
+ * Renders a template and replaces all placeholder.
+ *
+ * @static
+ * @private
+ * @method renderTemplate
+ * @param template {String} A template
+ * @param substitutes {Object} A list of substitute
+ * @return {String} The rendered template
+ */
+function renderTemplate(template, substitutes)
+{
+    var matches = template.match(/#([a-z]+)#/gi);
+    for (var i = 0; i < matches.length; i++)
+    {
+        var match = matches[i], 
+            key = match.substring(1, match.length - 1);
+
+        if (substitutes[key] === undefined)
+        {
+            throwError("The key '{0}' does not exist in the substitute collection!", key);
+        }
+
+        template = template.replace(match, substitutes[key]);
+    }
+
+    return template;
+}
+
+/**
  * Transforms the body to a proper tabpanel.
  *
  * @static
  * @private
  * @method renderBody
  * @param wizard {Object} A jQuery wizard object
+  * @param options {Object} Settings of the current wizard
  * @param body {Object} A jQuery body object
  * @param index {Integer} The position of the body
  */
-function renderBody(wizard, state, body, index)
+function renderBody(wizard, options, state, body, index)
 {
     var uniqueId = getUniqueId(wizard),
         uniqueBodyId = uniqueId + _tabpanelSuffix + index,
         uniqueHeaderId = uniqueId + _titleSuffix + index;
 
     body._id(uniqueBodyId).attr("role", "tabpanel")._aria("labelledby", uniqueHeaderId)
-        .addClass("body")._showAria(state.currentIndex === index);
+        .addClass(options.bodyCssClass)._showAria(state.currentIndex === index);
 }
 
 /**
@@ -1055,24 +1106,36 @@ function renderPagination(wizard, options, state)
     if (options.enablePagination)
     {
         var pagination = "<{0} class=\"actions {1}\"><ul role=\"menu\" aria-label=\"{2}\">{3}</ul></{0}>",
-            buttonTemplate = "<li><a href=\"#{0}\" role=\"menuitem\">{1}</a></li>",
+            buttonTemplate = options.buttonTemplate,
             buttons = "";
 
         if (!options.forceMoveForward)
         {
-            buttons += buttonTemplate.format("previous", options.labels.previous);
+            buttons += renderTemplate(buttonTemplate, {
+                action: "previous",
+                label: options.labels.previous
+            });
         }
 
-        buttons += buttonTemplate.format("next", options.labels.next);
+        buttons += renderTemplate(buttonTemplate, {
+            action: "next",
+            label: options.labels.next
+        });
 
         if (options.enableFinishButton)
         {
-            buttons += buttonTemplate.format("finish", options.labels.finish);
+            buttons += renderTemplate(buttonTemplate, {
+                action: "finish",
+                label: options.labels.finish
+            });
         }
 
         if (options.enableCancelButton)
         {
-            buttons += buttonTemplate.format("cancel", options.labels.cancel);
+            buttons += renderTemplate(buttonTemplate, {
+                action: "cancel",
+                label: options.labels.cancel
+            });
         }
 
         wizard.append(pagination.format(options.actionContainerTag, options.clearFixCssClass,
@@ -1081,36 +1144,6 @@ function renderPagination(wizard, options, state)
         refreshPagination(wizard, options, state);
         loadAsyncContent(wizard, options, state);
     }
-}
-
-/**
- * Renders a template and replaces all placeholder.
- *
- * @static
- * @private
- * @method renderTemplate
- * @param template {String} A template
- * @param substitutes {Object} A list of substitute
- * @return {String} The rendered template
- */
-function renderTemplate(template, substitutes)
-{
-    var matches = template.match(/#([a-z]*)#/gi);
-
-    for (var i = 0; i < matches.length; i++)
-    {
-        var match = matches[i], 
-            key = match.substring(1, match.length - 1);
-
-        if (substitutes[key] === undefined)
-        {
-            throwError("The key '{0}' does not exist in the substitute collection!", key);
-        }
-
-        template = template.replace(match, substitutes[key]);
-    }
-
-    return template;
 }
 
 /**
@@ -1131,7 +1164,7 @@ function renderTitle(wizard, options, state, header, index)
         uniqueStepId = uniqueId + _tabSuffix + index,
         uniqueBodyId = uniqueId + _tabpanelSuffix + index,
         uniqueHeaderId = uniqueId + _titleSuffix + index,
-        stepCollection = wizard.find(".steps > ul"),
+        stepCollection = getStepsCollection(wizard, options),
         title = renderTemplate(options.titleTemplate, {
             index: index + 1,
             title: header.html()
@@ -1146,7 +1179,7 @@ function renderTitle(wizard, options, state, header, index)
         stepItem.addClass("done");
     }
 
-    header._id(uniqueHeaderId).attr("tabindex", "-1").addClass("title");
+    header._id(uniqueHeaderId).attr("tabindex", "-1").addClass(options.headerCssClass);
 
     if (index === 0)
     {
@@ -1193,7 +1226,7 @@ function saveCurrentStateToCookie(wizard, options, state)
 
 function startTransitionEffect(wizard, options, state, index, oldIndex, doneCallback)
 {
-    var stepContents = wizard.find(".content > .body"),
+    var stepContents = getBodyCollection(wizard, options),
         effect = getValidEnumValue(transitionEffect, options.transitionEffect),
         effectSpeed = options.transitionEffectSpeed,
         newStep = stepContents.eq(index),
@@ -1302,6 +1335,7 @@ function validateArgument(argumentName, argumentValue)
     }
 }
 
+
 /**
  * Represents a jQuery wizard plugin.
  *
@@ -1358,7 +1392,7 @@ $.fn.steps.destroy = function ()
  **/
 $.fn.steps.finish = function ()
 {
-    finishStep(this, getState(this));
+    finishStep(this, getOptions(this), getState(this));
 };
 
 /**
@@ -1677,6 +1711,56 @@ var defaults = $.fn.steps.defaults = {
     cssClass: "wizard",
 
     /**
+     * The css class which will be added to the step button text.
+     *
+     * @property headerCssClass
+     * @type String
+     * @default "title"
+     * @for defaults
+     **/
+    headerCssClass: "title",
+
+    /**
+     * The css class which will be added to the step content.
+     *
+     * @property bodyCssClass
+     * @type String
+     * @default "body"
+     * @for defaults
+     **/
+    bodyCssClass: "body",
+
+    /**
+     * The css class which will be added to the content component wrapper.
+     *
+     * @property contentCssClass
+     * @type String
+     * @default "content"
+     * @for defaults
+     **/
+    contentCssClass: "content",
+
+    /**
+     * The css class which will be added to the pagination navigation wrapper.
+     *
+     * @property actionsCssClass
+     * @type String
+     * @default "actions"
+     * @for defaults
+     **/
+    actionsCssClass: "actions",
+
+    /**
+     * The css class which will be added to the steps navigation wrapper.
+     *
+     * @property stepsCssClass
+     * @type String
+     * @default "steps"
+     * @for defaults
+     **/
+    stepsCssClass: "steps",
+
+    /**
      * The css class which will be used for floating scenarios.
      *
      * @property clearFixCssClass
@@ -1720,6 +1804,16 @@ var defaults = $.fn.steps.defaults = {
      * @for defaults
      **/
     loadingTemplate: "<span class=\"spinner\"></span> #text#",
+
+    /**
+     * The button template which will be used to create a action button.
+     *
+     * @property buttonTemplate
+     * @type String
+     * @default "<a href=\"#action#\" role=\"menuitem\">#label#</a>"
+     * @for defaults
+     **/
+    buttonTemplate:  "<li><a href=\"##action#\" role=\"menuitem\">#label#</a></li>",
 
     /*
      * Behaviour
