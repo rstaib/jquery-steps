@@ -173,7 +173,7 @@ function destroy(wizard, options)
     // Remove virtual data objects from the wizard
     wizard.unbind(eventNamespace).removeData("uid").removeData("options")
         .removeData("state").removeData("steps").removeData("eventNamespace")
-        .find(".actions a").unbind(eventNamespace);
+        .find("." + options.actionsCssClass + " a").unbind(eventNamespace);
 
     // Remove attributes and CSS classes from the wizard
     wizard.removeClass(options.clearFixCssClass + " vertical");
@@ -782,12 +782,12 @@ function refreshPagination(wizard, options, state)
 {
     if (options.enablePagination)
     {
-        var finish = wizard.find(".actions a[href$='#finish']").parent(),
-            next = wizard.find(".actions a[href$='#next']").parent();
+        var finish = wizard.find("." + options.actionsCssClass + " a[href$='#finish']").parent(),
+            next = wizard.find("." + options.actionsCssClass + " a[href$='#next']").parent();
 
         if (!options.forceMoveForward)
         {
-            var previous = wizard.find(".actions a[href$='#previous']").parent();
+            var previous = wizard.find("." + options.actionsCssClass + " a[href$='#previous']").parent();
             previous._enableAria(state.currentIndex > 0);
         }
 
@@ -882,7 +882,7 @@ function registerEvents(wizard, options)
         wizard.bind("keyup" + eventNamespace, keyUpHandler);
     }
 
-    wizard.find(".actions a").bind("click" + eventNamespace, paginationClickHandler);
+    wizard.find("." + options.actionsCssClass + " a").bind("click" + eventNamespace, paginationClickHandler);
 }
 
 /**
@@ -1045,7 +1045,7 @@ function renderPagination(wizard, options, state)
 {
     if (options.enablePagination)
     {
-        var pagination = "<{0} class=\"actions {1}\"><ul role=\"menu\" aria-label=\"{2}\">{3}</ul></{0}>",
+        var pagination = "<{0} class=\""+options.actionsCssClass+" {1}\"><ul role=\"menu\" aria-label=\"{2}\">{3}</ul></{0}>",
             buttonTemplate = options.buttonTemplate,
             buttons = "";
 
