@@ -54,7 +54,7 @@ $.fn.steps.destroy = function ()
  **/
 $.fn.steps.finish = function ()
 {
-    finishStep(this, getState(this));
+    finishStep(this, getOptions(this), getState(this));
 };
 
 /**

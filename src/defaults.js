@@ -79,6 +79,56 @@ var defaults = $.fn.steps.defaults = {
     cssClass: "wizard",
 
     /**
+     * The css class which will be added to the step button text.
+     *
+     * @property headerCssClass
+     * @type String
+     * @default "title"
+     * @for defaults
+     **/
+    headerCssClass: "title",
+
+    /**
+     * The css class which will be added to the step content.
+     *
+     * @property bodyCssClass
+     * @type String
+     * @default "body"
+     * @for defaults
+     **/
+    bodyCssClass: "body",
+
+    /**
+     * The css class which will be added to the content component wrapper.
+     *
+     * @property contentCssClass
+     * @type String
+     * @default "content"
+     * @for defaults
+     **/
+    contentCssClass: "content",
+
+    /**
+     * The css class which will be added to the pagination navigation wrapper.
+     *
+     * @property actionsCssClass
+     * @type String
+     * @default "actions"
+     * @for defaults
+     **/
+    actionsCssClass: "actions",
+
+    /**
+     * The css class which will be added to the steps navigation wrapper.
+     *
+     * @property stepsCssClass
+     * @type String
+     * @default "steps"
+     * @for defaults
+     **/
+    stepsCssClass: "steps",
+
+    /**
      * The css class which will be used for floating scenarios.
      *
      * @property clearFixCssClass
@@ -122,6 +172,16 @@ var defaults = $.fn.steps.defaults = {
      * @for defaults
      **/
     loadingTemplate: "<span class=\"spinner\"></span> #text#",
+
+    /**
+     * The button template which will be used to create a action button.
+     *
+     * @property buttonTemplate
+     * @type String
+     * @default "<a href=\"#action#\" role=\"menuitem\">#label#</a>"
+     * @for defaults
+     **/
+    buttonTemplate:  "<li><a href=\"##action#\" role=\"menuitem\">#label#</a></li>",
 
     /*
      * Behaviour
