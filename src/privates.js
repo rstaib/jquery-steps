@@ -207,6 +207,25 @@ function destroy(wizard, options)
 }
 
 /**
+ * Routes to first step and resets state.
+ * 
+ * @static
+ * @private
+ * @method reset
+ */
+function _reset(wizard, options)
+{
+    var state = getState(wizard);
+
+    goToStep(wizard, options, state, 0);
+
+    for (i = 1; i < state.stepCount; i++) {
+        var stepAnchor = getStepAnchor(wizard, i);
+        stepAnchor.parent().removeClass("done")._enableAria(false);
+    }
+}
+
+/**
  * Triggers the onFinishing and onFinished event.
  *
  * @static
