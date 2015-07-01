@@ -58,6 +58,26 @@ $.fn.steps.finish = function ()
 };
 
 /**
+ * Routes to first step and resets all states.
+ *
+ * @method reset
+ * @chainable
+ */
+$.fn.steps.reset = function () {
+    var wizard = this,
+        options = getOptions(this),
+        state = getState(this);
+        goToStep(wizard, options, state, 0);
+
+    for (i = 1; i < state.stepCount; i++) {
+        var stepAnchor = getStepAnchor(wizard, i);
+        stepAnchor.parent().removeClass("done")._enableAria(false);
+    }
+
+    return this;
+};
+
+/**
  * Gets the current step index.
  *
  * @method getCurrentIndex
