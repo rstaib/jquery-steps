@@ -215,7 +215,8 @@ function destroy(wizard, options)
  */
 function _reset(wizard, options)
 {
-    var state = getState(wizard);
+    var state = getState(wizard),
+        i;
 
     goToStep(wizard, options, state, 0);
 
