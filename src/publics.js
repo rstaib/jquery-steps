@@ -48,6 +48,17 @@ $.fn.steps.destroy = function ()
 };
 
 /**
+ * Routes to first step and resets state.
+ *
+ * @method reset
+ * @chainable
+ **/
+$.fn.steps.reset = function ()
+{
+    return _reset(this, getOptions(this));
+};
+
+/**
  * Triggers the onFinishing and onFinished event.
  *
  * @method finish
