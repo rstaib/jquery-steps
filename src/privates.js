@@ -219,15 +219,21 @@ function finishStep(wizard, state)
 {
     var currentStep = wizard.find(".steps li").eq(state.currentIndex);
 
-    if (wizard.triggerHandler("finishing", [state.currentIndex]))
-    {
-        currentStep.addClass("done").removeClass("error");
-        wizard.triggerHandler("finished", [state.currentIndex]);
-    }
-    else
-    {
+    var response = wizard.triggerHandler("finishing", [state.currentIndex]);
+    
+    jQuery.when(response).done(function(status){
+        if (status)
+        {
+            currentStep.addClass("done").removeClass("error");
+            wizard.triggerHandler("finished", [state.currentIndex]);
+        }
+        else
+        {
+            currentStep.addClass("error");
+        }
+    }).fail(function(){
         currentStep.addClass("error");
-    }
+    });
 }
 
 /**
@@ -440,26 +446,34 @@ function goToStep(wizard, options, state, index)
     }
 
     var oldIndex = state.currentIndex;
-    if (wizard.triggerHandler("stepChanging", [state.currentIndex, index]))
-    {
-        // Save new state
-        state.currentIndex = index;
-        saveCurrentStateToCookie(wizard, options, state);
 
-        // Change visualisation
-        refreshStepNavigation(wizard, options, state, oldIndex);
-        refreshPagination(wizard, options, state);
-        loadAsyncContent(wizard, options, state);
-        startTransitionEffect(wizard, options, state, index, oldIndex, function()
+    var response = wizard.triggerHandler("stepChanging", [state.currentIndex, index]);
+    
+    jQuery.when(response).done(function(status){
+        if (status)
         {
-            wizard.triggerHandler("stepChanged", [index, oldIndex]);
-        });
-    }
-    else
-    {
-        wizard.find(".steps li").eq(oldIndex).addClass("error");
-    }
+            // Save new state
+            state.currentIndex = index;
+            saveCurrentStateToCookie(wizard, options, state);
 
+            // Change visualisation
+            refreshStepNavigation(wizard, options, state, oldIndex);
+            refreshPagination(wizard, options, state);
+            loadAsyncContent(wizard, options, state);
+            startTransitionEffect(wizard, options, state, index, oldIndex, function()
+            {
+                wizard.triggerHandler("stepChanged", [index, oldIndex]);
+            });
+        }
+        else
+        {
+            wizard.find(".steps li").eq(oldIndex).addClass("error");
+        }
+
+    }).fail(function(){
+        wizard.find(".steps li").eq(oldIndex).addClass("error");
+    });
+    
     return true;
 }
 
