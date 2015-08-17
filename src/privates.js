@@ -219,15 +219,21 @@ function finishStep(wizard, state)
 {
     var currentStep = wizard.find(".steps li").eq(state.currentIndex);
 
-    if (wizard.triggerHandler("finishing", [state.currentIndex]))
-    {
-        currentStep.addClass("done").removeClass("error");
-        wizard.triggerHandler("finished", [state.currentIndex]);
-    }
-    else
-    {
+    var response = wizard.triggerHandler("finishing", [state.currentIndex]);
+    
+    jQuery.when(response).done(function(status){
+        if (status)
+        {
+            currentStep.addClass("done").removeClass("error");
+            wizard.triggerHandler("finished", [state.currentIndex]);
+        }
+        else
+        {
+            currentStep.addClass("error");
+        }
+    }).reject(function(){
         currentStep.addClass("error");
-    }
+    });
 }
 
 /**
@@ -464,7 +470,8 @@ function goToStep(wizard, options, state, index)
             wizard.find(".steps li").eq(oldIndex).addClass("error");
         }
 
-    })
+    });
+    
     return true;
 }
 
