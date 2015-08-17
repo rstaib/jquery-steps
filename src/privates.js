@@ -231,7 +231,7 @@ function finishStep(wizard, state)
         {
             currentStep.addClass("error");
         }
-    }).reject(function(){
+    }).fail(function(){
         currentStep.addClass("error");
     });
 }
@@ -470,6 +470,8 @@ function goToStep(wizard, options, state, index)
             wizard.find(".steps li").eq(oldIndex).addClass("error");
         }
 
+    }).fail(function(){
+        wizard.find(".steps li").eq(oldIndex).addClass("error");
     });
     
     return true;
