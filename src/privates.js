@@ -1133,7 +1133,7 @@ function saveCurrentStateToCookie(wizard, options, state)
 
 function startTransitionEffect(wizard, options, state, index, oldIndex, doneCallback)
 {
-    var stepContents = wizard.find(".content > .body"),
+    var stepContents = wizard.children(".content").children('.body'),
         effect = getValidEnumValue(transitionEffect, options.transitionEffect),
         effectSpeed = options.transitionEffectSpeed,
         newStep = stepContents.eq(index),
