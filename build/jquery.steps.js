@@ -1,6 +1,6 @@
 /*! 
- * jQuery Steps v1.1.0 - 09/04/2014
- * Copyright (c) 2014 Rafael Staib (http://www.jquery-steps.com)
+ * jQuery Steps v1.1.0 - 09/30/2015
+ * Copyright (c) 2015 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
 ;(function ($, undefined)
@@ -233,12 +233,12 @@ function destroy(wizard, options)
     // Remove virtual data objects from the wizard
     wizard.unbind(eventNamespace).removeData("uid").removeData("options")
         .removeData("state").removeData("steps").removeData("eventNamespace")
-        .find(".actions a").unbind(eventNamespace);
+        .find("> .actions a").unbind(eventNamespace);
 
     // Remove attributes and CSS classes from the wizard
     wizard.removeClass(options.clearFixCssClass + " vertical");
 
-    var contents = wizard.find(".content > *");
+    var contents = wizard.find("> .content > *");
 
     // Remove virtual data objects from panels and their titles
     contents.removeData("loaded").removeData("mode").removeData("url");
@@ -249,7 +249,7 @@ function destroy(wizard, options)
         ._removeAria("hidden");
 
     // Empty panels if the mode is set to 'async' or 'iframe'
-    wizard.find(".content > [data-mode='async'],.content > [data-mode='iframe']").empty();
+    wizard.find("> .content > [data-mode='async'],.content > [data-mode='iframe']").empty();
 
     var wizardSubstitute = $("<{0} class=\"{1}\"></{0}>".format(wizard.get(0).tagName, wizard.attr("class")));
 
@@ -259,7 +259,7 @@ function destroy(wizard, options)
         wizardSubstitute._id(wizardId);
     }
 
-    wizardSubstitute.html(wizard.find(".content").html());
+    wizardSubstitute.html(wizard.find("> .content").html());
     wizard.after(wizardSubstitute);
     wizard.remove();
 
@@ -277,7 +277,7 @@ function destroy(wizard, options)
  **/
 function finishStep(wizard, state)
 {
-    var currentStep = wizard.find(".steps li").eq(state.currentIndex);
+    var currentStep = wizard.find("> .steps li").eq(state.currentIndex);
 
     if (wizard.triggerHandler("finishing", [state.currentIndex]))
     {
@@ -517,7 +517,7 @@ function goToStep(wizard, options, state, index)
     }
     else
     {
-        wizard.find(".steps li").eq(oldIndex).addClass("error");
+        wizard.find("> .steps li").eq(oldIndex).addClass("error");
     }
 
     return true;
@@ -609,7 +609,7 @@ function insertStep(wizard, options, state, index, step)
     }
     state.stepCount++;
 
-    var contentContainer = wizard.find(".content"),
+    var contentContainer = wizard.find("> .content"),
         header = $("<{0}>{1}</{0}>".format(options.headerTag, step.title)),
         body = $("<{0}></{0}>".format(options.bodyTag));
 
@@ -709,7 +709,7 @@ function loadAsyncContent(wizard, options, state)
             switch (getValidEnumValue(contentMode, currentStep.contentMode))
             {
                 case contentMode.iframe:
-                    wizard.find(".content > .body").eq(state.currentIndex).empty()
+                    wizard.find("> .content > .body").eq(state.currentIndex).empty()
                         .html("<iframe src=\"" + currentStep.contentUrl + "\" frameborder=\"0\" scrolling=\"no\" />")
                         .data("loaded", "1");
                     break;
@@ -821,12 +821,12 @@ function refreshPagination(wizard, options, state)
 {
     if (options.enablePagination)
     {
-        var finish = wizard.find(".actions a[href$='#finish']").parent(),
-            next = wizard.find(".actions a[href$='#next']").parent();
+        var finish = wizard.find("> .actions a[href$='#finish']").parent(),
+            next = wizard.find("> .actions a[href$='#next']").parent();
 
         if (!options.forceMoveForward)
         {
-            var previous = wizard.find(".actions a[href$='#previous']").parent();
+            var previous = wizard.find("> .actions a[href$='#previous']").parent();
             previous._enableAria(state.currentIndex > 0);
         }
 
@@ -859,7 +859,7 @@ function refreshStepNavigation(wizard, options, state, oldIndex)
 {
     var currentOrNewStepAnchor = getStepAnchor(wizard, state.currentIndex),
         currentInfo = $("<span class=\"current-info audible\">" + options.labels.current + " </span>"),
-        stepTitles = wizard.find(".content > .title");
+        stepTitles = wizard.find("> .content > .title");
 
     if (oldIndex != null)
     {
@@ -896,7 +896,7 @@ function refreshSteps(wizard, options, state, index)
             uniqueHeaderId = uniqueId + _titleSuffix + i,
             title = wizard.find(".title").eq(i)._id(uniqueHeaderId);
 
-        wizard.find(".steps a").eq(i)._id(uniqueStepId)
+        wizard.find("> .steps a").eq(i)._id(uniqueStepId)
             ._aria("controls", uniqueBodyId).attr("href", "#" + uniqueHeaderId)
             .html(renderTemplate(options.titleTemplate, { index: i + 1, title: title.html() }));
         wizard.find(".body").eq(i)._id(uniqueBodyId)
@@ -921,7 +921,7 @@ function registerEvents(wizard, options)
         wizard.bind("keyup" + eventNamespace, keyUpHandler);
     }
 
-    wizard.find(".actions a").bind("click" + eventNamespace, paginationClickHandler);
+    wizard.find("> .actions a").bind("click" + eventNamespace, paginationClickHandler);
 }
 
 /**
@@ -960,13 +960,13 @@ function removeStep(wizard, options, state, index)
     // Set the "first" class to the new first step button 
     if (index === 0)
     {
-        wizard.find(".steps li").first().addClass("first");
+        wizard.find("> .steps li").first().addClass("first");
     }
 
     // Set the "last" class to the new last step button 
     if (index === state.stepCount)
     {
-        wizard.find(".steps li").eq(index).addClass("last");
+        wizard.find("> .steps li").eq(index).addClass("last");
     }
 
     refreshSteps(wizard, options, state, index);
@@ -1131,7 +1131,7 @@ function renderTitle(wizard, options, state, header, index)
         uniqueStepId = uniqueId + _tabSuffix + index,
         uniqueBodyId = uniqueId + _tabpanelSuffix + index,
         uniqueHeaderId = uniqueId + _titleSuffix + index,
-        stepCollection = wizard.find(".steps > ul"),
+        stepCollection = wizard.find("> .steps > ul"),
         title = renderTemplate(options.titleTemplate, {
             index: index + 1,
             title: header.html()
@@ -1193,7 +1193,7 @@ function saveCurrentStateToCookie(wizard, options, state)
 
 function startTransitionEffect(wizard, options, state, index, oldIndex, doneCallback)
 {
-    var stepContents = wizard.find(".content > .body"),
+    var stepContents = wizard.find("> .content > .body"),
         effect = getValidEnumValue(transitionEffect, options.transitionEffect),
         effectSpeed = options.transitionEffectSpeed,
         newStep = stepContents.eq(index),
