@@ -3,6 +3,7 @@
   "title": "jQuery Steps",
   "version": "1.1.0",
   "description": "A powerful jQuery wizard plugin that supports accessibility and HTML5",
+  "main": "build/jquery.steps.js",
   "homepage": "http://www.jquery-steps.com",
   "author": {
     "name": "Rafael Staib",
