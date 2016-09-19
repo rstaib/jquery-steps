@@ -2,6 +2,7 @@
   "name": "jquery-steps",
   "title": "jQuery Steps",
   "version": "1.1.0",
+  "main": "build/jquery.steps.js",
   "description": "A powerful jQuery wizard plugin that supports accessibility and HTML5",
   "homepage": "http://www.jquery-steps.com",
   "author": {
