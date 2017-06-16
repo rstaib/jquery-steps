@@ -155,7 +155,7 @@ $.fn.steps.remove = function (index)
  **/
 $.fn.steps.setStep = function (index, step)
 {
-    throw new Error("Not yet implemented!");
+    return setStep(this,index);
 };
 
 /**
