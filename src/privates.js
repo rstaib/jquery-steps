@@ -1131,6 +1131,22 @@ function saveCurrentStateToCookie(wizard, options, state)
     }
 }
 
+/**
+ * sets a specific step object by index.
+ *
+ * @static
+ * @private
+ * @method setStep
+ * @param index {Integer} An integer that belongs to the position of a step
+ * @return {Boolean} Indicates whether the action executed  
+ **/
+function setStep(wizard, index)
+{
+    var options = getOptions(wizard),
+    state = getState(wizard);
+    return paginationClick(wizard, options, state, index);
+}
+
 function startTransitionEffect(wizard, options, state, index, oldIndex, doneCallback)
 {
     var stepContents = wizard.find(".content > .body"),
