@@ -310,6 +310,22 @@ function getStep(wizard, index)
 }
 
 /**
+ * sets a specific step object by index.
+ *
+ * @static
+ * @private
+ * @method setStep
+ * @param index {Integer} An integer that belongs to the position of a step
+ * @return {Boolean} Indicates whether the action executed  
+ **/
+function setStep(wizard, index)
+{
+    var options = getOptions(wizard),
+    state = getState(wizard);
+	return paginationClick(wizard, options, state, index);
+}
+
+/**
  * Gets or creates if not exist an unique id from the given wizard instance.
  *
  * @static
