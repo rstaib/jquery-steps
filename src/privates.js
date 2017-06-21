@@ -220,6 +220,10 @@ function finishStep(wizard, state)
     var currentStep = wizard.find(".steps li").eq(state.currentIndex);
 
     var response = wizard.triggerHandler("finishing", [state.currentIndex]);
+
+    if (typeof(response) === "boolean") {
+        response = jQuery.Deferred().resolve(response);
+    }
     
     jQuery.when(response).done(function(status){
         if (status)
@@ -448,6 +452,10 @@ function goToStep(wizard, options, state, index)
     var oldIndex = state.currentIndex;
 
     var response = wizard.triggerHandler("stepChanging", [state.currentIndex, index]);
+
+    if (typeof(response) === "boolean") {
+        response = jQuery.Deferred().resolve(response);
+    }
     
     jQuery.when(response).done(function(status){
         if (status)
