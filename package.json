@@ -9,6 +9,7 @@
     "email": "me@rafaelstaib.com",
     "url": "http://www.rafaelstaib.com"
   },
+  "main": "./build/jquery.steps.js",
   "bugs": "https://github.com/rstaib/jquery-steps/issues",
   "scripts": {
     "test": "grunt"
