@@ -167,5 +167,5 @@ $.fn.steps.setStep = function (index, step)
  **/
 $.fn.steps.skip = function (count)
 {
-    throw new Error("Not yet implemented!");
+    return skipNextNSteps(this, getOptions(this), getState(this), count);
 };
