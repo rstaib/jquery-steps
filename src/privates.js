@@ -1182,6 +1182,23 @@ function startTransitionEffect(wizard, options, state, index, oldIndex, doneCall
 }
 
 /**
+ * Skips the 'n' number of step(s).
+ *
+ * @static
+ * @private
+ * @method skipNextNSteps
+ * @param wizard {Object} The jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @param n {Number} The number of steps to skip
+ * @return {Boolean} Indicates whether the action executed
+ **/
+function skipNextNSteps(wizard, options, state, n)
+{
+    return paginationClick(wizard, options, state, increaseCurrentIndexBy(state, n));
+}
+
+/**
  * Fires when a step click happens.
  *
  * @static
