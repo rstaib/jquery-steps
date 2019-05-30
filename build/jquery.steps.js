@@ -1,6 +1,6 @@
 /*! 
- * jQuery Steps v1.1.0 - 09/04/2014
- * Copyright (c) 2014 Rafael Staib (http://www.jquery-steps.com)
+ * jQuery Steps v1.1.0 - 05/30/2019
+ * Copyright (c) 2019 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
 ;(function ($, undefined)
@@ -1242,6 +1242,23 @@ function startTransitionEffect(wizard, options, state, index, oldIndex, doneCall
 }
 
 /**
+ * Skips the 'n' number of step(s).
+ *
+ * @static
+ * @private
+ * @method skipNextNSteps
+ * @param wizard {Object} The jQuery wizard object
+ * @param options {Object} Settings of the current wizard
+ * @param state {Object} The state container of the current wizard
+ * @param n {Integer} An integer number of steps to be skipped
+ * @return {Boolean} Indicates whether the action executed
+ **/
+function skipNextNSteps(wizard, options, state, n)
+{
+    return paginationClick(wizard, options, state, increaseCurrentIndexBy(state, n));
+}
+
+/**
  * Fires when a step click happens.
  *
  * @static
@@ -1301,6 +1318,7 @@ function validateArgument(argumentName, argumentValue)
         throwError("The argument '{0}' is null or undefined.", argumentName);
     }
 }
+
 
 /**
  * Represents a jQuery wizard plugin.
@@ -1471,8 +1489,9 @@ $.fn.steps.setStep = function (index, step)
  **/
 $.fn.steps.skip = function (count)
 {
-    throw new Error("Not yet implemented!");
+    return skipNextNSteps(this, getOptions(this), getState(this), count);
 };
+
 
 /**
  * An enum represents the different content types of a step and their loading mechanisms.
