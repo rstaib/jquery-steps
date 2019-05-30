@@ -1150,7 +1150,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex, doneCall
  * @return {Boolean} Indicates whether the action executed
  **/
 function skipNextNSteps(wizard, options, state, n) {
-    return paginationClick(wizard, options, state, increaseCurrentIndexBy(state, n));
+    return goToStep(wizard, options, state, increaseCurrentIndexBy(state, n));
 }
 
 /**
