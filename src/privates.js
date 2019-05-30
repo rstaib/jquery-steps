@@ -1190,7 +1190,7 @@ function startTransitionEffect(wizard, options, state, index, oldIndex, doneCall
  * @param wizard {Object} The jQuery wizard object
  * @param options {Object} Settings of the current wizard
  * @param state {Object} The state container of the current wizard
- * @param n {Number} The number of steps to skip
+ * @param n {Integer} An integer number of steps to be skipped
  * @return {Boolean} Indicates whether the action executed
  **/
 function skipNextNSteps(wizard, options, state, n)
