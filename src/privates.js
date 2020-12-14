@@ -99,10 +99,10 @@ function analyzeData(wizard, options, state)
     {
         throwError(_missingCorrespondingElementErrorMessage, "titles");
     }
-        
-    var startIndex = options.startIndex;
 
     state.stepCount = stepTitles.length;
+    
+    var startIndex =  options.startIndex < state.stepCount ? options.startIndex : 0;
 
     // Tries to load the saved state (step position)
     if (options.saveState && $.cookie)
